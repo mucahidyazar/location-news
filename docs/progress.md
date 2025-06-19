@@ -44,6 +44,119 @@
 
 ---
 
+## 🚀 Step 5: Pre-Deployment Checklist
+
+Live'a almadan önce tamamlanması gereken kritik maddeler.
+
+### 🚨 HEMEN ÇÖZÜLMESİ GEREKENLER (Build Fails)
+
+#### 1. **Favicon ve İkonlar**
+- [ ] `favicon.ico` dosyası `/public` klasörüne eklenmeli
+- [ ] `apple-touch-icon.png` (180x180) eklenmeli  
+- [ ] `icon.png` (32x32) eklenmeli
+- [ ] Web app manifest dosyası (`manifest.json`) eklenmeli
+
+#### 2. **TypeScript/ESLint Hataları**
+- [ ] `src/components/interactive-map.tsx` - unused variables fix
+- [ ] `src/components/news-card-minimal.tsx` - unused imports fix
+- [ ] `src/components/ui/calendar.tsx` - React hooks dependencies fix
+- [ ] `src/app/page.tsx` - `<img>` → `<Image>` component değişimi
+
+#### 3. **Database Production Hazırlığı**
+- [ ] SQLite dosyaları git'ten çıkarılmalı (.gitignore güncelle)
+- [ ] Production database seçimi (Supabase/Airtable/vb.)
+- [ ] Seed data için güvenli import stratejisi
+
+### 🔧 ÖNEMLİ YAPıLANDıRMALAR
+
+#### 4. **Environment Variables**
+- [ ] `.env.example` dosyası oluştur:
+  ```
+  # Database (Production)
+  DATABASE_URL=
+  
+  # Analytics (Optional)
+  NEXT_PUBLIC_GA_ID=
+  
+  # Error Tracking (Optional)  
+  SENTRY_DSN=
+  ```
+
+#### 5. **SEO ve Metadata**
+- [ ] `sitemap.xml` oluştur
+- [ ] `robots.txt` oluştur
+- [ ] Open Graph meta tags ekle
+- [ ] Twitter Card meta tags ekle
+
+#### 6. **Performance Optimizations**
+- [ ] Logo SVG'yi optimize et
+- [ ] `<Image>` component'i için image domains yapılandır
+- [ ] Lazy loading implement et
+
+#### 7. **Security Headers**
+- [ ] `next.config.ts` güvenlik başlıkları ekle:
+  ```typescript
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+      ],
+    },
+  ]
+  ```
+
+### 📱 DEPLOYMENT PLATFORMU HAZIRLIĞI
+
+#### 8. **Vercel Deploy Ayarları**
+- [ ] `vercel.json` yapılandırması (eğer gerekli ise)
+- [ ] Environment variables Vercel dashboard'a eklenmeli
+- [ ] Build ve output directory ayarları kontrol
+
+#### 9. **Error Handling**
+- [ ] 404 sayfası (`not-found.tsx`)
+- [ ] 500 error sayfası (`error.tsx`)
+- [ ] Loading states iyileştirme
+- [ ] API route error handling
+
+#### 10. **Final Tests**
+- [ ] `npm run build` başarılı çalışmalı
+- [ ] `npm run start` production mode test
+- [ ] Tüm sayfalar ve API routes test edilmeli
+- [ ] Mobile responsive test
+- [ ] Performance test (Lighthouse)
+
+### 📋 SEN HAZIRLAMALI (User Action Required)
+
+#### İhtiyaç Duyulan Dosyalar:
+1. **Favicon dosyaları** → `/public` klasörüne koy
+2. **Logo optimizasyonu** → Mevcut logo.svg optimize et
+3. **Production database** → Hangi servisi kullanacağını belirle
+4. **Analytics ID'si** → Eğer analytics kullanacaksan
+5. **Domain name** → Deploy edilecek domain
+
+#### Opsiyonel Ama Önerilen:
+- Error tracking servisi (Sentry vb.)
+- Analytics service (Google Analytics vb.)  
+- CDN configuration
+- Custom domain SSL setup
+
+### ⚡ HIZLI FIX LİSTESİ
+
+Bu maddeler 30 dakika içinde halledilecek kritik fixler:
+
+1. Favicon ekle
+2. TypeScript hatalarını düzelt  
+3. Database dosyalarını git'ten çıkar
+4. Build test et
+5. Error pages ekle
+
+**Bu 5 madde tamamlandıktan sonra "Step 5'e başla" diyebilirsin!**
+
+---
+
 ## Notes
 - Started: [Current Date]
 - Using Next.js 14+ with App Router
