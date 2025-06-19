@@ -184,7 +184,7 @@ export default function HomePage() {
       <header className="bg-white border-b px-4 lg:px-6 py-3 z-[100]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
+            <img src="/logo.svg" alt="LocationNews Logo" className="h-8 w-8" />
             <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
               LocationNews
             </h1>
