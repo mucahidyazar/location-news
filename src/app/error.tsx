@@ -2,6 +2,7 @@
 
 import {useEffect} from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Error({
   error,
@@ -46,7 +47,7 @@ export default function Error({
                 Oops! Something went wrong
               </h1>
               <p className="text-gray-600 text-lg leading-relaxed">
-                We're sorry for the inconvenience. An unexpected error has occurred while processing your request.
+                We&apos;re sorry for the inconvenience. An unexpected error has occurred while processing your request.
               </p>
             </div>
             
@@ -73,7 +74,7 @@ export default function Error({
                 </div>
               </button>
               
-              <a
+              <Link
                 href="/"
                 className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
               >
@@ -83,7 +84,7 @@ export default function Error({
                   </svg>
                   <span>Go back home</span>
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="text-sm text-gray-500">

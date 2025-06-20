@@ -1,6 +1,4 @@
 import { NewsItem } from '@/lib/database';
-import { Badge } from '@/components/ui/badge';
-import { getCategoryColor } from '@/lib/category-colors';
 import { getSourceLogo } from '@/lib/news-sources';
 
 interface NewsCardMinimalProps {
@@ -8,7 +6,7 @@ interface NewsCardMinimalProps {
   onLocationClick: (location: string) => void;
 }
 
-export default function NewsCardMinimal({ news, onLocationClick }: NewsCardMinimalProps) {
+export default function NewsCardMinimal({ news }: NewsCardMinimalProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR', {
       month: 'short',
@@ -18,7 +16,6 @@ export default function NewsCardMinimal({ news, onLocationClick }: NewsCardMinim
     });
   };
 
-  const categoryStyle = getCategoryColor(news.category);
 
   return (
     <div className="mb-2 p-2">

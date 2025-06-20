@@ -19,9 +19,9 @@ interface InteractiveMapProps {
   onLocationSelect: (location: string) => void;
 }
 
-export default function InteractiveMap({ locations, filteredNews, selectedCategory, onLocationSelect }: InteractiveMapProps) {
+export default function InteractiveMap({ locations, filteredNews, onLocationSelect }: InteractiveMapProps) {
   const [isClient, setIsClient] = useState(false);
-  const [L, setL] = useState<any>(null);
+  const [L, setL] = useState<typeof import('leaflet') | null>(null);
 
   useEffect(() => {
     setIsClient(true);
