@@ -4,16 +4,21 @@
 A news-on-map application that displays location-based news articles on an interactive map interface.
 
 ## Core Features
-- **Interactive Map**: Full-screen map showing news markers by location
-- **News Categories**: Filter by crime, discovery, sports, and other categories
-- **Sidebar Interface**: Sticky news list on the right side for easy browsing
-- **Location-Based**: News articles tied to specific geographic locations
+- **Interactive Map**: Full-screen Leaflet map showing news markers by location
+- **Advanced Filtering**: Filter by categories, sources, date ranges, and search terms
+- **Multiple View Types**: Card, horizontal, and minimal news layouts
+- **Smart Date Picker**: Quick date range selection with presets
+- **Responsive Design**: Works seamlessly on desktop and mobile
+- **Real-time Updates**: Dynamic news filtering and map updates
+- **PWA Support**: App icons, manifest, and offline capabilities
 
 ## Technology Stack
-- **Frontend**: Next.js 14+ with App Router
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **Database**: SQLite for initial data storage
-- **Map**: Interactive mapping solution (to be determined)
+- **Frontend**: Next.js 15 with App Router
+- **Styling**: Tailwind CSS 4 + shadcn/ui components
+- **Database**: SQLite with better-sqlite3
+- **Map**: Leaflet + React-Leaflet for interactive mapping
+- **Icons**: Lucide React
+- **Date Handling**: date-fns + react-day-picker
 
 ## User Experience
 - Users see a full-screen map with news markers
@@ -23,7 +28,10 @@ A news-on-map application that displays location-based news articles on an inter
 - Responsive design for desktop and mobile
 
 ## Success Criteria
-- Fast, responsive map interactions
-- Intuitive news filtering and browsing
-- Clean, modern UI using shadcn/ui
-- Proper data structure for location-based news
+- ✅ Fast, responsive map interactions with Leaflet
+- ✅ Intuitive news filtering and browsing with multiple view types
+- ✅ Clean, modern UI using shadcn/ui components
+- ✅ Proper data structure for location-based news
+- ✅ SEO optimized with metadata, sitemap, and Open Graph tags
+- ✅ Production-ready with error handling and security headers
+- ✅ PWA capabilities with app icons and manifest

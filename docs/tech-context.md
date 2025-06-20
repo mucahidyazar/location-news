@@ -1,30 +1,37 @@
 # Technical Context
 
 ## Architecture Overview
-- **Framework**: Next.js 14+ with App Router
-- **Styling**: Tailwind CSS for utility-first styling
+- **Framework**: Next.js 15 with App Router
+- **Styling**: Tailwind CSS 4 for utility-first styling
 - **UI Components**: shadcn/ui for consistent, accessible components
-- **Database**: SQLite for lightweight, local data storage
-- **Map Library**: TBD (likely Leaflet or Mapbox)
+- **Database**: SQLite with better-sqlite3 for lightweight, local data storage
+- **Map Library**: Leaflet + React-Leaflet for interactive mapping
+- **Icons**: Lucide React for consistent iconography
+- **Date Handling**: date-fns + react-day-picker for date operations
 
 ## Project Structure
 ```
 location-news/
-├── app/                 # Next.js app directory
-├── components/          # Reusable UI components
-├── lib/                 # Utilities and database logic
+├── src/
+│   ├── app/             # Next.js app directory (routes, layouts, pages)
+│   ├── components/      # Reusable UI components
+│   ├── lib/            # Utilities and database logic
+│   └── types/          # TypeScript type definitions
+├── public/             # Static assets (images, icons, manifest)
+├── docs/               # Project documentation
 ├── data/               # SQLite database and seed data
-├── types/              # TypeScript type definitions
-└── docs/               # Project documentation
+└── .cursor/            # Cursor IDE configuration
 ```
 
 ## Key Dependencies
-- `next`: React framework
-- `tailwindcss`: CSS framework
+- `next`: React framework (v15)
+- `tailwindcss`: CSS framework (v4)
 - `@radix-ui/*`: Accessibility primitives for shadcn/ui
 - `lucide-react`: Icon library
-- `sqlite3` or `better-sqlite3`: Database driver
-- Map library (TBD)
+- `better-sqlite3`: Database driver
+- `leaflet` + `react-leaflet`: Interactive mapping
+- `date-fns`: Date utility library
+- `react-day-picker`: Date picker component
 
 ## Data Model
 ```sql
@@ -42,9 +49,13 @@ CREATE TABLE news_articles (
 ```
 
 ## Development Workflow
-1. Set up Next.js project with TypeScript
-2. Configure Tailwind CSS and shadcn/ui
-3. Create database schema and seed data
-4. Build map component with markers
-5. Implement news filtering and sidebar
-6. Add responsive design and polish
+1. ✅ Set up Next.js project with TypeScript
+2. ✅ Configure Tailwind CSS and shadcn/ui
+3. ✅ Create database schema and seed data
+4. ✅ Build map component with Leaflet markers
+5. ✅ Implement advanced news filtering and sidebar
+6. ✅ Add responsive design and polish
+7. ✅ SEO optimization (metadata, sitemap, robots.txt)
+8. ✅ PWA setup (app icons, manifest)
+9. ✅ Production optimization (security headers, error handling)
+10. 🔧 Deployment and final testing

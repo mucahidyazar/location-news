@@ -20,6 +20,8 @@ A news-on-map application that displays location-based news articles on an inter
 - **Map**: Leaflet + React-Leaflet
 - **Icons**: Lucide React
 - **Date Handling**: date-fns + react-day-picker
+- **SEO**: Optimized metadata, sitemap, Open Graph tags
+- **PWA**: App icons, manifest, offline capabilities
 
 ## 🚀 Getting Started
 
@@ -79,6 +81,14 @@ Built with shadcn/ui components including:
 - Badges and buttons
 - Cards and tooltips
 - Responsive layouts
+
+## ✨ Additional Features
+
+- **SEO Optimized**: Complete metadata, sitemap.xml, robots.txt
+- **PWA Ready**: App icons, manifest.json, offline support
+- **Security**: Security headers, CSRF protection
+- **Error Handling**: Custom 404/500 pages, graceful error boundaries
+- **Performance**: Optimized images, lazy loading, efficient bundling
 
 ## 🤝 Contributing
 
