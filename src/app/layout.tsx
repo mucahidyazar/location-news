@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'LocationNews - News on Interactive Map',
-  description: 'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
+  description:
+    'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
 }
 
 export default function RootLayout({
@@ -25,6 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="apple-mobile-web-app-title" content="LocationNews" />
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
