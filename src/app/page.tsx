@@ -9,6 +9,7 @@ import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Newspaper, Search, X, Globe, Tv, Building} from 'lucide-react'
+import Image from 'next/image'
 import SmartDatePicker from '@/components/smart-date-picker'
 
 export default function HomePage() {
@@ -184,7 +185,7 @@ export default function HomePage() {
       <header className="bg-white border-b px-4 lg:px-6 py-3 z-[100]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="LocationNews Logo" className="h-8 w-8" />
+            <Image src="/logo.svg" alt="LocationNews Logo" width={32} height={32} className="h-8 w-8" />
             <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
               LocationNews
             </h1>
