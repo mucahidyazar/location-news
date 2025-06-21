@@ -1,20 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getNews } from '@/lib/database';
+import { getNews, searchNews } from '@/lib/supabase-helpers';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const location = searchParams.get('location');
     const category = searchParams.get('category');
+    const search = searchParams.get('search');
+    const featured = searchParams.get('featured') === 'true';
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    const news = getNews({
-      location: location || null,
-      category: category || null,
-      limit,
-      offset
-    });
+    let news;
+
+    if (search) {
+      // Use full-text search if search query is provided
+      news = await searchNews(search, limit);
+    } else {
+      // Use regular filtered query
+      news = await getNews({
+        location: location || undefined,
+        category: category || undefined,
+        featured: featured || undefined,
+        limit,
+        offset
+      });
+    }
 
     return NextResponse.json(news);
   } catch (error) {

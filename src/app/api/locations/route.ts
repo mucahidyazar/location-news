@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getLocations } from '@/lib/database';
+import { getLocations } from '@/lib/supabase-helpers';
 
 export async function GET() {
   try {
-    const locations = getLocations();
+    const locations = await getLocations();
     return NextResponse.json(locations);
   } catch (error) {
     console.error('Error fetching locations:', error);

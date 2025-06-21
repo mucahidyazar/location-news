@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import { seedDatabase } from '@/lib/seed-data';
+import { seedSupabaseDatabase } from '@/lib/supabase-seed';
 
 export async function POST() {
   try {
-    seedDatabase();
-    return NextResponse.json({ message: 'Database seeded successfully' });
+    const result = await seedSupabaseDatabase();
+    return NextResponse.json({ 
+      message: 'Supabase database seeded successfully',
+      stats: result.stats
+    });
   } catch (error) {
     console.error('Error seeding database:', error);
     return NextResponse.json(
