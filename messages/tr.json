@@ -1,0 +1,88 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "back": "Geri",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "clear": "Temizle",
+    "more": "Daha Fazla",
+    "less": "Daha Az",
+    "readMore": "Devamını Oku",
+    "close": "Kapat"
+  },
+  "header": {
+    "title": "Lokasyon Haberleri",
+    "subtitle": "Türkiye'den Yerel Haberler",
+    "language": "Dil"
+  },
+  "navigation": {
+    "home": "Ana Sayfa",
+    "news": "Haberler",
+    "locations": "Lokasyonlar",
+    "categories": "Kategoriler"
+  },
+  "news": {
+    "title": "Son Haberler",
+    "noNews": "Haber bulunamadı",
+    "featuredNews": "Öne Çıkan Haberler",
+    "publishedHoursAgo": "{hours} saat önce yayınlandı",
+    "viewCount": "{count} görüntülenme",
+    "source": "Kaynak",
+    "readFullArticle": "Haberin Tamamını Oku",
+    "relatedNews": "İlgili Haberler",
+    "newsCount": "{count} haber"
+  },
+  "categories": {
+    "theft_robbery": "Hırsızlık ve Gasp",
+    "fraud_scam": "Dolandırıcılık", 
+    "violence": "Şiddet",
+    "sexual_crimes": "Cinsel Suçlar",
+    "traffic_incidents": "Trafik Olayları",
+    "drug_crimes": "Uyuşturucu Suçları",
+    "domestic_violence": "Aile İçi Şiddet",
+    "fire_explosion": "Yangın ve Patlama",
+    "suicide_missing": "İntihar ve Kayıp",
+    "terror_security": "Terör ve Güvenlik",
+    "natural_disaster": "Doğal Afet",
+    "other_incidents": "Diğer Olaylar"
+  },
+  "locations": {
+    "title": "Lokasyonlar",
+    "searchPlaceholder": "Lokasyon ara...",
+    "newsCount": "{count} haber",
+    "locationCount": "{count} konum"
+  },
+  "map": {
+    "title": "Haber Haritası",
+    "loading": "Harita yükleniyor...",
+    "zoomIn": "Yakınlaştır",
+    "zoomOut": "Uzaklaştır",
+    "newsAt": "{location} konumundaki haberler",
+    "noNewsHere": "Bu konumda haber yok",
+    "viewNews": "Haberleri Gör",
+    "newsCount": "{count} haber",
+    "mostCommon": "Çoğu: {category}",
+    "toggleIcons": "İkon türünü değiştir",
+    "simpleIcons": "Basit pinleri göster",
+    "customIcons": "Özel ikonları göster"
+  },
+  "filters": {
+    "all": "Tümü",
+    "today": "Bugün",
+    "thisWeek": "Bu Hafta",
+    "thisMonth": "Bu Ay",
+    "featured": "Öne Çıkan",
+    "sortBy": "Sırala",
+    "newest": "En Yeni",
+    "oldest": "En Eski",
+    "mostViewed": "En Çok Görüntülenen"
+  },
+  "footer": {
+    "copyright": "© 2024 Lokasyon Haberleri. Tüm hakları saklıdır.",
+    "about": "Hakkında",
+    "contact": "İletişim",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "more": "More",
+    "less": "Less",
+    "readMore": "Read More",
+    "close": "Close"
+  },
+  "header": {
+    "title": "Location News",
+    "subtitle": "Local News from Around Turkey",
+    "language": "Language"
+  },
+  "navigation": {
+    "home": "Home",
+    "news": "News",
+    "locations": "Locations",
+    "categories": "Categories"
+  },
+  "news": {
+    "title": "Latest News",
+    "noNews": "No news found",
+    "featuredNews": "Featured News",
+    "publishedHoursAgo": "Published {hours} hours ago",
+    "viewCount": "{count} views",
+    "source": "Source",
+    "readFullArticle": "Read Full Article",
+    "relatedNews": "Related News",
+    "newsCount": "{count} news"
+  },
+  "categories": {
+    "theft_robbery": "Theft & Robbery",
+    "fraud_scam": "Fraud & Scam", 
+    "violence": "Violence",
+    "sexual_crimes": "Sexual Crimes",
+    "traffic_incidents": "Traffic Incidents",
+    "drug_crimes": "Drug Crimes",
+    "domestic_violence": "Domestic Violence",
+    "fire_explosion": "Fire & Explosion",
+    "suicide_missing": "Suicide & Missing",
+    "terror_security": "Terror & Security",
+    "natural_disaster": "Natural Disaster",
+    "other_incidents": "Other Incidents"
+  },
+  "locations": {
+    "title": "Locations",
+    "searchPlaceholder": "Search locations...",
+    "newsCount": "{count} news",
+    "locationCount": "{count} locations"
+  },
+  "map": {
+    "title": "News Map",
+    "loading": "Loading map...",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "newsAt": "News at {location}",
+    "noNewsHere": "No news at this location",
+    "viewNews": "View News",
+    "newsCount": "{count} news",
+    "mostCommon": "Most: {category}",
+    "toggleIcons": "Toggle icon type",
+    "simpleIcons": "Show simple pins",
+    "customIcons": "Show custom icons"
+  },
+  "filters": {
+    "all": "All",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "featured": "Featured",
+    "sortBy": "Sort By",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "mostViewed": "Most Viewed"
+  },
+  "footer": {
+    "copyright": "© 2024 Location News. All rights reserved.",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}
