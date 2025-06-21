@@ -54,6 +54,7 @@ export interface NewsItem {
   publishedAt: string;
   source: string;
   imageUrl?: string;
+  externalUrl?: string;
 }
 
 export interface Location {

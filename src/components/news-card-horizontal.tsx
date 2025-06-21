@@ -3,7 +3,7 @@ import { NewsItem } from '@/lib/database';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, MapPin } from 'lucide-react';
-import { getCategoryColor } from '@/lib/category-colors';
+import { getCategoryKeyByName, getCategoryColorByKey } from '@/lib/category-colors';
 import { getSourceLogo } from '@/lib/news-sources';
 
 interface NewsCardHorizontalProps {
@@ -22,7 +22,9 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
     });
   };
 
-  const categoryStyle = getCategoryColor(news.category);
+  // Use key-based system for better multilingual support
+  const categoryKey = getCategoryKeyByName(news.category);
+  const categoryStyle = getCategoryColorByKey(categoryKey);
 
   return (
     <Card className="mb-3 hover:shadow-lg transition-shadow">
@@ -47,10 +49,22 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
               <Badge variant="secondary" className={`${categoryStyle.badge} text-xs flex-shrink-0`}>
                 {news.category}
               </Badge>
-              <div className="flex items-center gap-1 text-xs text-gray-500 truncate">
-                <span>{getSourceLogo(news.source)}</span>
-                <span className="truncate">{news.source}</span>
-              </div>
+              {news.externalUrl ? (
+                <a 
+                  href={news.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors truncate group"
+                >
+                  <span>{getSourceLogo(news.source)}</span>
+                  <span className="truncate group-hover:underline">{news.source}</span>
+                </a>
+              ) : (
+                <div className="flex items-center gap-1 text-xs text-gray-500 truncate">
+                  <span>{getSourceLogo(news.source)}</span>
+                  <span className="truncate">{news.source}</span>
+                </div>
+              )}
             </div>
             
             <h3 className="font-semibold text-sm leading-tight mb-2 line-clamp-2 flex-1">

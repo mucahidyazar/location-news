@@ -6,6 +6,7 @@ import NewsCard from './news-card'
 import NewsCardHorizontal from './news-card-horizontal'
 import NewsCardMinimal from './news-card-minimal'
 import {X, Grid3X3, LayoutList, AlignLeft, Newspaper} from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface NewsSidebarProps {
   news: NewsItem[]
@@ -32,6 +33,7 @@ export default function NewsSidebar({
   onViewTypeChange,
   onClose,
 }: NewsSidebarProps) {
+  const t = useTranslations();
   const sourceCount = news.reduce((acc, item) => {
     acc[item.source] = (acc[item.source] || 0) + 1
     return acc
@@ -56,11 +58,11 @@ export default function NewsSidebar({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Newspaper className="w-5 h-5 text-blue-600" />
-            <h2 className="text-xl font-bold">Haberler</h2>
+            <h2 className="text-xl font-bold">{t('news.title')}</h2>
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm text-gray-600">
-              {news.length} haber • {locations.length} konum
+              {t('news.newsCount', { count: news.length })} • {t('locations.locationCount', { count: locations.length })}
             </div>
             {onClose && (
               <button
