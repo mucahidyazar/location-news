@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -128,7 +128,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
-  
+
   .line-clamp-3 {
     overflow: hidden;
     display: -webkit-box;
@@ -180,6 +180,19 @@
 }
 
 /* All BMC related elements */
-[id*="bmc"], [class*="bmc"] {
+[id*='bmc'],
+[class*='bmc'] {
   z-index: 9999 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 4px !important;
+}
+
+.leaflet-popup-content {
+  margin: 4px 12px 12px 12px !important;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
 }

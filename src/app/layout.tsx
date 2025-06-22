@@ -1,5 +1,5 @@
 import type {Metadata, Viewport} from 'next'
-import {Geist, Geist_Mono} from 'next/font/google'
+import {Geist, Geist_Mono, Josefin_Sans} from 'next/font/google'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
 import './marker-styles.css'
@@ -14,12 +14,26 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const josefinSans = Josefin_Sans({
+  variable: '--font-josefin-sans',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+})
+
 export const metadata: Metadata = {
   title: 'LocationNews - News on Interactive Map',
   description:
     'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
-  keywords: ['news', 'location', 'interactive map', 'turkey', 'haberler', 'konum', 'interaktif harita'],
-  authors: [{ name: 'LocationNews Team' }],
+  keywords: [
+    'news',
+    'location',
+    'interactive map',
+    'turkey',
+    'haberler',
+    'konum',
+    'interaktif harita',
+  ],
+  authors: [{name: 'LocationNews Team'}],
   creator: 'LocationNews',
   publisher: 'LocationNews',
   formatDetection: {
@@ -33,7 +47,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'LocationNews - News on Interactive Map',
-    description: 'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
+    description:
+      'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
     url: 'https://location-news.vercel.app',
     siteName: 'LocationNews',
     images: [
@@ -50,7 +65,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'LocationNews - News on Interactive Map',
-    description: 'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
+    description:
+      'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
     images: ['/logo.svg'],
     creator: '@locationnews',
   },
@@ -90,7 +106,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${josefinSans.variable} antialiased`}
       >
         {children}
         <script

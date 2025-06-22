@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -66,37 +67,7 @@ export default function NewsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [featuredOnly, setFeaturedOnly] = useState(false)
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  useEffect(() => {
-    filterNews()
-  }, [news, searchTerm, selectedLocation, selectedCategory, featuredOnly])
-
-  const loadData = async () => {
-    try {
-      const [newsRes, locationsRes, categoriesRes] = await Promise.all([
-        fetch('/api/news'),
-        fetch('/api/locations'),
-        fetch('/api/categories'),
-      ])
-
-      const newsData = await newsRes.json()
-      const locationsData = await locationsRes.json()
-      const categoriesData = await categoriesRes.json()
-
-      setNews(newsData)
-      setLocations(locationsData)
-      setCategories(categoriesData)
-    } catch (error) {
-      console.error('Error loading data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const filterNews = () => {
+  const filterNews = useCallback(() => {
     let filtered = news
 
     if (searchTerm) {
@@ -120,6 +91,36 @@ export default function NewsPage() {
     }
 
     setFilteredNews(filtered)
+  }, [news, searchTerm, selectedLocation, selectedCategory, featuredOnly])
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  useEffect(() => {
+    filterNews()
+  }, [filterNews])
+
+  const loadData = async () => {
+    try {
+      const [newsRes, locationsRes, categoriesRes] = await Promise.all([
+        fetch('/api/news'),
+        fetch('/api/locations'),
+        fetch('/api/categories'),
+      ])
+
+      const newsData = await newsRes.json()
+      const locationsData = await locationsRes.json()
+      const categoriesData = await categoriesRes.json()
+
+      setNews(newsData)
+      setLocations(locationsData)
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Error loading data:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const clearFilters = () => {
@@ -240,9 +241,11 @@ export default function NewsPage() {
             <article key={item.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
               {item.image_url && (
                 <div className="aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
-                  <img
+                  <Image
                     src={item.image_url}
                     alt={item.title}
+                    width={400}
+                    height={225}
                     className="w-full h-full object-cover"
                   />
                 </div>
