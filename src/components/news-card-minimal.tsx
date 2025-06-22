@@ -1,4 +1,4 @@
-import { NewsItem } from '@/lib/database';
+import { NewsItem } from '@/lib/types';
 import { getSourceLogo } from '@/lib/news-sources';
 
 interface NewsCardMinimalProps {
@@ -20,21 +20,21 @@ export default function NewsCardMinimal({ news }: NewsCardMinimalProps) {
   return (
     <div className="mb-2 p-2">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-xs text-gray-500">{formatDate(news.publishedAt)}</span>
-        {news.externalUrl ? (
+        <span className="text-xs text-gray-500">{formatDate(news.publishedAt || news.published_at || '')}</span>
+        {(news.externalUrl || news.external_url) ? (
           <a 
-            href={news.externalUrl}
+            href={news.externalUrl || news.external_url || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors group"
           >
-            <span>{getSourceLogo(news.source)}</span>
-            <span className="group-hover:underline">{news.source}</span>
+            <span>{getSourceLogo(typeof news.source === 'string' ? news.source : news.source?.name || '')}</span>
+            <span className="group-hover:underline">{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
           </a>
         ) : (
           <div className="flex items-center gap-1 text-xs text-gray-500">
-            <span>{getSourceLogo(news.source)}</span>
-            <span>{news.source}</span>
+            <span>{getSourceLogo(typeof news.source === 'string' ? news.source : news.source?.name || '')}</span>
+            <span>{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
           </div>
         )}
       </div>

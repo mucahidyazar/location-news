@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import {NewsItem} from '@/lib/database'
+import {NewsItem} from '@/lib/types'
 import NewsCard from './news-card'
 import NewsCardHorizontal from './news-card-horizontal'
 import NewsCardMinimal from './news-card-minimal'
@@ -35,7 +35,10 @@ export default function NewsSidebar({
 }: NewsSidebarProps) {
   const t = useTranslations();
   const sourceCount = news.reduce((acc, item) => {
-    acc[item.source] = (acc[item.source] || 0) + 1
+    const sourceName = typeof item.source === 'string' ? item.source : item.source?.name || ''
+    if (sourceName) {
+      acc[sourceName] = (acc[sourceName] || 0) + 1
+    }
     return acc
   }, {} as Record<string, number>)
 
@@ -44,8 +47,10 @@ export default function NewsSidebar({
     .map(([source]) => source)
 
   const sortedNews = [...news].sort((a, b) => {
-    const aIndex = sortedSources.indexOf(a.source)
-    const bIndex = sortedSources.indexOf(b.source)
+    const aSourceName = typeof a.source === 'string' ? a.source : a.source?.name || ''
+    const bSourceName = typeof b.source === 'string' ? b.source : b.source?.name || ''
+    const aIndex = sortedSources.indexOf(aSourceName)
+    const bIndex = sortedSources.indexOf(bSourceName)
     return aIndex - bIndex
   })
 
