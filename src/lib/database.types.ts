@@ -105,7 +105,9 @@ export interface Database {
           title: string
           content: string
           summary: string | null
-          location_id: string | null
+          latitude: number | null
+          longitude: number | null
+          location_name: string | null
           category_id: string | null
           source_id: string | null
           external_url: string | null
@@ -122,7 +124,9 @@ export interface Database {
           title: string
           content: string
           summary?: string | null
-          location_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          location_name?: string | null
           category_id?: string | null
           source_id?: string | null
           external_url?: string | null
@@ -139,7 +143,9 @@ export interface Database {
           title?: string
           content?: string
           summary?: string | null
-          location_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          location_name?: string | null
           category_id?: string | null
           source_id?: string | null
           external_url?: string | null
@@ -152,13 +158,6 @@ export interface Database {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "news_location_id_fkey"
-            columns: ["location_id"]
-            isOneToOne: false
-            referencedRelation: "locations"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "news_category_id_fkey"
             columns: ["category_id"]
@@ -303,7 +302,6 @@ export type NewsAnalyticsUpdate = Database['public']['Tables']['news_analytics']
 
 // Extended types with relationships
 export type NewsWithRelations = News & {
-  location?: Location
   category?: NewsCategory
   source?: NewsSource
 }

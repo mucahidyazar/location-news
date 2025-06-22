@@ -7,7 +7,7 @@ function getDb() {
   if (!db) {
     db = new Database(join(process.cwd(), 'data.db'));
     db.pragma('journal_mode = WAL');
-    
+
     // Initialize tables
     db.exec(`
       CREATE TABLE IF NOT EXISTS news (
@@ -50,7 +50,10 @@ export interface NewsItem {
   location: string;
   latitude: number;
   longitude: number;
-  category: string;
+  category: {
+    name: string;
+    color: string;
+  };
   publishedAt: string;
   source: string;
   imageUrl?: string;

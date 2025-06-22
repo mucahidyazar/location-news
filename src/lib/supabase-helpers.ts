@@ -15,20 +15,47 @@ import type {
 // =============================================
 
 export async function getLocations(): Promise<LocationWithStats[]> {
+  // Get aggregated location data from news table
   const { data, error } = await supabase
-    .from('locations')
+    .from('news')
     .select(`
-      *,
-      news(count)
+      location_name,
+      latitude,
+      longitude
     `)
-    .order('news_count', { ascending: false })
+    .not('location_name', 'is', null)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
 
   if (error) {
-    console.error('Error fetching locations:', error)
+    console.error('Error fetching locations from news:', error)
     throw error
   }
 
-  return data as LocationWithStats[]
+  // Group by location and calculate stats
+  const locationMap = new Map()
+  data.forEach((news: {location_name: string | null; latitude: number | null; longitude: number | null}) => {
+    const key = news.location_name
+    if (!key || !news.latitude || !news.longitude) return
+    
+    if (!locationMap.has(key)) {
+      locationMap.set(key, {
+        id: key,
+        name: news.location_name,
+        latitude: news.latitude,
+        longitude: news.longitude,
+        news_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+    }
+    locationMap.get(key).news_count++
+  })
+
+  // Convert to array and sort by news count
+  const locations = Array.from(locationMap.values()).sort((a, b) => b.news_count - a.news_count)
+
+  return locations as LocationWithStats[]
 }
 
 export async function getLocationByName(name: string): Promise<Location | null> {
@@ -77,14 +104,13 @@ export async function getNews(params: {
     .from('news')
     .select(`
       *,
-      location:locations(*),
       category:news_categories(*),
       source:news_sources(*)
     `)
     .order('published_at', { ascending: false })
 
   if (params.location) {
-    query = query.eq('locations.name', params.location)
+    query = query.eq('location_name', params.location)
   }
 
   if (params.category) {
@@ -118,7 +144,6 @@ export async function getNewsById(id: string): Promise<NewsWithRelations | null>
     .from('news')
     .select(`
       *,
-      location:locations(*),
       category:news_categories(*),
       source:news_sources(*)
     `)
@@ -267,7 +292,6 @@ export async function searchNews(
     .from('news')
     .select(`
       *,
-      location:locations(*),
       category:news_categories(*),
       source:news_sources(*)
     `)
