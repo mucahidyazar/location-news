@@ -3,7 +3,8 @@
 import {useState, useEffect} from 'react'
 import InteractiveMap from '@/components/interactive-map'
 import NewsSidebar from '@/components/news-sidebar'
-import {NewsItem, Location} from '@/lib/database'
+import CommonHeader from '@/components/common-header'
+import {NewsItem, Location} from '@/lib/types'
 import {
   categoryKeys,
   getCategoryColor,
@@ -20,15 +21,10 @@ import {
   Globe,
   Tv,
   Building,
-  Grid3x3,
-  List,
-  MapPin,
-  Settings,
 } from 'lucide-react'
-import {Link} from '@/i18n/routing'
 import SmartDatePicker from '@/components/smart-date-picker'
-import LanguageSwitcher from '@/components/ui/LanguageSwitcher'
 import {useTranslations} from 'next-intl'
+
 
 export default function HomePage() {
   const t = useTranslations()
@@ -66,7 +62,7 @@ export default function HomePage() {
     let filtered = news
 
     if (selectedLocation) {
-      filtered = filtered.filter(item => item.location === selectedLocation)
+      filtered = filtered.filter(item => item.location_name === selectedLocation)
     }
 
     if (
@@ -74,12 +70,12 @@ export default function HomePage() {
       selectedCategories.length > 0
     ) {
       filtered = filtered.filter(item =>
-        selectedCategories.includes(item.category),
+        selectedCategories.includes(typeof item.category === 'string' ? item.category : item.category?.name || ''),
       )
     }
 
     if (selectedSources.length > 0) {
-      filtered = filtered.filter(item => selectedSources.includes(item.source))
+      filtered = filtered.filter(item => selectedSources.includes(typeof item.source === 'string' ? item.source : item.source?.name || ''))
     }
 
     if (searchTerm) {
@@ -92,13 +88,13 @@ export default function HomePage() {
 
     if (dateRange.start) {
       filtered = filtered.filter(
-        item => new Date(item.publishedAt) >= new Date(dateRange.start!),
+        item => item.published_at && new Date(item.published_at) >= new Date(dateRange.start!),
       )
     }
 
     if (dateRange.end) {
       filtered = filtered.filter(
-        item => new Date(item.publishedAt) <= new Date(dateRange.end!),
+        item => item.published_at && new Date(item.published_at) <= new Date(dateRange.end!),
       )
     }
 
@@ -115,11 +111,14 @@ export default function HomePage() {
 
   // Get unique sources from news, sorted by news count (descending)
   const sourceCount = news.reduce((acc, item) => {
-    acc[item.source] = (acc[item.source] || 0) + 1
+    const sourceName = typeof item.source === 'string' ? item.source : item.source?.name || ''
+    acc[sourceName] = (acc[sourceName] || 0) + 1
     return acc
   }, {} as Record<string, number>)
 
-  const uniqueSources = Array.from(new Set(news.map(item => item.source))).sort(
+  const uniqueSources = Array.from(new Set(news.map(item => 
+    typeof item.source === 'string' ? item.source : item.source?.name || ''
+  ).filter(Boolean))).sort(
     (a, b) => (sourceCount[b] || 0) - (sourceCount[a] || 0),
   )
 
@@ -149,40 +148,18 @@ export default function HomePage() {
       const newsData = await newsResponse.json()
       const locationsData = await locationsResponse.json()
 
-      // Transform Supabase data to legacy format
-      const transformedNews: NewsItem[] = newsData.map(
-        (item: {
-          title: string;
-          content: string;
-          location?: { name: string; latitude: number; longitude: number };
-          category?: { name: string };
-          published_at: string;
-          source?: { name: string };
-          image_url?: string;
-          external_url?: string;
-        }, index: number) => ({
-          id: index + 1,
-          title: item.title,
-          content: item.content,
-          location: item.location?.name || '',
-          latitude: item.location?.latitude || 0,
-          longitude: item.location?.longitude || 0,
-          category: item.category?.name || '',
-          publishedAt: item.published_at,
-          source: item.source?.name || '',
-          imageUrl: item.image_url,
-          externalUrl: item.external_url,
-        }),
-      )
 
       const transformedLocations: Location[] = locationsData.map(
-        (item: {
-          name: string;
-          latitude: number;
-          longitude: number;
-          news_count: number;
-          primary_category: string;
-        }, index: number) => ({
+        (
+          item: {
+            name: string
+            latitude: number
+            longitude: number
+            news_count: number
+            primary_category: string
+          },
+          index: number,
+        ) => ({
           id: index + 1,
           name: item.name,
           latitude: item.latitude,
@@ -192,7 +169,7 @@ export default function HomePage() {
         }),
       )
 
-      setNews(transformedNews)
+      setNews(newsData)
       setLocations(transformedLocations)
     } catch (error) {
       console.error('Error loading data:', error)
@@ -266,56 +243,17 @@ export default function HomePage() {
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="bg-white border-b px-4 lg:px-6 py-3 z-[100]">
-        <div className="flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-          >
-            <Newspaper className="h-8 w-8 text-blue-600" />
-            <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
-                {t('header.title')}
-              </h1>
-              <p className="text-xs text-gray-600 hidden lg:block">
-                {t('header.subtitle')}
-              </p>
-            </div>
-          </Link>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <button
-              onClick={handleToggleIcons}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-              title={
-                useCustomIcons ? t('map.simpleIcons') : t('map.customIcons')
-              }
-            >
-              {useCustomIcons ? (
-                <MapPin className="w-5 h-5 text-gray-600" />
-              ) : (
-                <Settings className="w-5 h-5 text-gray-600" />
-              )}
-            </button>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => window.location.href = '/news'}
-                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-                title={t('navigation.news')}
-              >
-                <Grid3x3 className="w-6 h-6 text-gray-600" />
-              </button>
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-                title={t('common.more')}
-              >
-                <List className="w-6 h-6 text-gray-600" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CommonHeader
+        title={t('header.title')}
+        subtitle={t('header.subtitle')}
+        showLanguageSwitcher={true}
+        showMapControls={true}
+        showNewsButton={true}
+        showSidebarButton={true}
+        useCustomIcons={useCustomIcons}
+        onToggleIcons={handleToggleIcons}
+        onToggleSidebar={() => setIsSidebarOpen(true)}
+      />
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         <div className="flex-1 h-64 lg:h-full flex flex-col relative">
@@ -401,7 +339,7 @@ export default function HomePage() {
                 const categoryNewsCount =
                   category === t('filters.all')
                     ? news.length
-                    : news.filter(item => item.category === category).length
+                    : news.filter(item => (typeof item.category === 'string' ? item.category : item.category?.name) === category).length
 
                 return (
                   <Badge
@@ -434,7 +372,19 @@ export default function HomePage() {
           <div className="flex-1">
             <InteractiveMap
               locations={locations}
-              filteredNews={filteredNews}
+              filteredNews={filteredNews.map((item: NewsItem, index: number) => ({
+                id: index + 1,
+                title: item.title,
+                content: item.content,
+                location: item.location_name || '',
+                latitude: item.latitude || 0,
+                longitude: item.longitude || 0,
+                category: typeof item.category === 'string' ? item.category : item.category?.name || '',
+                publishedAt: item.published_at || '',
+                source: typeof item.source === 'string' ? item.source : item.source?.name || '',
+                imageUrl: item.image_url,
+                externalUrl: item.external_url,
+              }))}
               selectedLocation={selectedLocation}
               selectedCategory={
                 selectedCategories.includes(t('filters.all'))
@@ -455,7 +405,19 @@ export default function HomePage() {
           }`}
         >
           <NewsSidebar
-            news={filteredNews}
+            news={filteredNews.map((item: NewsItem, index: number) => ({
+              id: index + 1,
+              title: item.title,
+              content: item.content,
+              location: item.location_name || '',
+              latitude: item.latitude || 0,
+              longitude: item.longitude || 0,
+              category: typeof item.category === 'string' ? item.category : item.category?.name || '',
+              publishedAt: item.published_at || '',
+              source: typeof item.source === 'string' ? item.source : item.source?.name || '',
+              imageUrl: item.image_url,
+              externalUrl: item.external_url,
+            }))}
             locations={locations}
             selectedLocation={selectedLocation}
             selectedCategory={
