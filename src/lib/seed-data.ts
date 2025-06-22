@@ -1,4 +1,4 @@
-import { insertNews, insertLocation, updateLocationNewsCount } from './database';
+import { insertNews, insertLocation, updateLocationNewsCount, NewsItem } from './database';
 
 const sampleNews = [
   {
@@ -770,7 +770,7 @@ export function seedDatabase() {
     });
 
     sampleNews.forEach(news => {
-      insertNews(news);
+      insertNews(news as unknown as NewsItem);
     });
 
     locations.forEach(location => {
