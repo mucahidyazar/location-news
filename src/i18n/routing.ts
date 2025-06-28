@@ -9,13 +9,7 @@ export const routing = defineRouting({
   defaultLocale: 'tr',
   
   // Don't show locale prefix for default locale
-  localePrefix: 'as-needed',
-  
-  // Define pathnames for different locales
-  pathnames: {
-    '/': '/',
-    '/news': '/news'
-  }
+  localePrefix: 'as-needed'
 });
 
 // Lightweight wrappers around Next.js' navigation APIs that consider the routing configuration

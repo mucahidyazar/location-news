@@ -6,7 +6,6 @@ export interface NewsItem {
   content: string
   summary?: string | null
   published_at?: string
-  published_at?: string // Legacy support
   image_url?: string | null
   imageUrl?: string | null // Legacy support
   external_url?: string | null

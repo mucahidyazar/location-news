@@ -16,6 +16,19 @@
     "subtitle": "Knowledge is Power, Security is Right",
     "language": "Language"
   },
+  "settings": {
+    "title": "Settings",
+    "mapIcons": {
+      "title": "Map Icons",
+      "default": "Default Icons",
+      "defaultDesc": "Simple geometric shapes",
+      "custom": "Custom Icons",
+      "customDesc": "Detailed category icons"
+    },
+    "language": {
+      "title": "Language"
+    }
+  },
   "navigation": {
     "home": "Home",
     "news": "News",
@@ -31,7 +44,16 @@
     "source": "Source",
     "readFullArticle": "Read Full Article",
     "relatedNews": "Related News",
-    "newsCount": "{count} news"
+    "newsCount": "{count} news",
+    "searchPlaceholder": "Search...",
+    "allCities": "All Cities",
+    "allCategories": "All Categories",
+    "featured": "Featured",
+    "clearFilters": "Clear",
+    "newsFound": "{count} news found",
+    "noNewsFound": "No news found",
+    "changeSearchCriteria": "Try changing your search criteria.",
+    "copyrightText": "© 2024 LocationNews. All rights reserved."
   },
   "categories": {
     "theft_robbery": "Theft & Robbery",

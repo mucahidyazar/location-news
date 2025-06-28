@@ -16,6 +16,19 @@
     "subtitle": "Bilgi Güçtür, Güvenlik Haktır",
     "language": "Dil"
   },
+  "settings": {
+    "title": "Ayarlar",
+    "mapIcons": {
+      "title": "Harita İkonları",
+      "default": "Varsayılan İkonlar",
+      "defaultDesc": "Basit geometrik şekiller",
+      "custom": "Özel İkonlar",
+      "customDesc": "Detaylı kategori ikonları"
+    },
+    "language": {
+      "title": "Dil"
+    }
+  },
   "navigation": {
     "home": "Ana Sayfa",
     "news": "Haberler",
@@ -31,7 +44,16 @@
     "source": "Kaynak",
     "readFullArticle": "Haberin Tamamını Oku",
     "relatedNews": "İlgili Haberler",
-    "newsCount": "{count} haber"
+    "newsCount": "{count} haber",
+    "searchPlaceholder": "Ara...",
+    "allCities": "Tüm Şehirler",
+    "allCategories": "Tüm Kategoriler",
+    "featured": "Öne Çıkanlar",
+    "clearFilters": "Temizle",
+    "newsFound": "{count} haber bulundu",
+    "noNewsFound": "Haber bulunamadı",
+    "changeSearchCriteria": "Arama kriterlerinizi değiştirip tekrar deneyin.",
+    "copyrightText": "© 2024 LocationNews. Tüm hakları saklıdır."
   },
   "categories": {
     "theft_robbery": "Hırsızlık ve Gasp",
