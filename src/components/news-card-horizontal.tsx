@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, MapPin } from 'lucide-react';
 import { getCategoryKeyByName, getCategoryColorByKey } from '@/lib/category-colors';
-import { getSourceLogo } from '@/lib/news-sources';
+import { SourceLogo } from '@/lib/news-sources'
 import TwitterEmbed from './twitter-embed';
 
 interface NewsCardHorizontalProps {
@@ -14,7 +14,10 @@ interface NewsCardHorizontalProps {
 
 export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHorizontalProps) {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+    if (!dateString) return 'Tarih belirtilmemiş'
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'Geçersiz tarih'
+    return date.toLocaleDateString('tr-TR', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -31,20 +34,20 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
   const sourceName = typeof news.source === 'string' ? news.source : news.source?.name || ''
   const isTwitterSource = sourceName.toLowerCase().includes('twitter') || 
                          sourceName.startsWith('@') ||
-                         (news.externalUrl || news.external_url)?.includes('twitter.com');
+                         news.external_url?.includes('twitter.com');
 
   return (
     <Card className="mb-3 hover:shadow-lg transition-shadow">
       <CardContent className="p-3">
-        {isTwitterSource && news.externalUrl ? (
-          <TwitterEmbed url={news.externalUrl} className="mb-2" />
+        {isTwitterSource && news.external_url ? (
+          <TwitterEmbed url={news.external_url} className="mb-2" />
         ) : (
           <div className="flex gap-3">
             {/* Image */}
-            {news.imageUrl && (
+            {news.image_url && (
               <div className="flex-shrink-0">
                 <Image
-                  src={news.imageUrl}
+                  src={news.image_url}
                   alt={news.title}
                   width={100}
                   height={70}
@@ -59,19 +62,19 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
               <Badge variant="secondary" className={`${categoryStyle.badge} text-xs flex-shrink-0`}>
                 {typeof news.category === 'string' ? news.category : news.category?.name || ''}
               </Badge>
-              {news.externalUrl ? (
+              {news.external_url ? (
                 <a 
-                  href={news.externalUrl}
+                  href={news.external_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors truncate group"
                 >
-                  <span>{getSourceLogo(sourceName)}</span>
+                  <SourceLogo source={news.source} />
                   <span className="truncate group-hover:underline">{sourceName}</span>
                 </a>
               ) : (
                 <div className="flex items-center gap-1 text-xs text-gray-500 truncate">
-                  <span>{getSourceLogo(sourceName)}</span>
+                  <SourceLogo source={news.source} />
                   <span className="truncate">{sourceName}</span>
                 </div>
               )}
@@ -105,7 +108,7 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
               
               <div className="flex items-center gap-1 flex-shrink-0 ml-2">
                 <CalendarDays className="w-3 h-3" />
-                <span className="whitespace-nowrap">{formatDate(news.publishedAt || news.published_at || '')}</span>
+                <span className="whitespace-nowrap">{formatDate(news.published_at || '')}</span>
               </div>
             </div>
           </div>

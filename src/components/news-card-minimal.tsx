@@ -1,5 +1,5 @@
 import { NewsItem } from '@/lib/types';
-import { getSourceLogo } from '@/lib/news-sources';
+import { SourceLogo } from '@/lib/news-sources'
 
 interface NewsCardMinimalProps {
   news: NewsItem;
@@ -8,7 +8,10 @@ interface NewsCardMinimalProps {
 
 export default function NewsCardMinimal({ news }: NewsCardMinimalProps) {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+    if (!dateString) return 'Tarih belirtilmemiş'
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'Geçersiz tarih'
+    return date.toLocaleDateString('tr-TR', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
@@ -20,20 +23,20 @@ export default function NewsCardMinimal({ news }: NewsCardMinimalProps) {
   return (
     <div className="mb-2 p-2">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-xs text-gray-500">{formatDate(news.publishedAt || news.published_at || '')}</span>
-        {(news.externalUrl || news.external_url) ? (
+        <span className="text-xs text-gray-500">{formatDate(news.published_at || '')}</span>
+        {news.external_url ? (
           <a 
-            href={news.externalUrl || news.external_url || '#'}
+            href={news.external_url}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors group"
           >
-            <span>{getSourceLogo(typeof news.source === 'string' ? news.source : news.source?.name || '')}</span>
+            <SourceLogo source={news.source} />
             <span className="group-hover:underline">{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
           </a>
         ) : (
           <div className="flex items-center gap-1 text-xs text-gray-500">
-            <span>{getSourceLogo(typeof news.source === 'string' ? news.source : news.source?.name || '')}</span>
+            <SourceLogo source={news.source} />
             <span>{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
           </div>
         )}
