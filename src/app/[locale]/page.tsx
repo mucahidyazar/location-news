@@ -14,17 +14,9 @@ import {
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
-import {
-  Newspaper,
-  Search,
-  X,
-  Globe,
-  Tv,
-  Building,
-} from 'lucide-react'
+import {Newspaper, Search, X, Globe, Tv, Building} from 'lucide-react'
 import SmartDatePicker from '@/components/smart-date-picker'
 import {useTranslations} from 'next-intl'
-
 
 export default function HomePage() {
   const t = useTranslations()
@@ -62,7 +54,9 @@ export default function HomePage() {
     let filtered = news
 
     if (selectedLocation) {
-      filtered = filtered.filter(item => item.location_name === selectedLocation)
+      filtered = filtered.filter(
+        item => item.location_name === selectedLocation,
+      )
     }
 
     if (
@@ -70,12 +64,22 @@ export default function HomePage() {
       selectedCategories.length > 0
     ) {
       filtered = filtered.filter(item =>
-        selectedCategories.includes(typeof item.category === 'string' ? item.category : item.category?.name || ''),
+        selectedCategories.includes(
+          typeof item.category === 'string'
+            ? item.category
+            : item.category?.name || '',
+        ),
       )
     }
 
     if (selectedSources.length > 0) {
-      filtered = filtered.filter(item => selectedSources.includes(typeof item.source === 'string' ? item.source : item.source?.name || ''))
+      filtered = filtered.filter(item =>
+        selectedSources.includes(
+          typeof item.source === 'string'
+            ? item.source
+            : item.source?.name || '',
+        ),
+      )
     }
 
     if (searchTerm) {
@@ -88,13 +92,17 @@ export default function HomePage() {
 
     if (dateRange.start) {
       filtered = filtered.filter(
-        item => item.published_at && new Date(item.published_at) >= new Date(dateRange.start!),
+        item =>
+          item.published_at &&
+          new Date(item.published_at) >= new Date(dateRange.start!),
       )
     }
 
     if (dateRange.end) {
       filtered = filtered.filter(
-        item => item.published_at && new Date(item.published_at) <= new Date(dateRange.end!),
+        item =>
+          item.published_at &&
+          new Date(item.published_at) <= new Date(dateRange.end!),
       )
     }
 
@@ -111,16 +119,23 @@ export default function HomePage() {
 
   // Get unique sources from news, sorted by news count (descending)
   const sourceCount = news.reduce((acc, item) => {
-    const sourceName = typeof item.source === 'string' ? item.source : item.source?.name || ''
+    const sourceName =
+      typeof item.source === 'string' ? item.source : item.source?.name || ''
     acc[sourceName] = (acc[sourceName] || 0) + 1
     return acc
   }, {} as Record<string, number>)
 
-  const uniqueSources = Array.from(new Set(news.map(item => 
-    typeof item.source === 'string' ? item.source : item.source?.name || ''
-  ).filter(Boolean))).sort(
-    (a, b) => (sourceCount[b] || 0) - (sourceCount[a] || 0),
-  )
+  const uniqueSources = Array.from(
+    new Set(
+      news
+        .map(item =>
+          typeof item.source === 'string'
+            ? item.source
+            : item.source?.name || '',
+        )
+        .filter(Boolean),
+    ),
+  ).sort((a, b) => (sourceCount[b] || 0) - (sourceCount[a] || 0))
 
   const getSourceIcon = (source: string) => {
     if (source.toLowerCase().includes('haber')) return Newspaper
@@ -147,7 +162,6 @@ export default function HomePage() {
 
       const newsData = await newsResponse.json()
       const locationsData = await locationsResponse.json()
-
 
       const transformedLocations: Location[] = locationsData.map(
         (
@@ -339,7 +353,12 @@ export default function HomePage() {
                 const categoryNewsCount =
                   category === t('filters.all')
                     ? news.length
-                    : news.filter(item => (typeof item.category === 'string' ? item.category : item.category?.name) === category).length
+                    : news.filter(
+                        item =>
+                          (typeof item.category === 'string'
+                            ? item.category
+                            : item.category?.name) === category,
+                      ).length
 
                 return (
                   <Badge
@@ -372,19 +391,24 @@ export default function HomePage() {
           <div className="flex-1">
             <InteractiveMap
               locations={locations}
-              filteredNews={filteredNews.map((item: NewsItem, index: number) => ({
-                id: index + 1,
-                title: item.title,
-                content: item.content,
-                location: item.location_name || '',
-                latitude: item.latitude || 0,
-                longitude: item.longitude || 0,
-                category: typeof item.category === 'string' ? item.category : item.category?.name || '',
-                publishedAt: item.published_at || '',
-                source: typeof item.source === 'string' ? item.source : item.source?.name || '',
-                imageUrl: item.image_url,
-                externalUrl: item.external_url,
-              }))}
+              filteredNews={filteredNews.map(
+                (item: NewsItem, index: number) => ({
+                  id: index + 1,
+                  title: item.title,
+                  content: item.content,
+                  location: item.location_name || '',
+                  latitude: item.latitude || 0,
+                  longitude: item.longitude || 0,
+                  category:
+                    typeof item.category === 'string'
+                      ? item.category
+                      : item.category?.name || '',
+                  published_at: item.published_at || '',
+                  source: item.source,
+                  imageUrl: item.image_url,
+                  externalUrl: item.external_url,
+                }),
+              )}
               selectedLocation={selectedLocation}
               selectedCategory={
                 selectedCategories.includes(t('filters.all'))
@@ -409,12 +433,15 @@ export default function HomePage() {
               id: index + 1,
               title: item.title,
               content: item.content,
-              location: item.location_name || '',
+              location_name: item.location_name || '',
               latitude: item.latitude || 0,
               longitude: item.longitude || 0,
-              category: typeof item.category === 'string' ? item.category : item.category?.name || '',
-              publishedAt: item.published_at || '',
-              source: typeof item.source === 'string' ? item.source : item.source?.name || '',
+              category:
+                typeof item.category === 'string'
+                  ? item.category
+                  : item.category?.name || '',
+              published_at: item.published_at || '',
+              source: item.source,
               imageUrl: item.image_url,
               externalUrl: item.external_url,
             }))}

@@ -6,7 +6,7 @@ export interface NewsItem {
   content: string
   summary?: string | null
   published_at?: string
-  publishedAt?: string // Legacy support
+  published_at?: string // Legacy support
   image_url?: string | null
   imageUrl?: string | null // Legacy support
   external_url?: string | null
@@ -25,6 +25,7 @@ export interface NewsItem {
   source?: {
     id?: string
     name: string
+    logo_url?: string | null
   } | string | null // Support both new object format and legacy string format
 }
 
@@ -37,7 +38,7 @@ export interface LegacyNewsItem {
   latitude: number
   longitude: number
   category: string
-  publishedAt: string
+  published_at: string
   source: string
   imageUrl?: string | null
   externalUrl?: string | null
