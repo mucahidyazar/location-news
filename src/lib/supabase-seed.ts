@@ -1,10 +1,8 @@
 import { supabaseAdmin } from './supabase'
 import { 
-  createLocation, 
   createNews, 
   getCategoryByName, 
-  getSourceByName,
-  getLocationByName
+  getSourceByName
 } from './supabase-helpers'
 import type { NewsInsert } from './database.types'
 import turkishNewsData from '../data/turkish-news-data.json'
@@ -48,18 +46,14 @@ export async function seedSupabaseDatabase() {
       }
     }
 
-    // 3. Seed locations
-    console.log('🌍 Seeding locations...')
+    // 3. Skip location seeding - locations are now embedded in news records
+    console.log('🌍 Skipping location seeding (locations are embedded in news records)...')
     const locationIds: Record<string, string> = {}
     
+    // Create virtual location mapping for compatibility
     for (const location of sampleLocations) {
-      try {
-        const createdLocation = await createLocation(location)
-        locationIds[location.name] = createdLocation.id
-        console.log(`✅ Seeded location: ${location.name}`)
-      } catch (error) {
-        console.error(`Error seeding location ${location.name}:`, error)
-      }
+      locationIds[location.name] = location.name
+      console.log(`✅ Registered location: ${location.name}`)
     }
 
     // 4. Seed Turkish news
@@ -68,9 +62,9 @@ export async function seedSupabaseDatabase() {
     
     for (const newsData of turkishNews) {
       try {
-        // Get location ID
-        const location = await getLocationByName(newsData.location)
-        if (!location) {
+        // Find location data from sample locations
+        const locationData = sampleLocations.find(loc => loc.name === newsData.location)
+        if (!locationData) {
           console.warn(`⚠️ Location not found: ${newsData.location}`)
           continue
         }
@@ -86,9 +80,9 @@ export async function seedSupabaseDatabase() {
           title: newsData.title,
           content: newsData.content,
           summary: newsData.summary,
-          location_name: location.name,
-          latitude: location.latitude,
-          longitude: location.longitude,
+          location_name: locationData.name,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
           category_id: category?.id,
           source_id: source?.id,
           published_at: publishedDate.toISOString(),

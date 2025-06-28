@@ -17,16 +17,8 @@ export async function POST() {
       throw newsError;
     }
     
-    // Clear locations (news should cascade delete if properly configured)
-    const { error: locationsError } = await supabaseAdmin
-      .from('locations')
-      .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
-    
-    if (locationsError) {
-      console.error('Error clearing locations:', locationsError);
-      throw locationsError;
-    }
+    // Skip clearing locations table - it no longer exists (locations are embedded in news)
+    console.log('⏭️ Skipping locations table clearing (table no longer exists)');
     
     // Clear sources
     const { error: sourcesError } = await supabaseAdmin

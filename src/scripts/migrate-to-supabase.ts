@@ -38,14 +38,14 @@ interface SQLiteNews {
   latitude: number
   longitude: number
   category: string
-  publishedAt: string
+  published_at: string
   source: string
   imageUrl?: string
 }
 
 async function migrateCategories() {
   console.log('🏷️ Migrating categories...')
-  
+
   // Get unique categories from SQLite
   const categories = sqliteDb.prepare(`
     SELECT DISTINCT category FROM news WHERE category IS NOT NULL
@@ -54,7 +54,7 @@ async function migrateCategories() {
   // Default category colors
   const categoryColors: Record<string, string> = {
     'Politics': '#EF4444',
-    'Business': '#10B981', 
+    'Business': '#10B981',
     'Technology': '#3B82F6',
     'Health': '#F59E0B',
     'Sports': '#8B5CF6',
@@ -83,7 +83,7 @@ async function migrateCategories() {
 
 async function migrateSources() {
   console.log('📡 Migrating sources...')
-  
+
   // Get unique sources from SQLite
   const sources = sqliteDb.prepare(`
     SELECT DISTINCT source FROM news WHERE source IS NOT NULL
@@ -107,7 +107,7 @@ async function migrateSources() {
 
 async function migrateLocations() {
   console.log('🌍 Migrating locations...')
-  
+
   const locations = sqliteDb.prepare(`
     SELECT * FROM locations
   `).all() as SQLiteLocation[]
@@ -132,7 +132,7 @@ async function migrateLocations() {
 
 async function migrateNews() {
   console.log('📰 Migrating news...')
-  
+
   const news = sqliteDb.prepare(`
     SELECT * FROM news
   `).all() as SQLiteNews[]
@@ -180,7 +180,7 @@ async function migrateNews() {
           category_id: categoryId,
           source_id: sourceId,
           image_url: newsItem.imageUrl,
-          published_at: newsItem.publishedAt
+          published_at: newsItem.published_at
         })
 
       if (error) {
@@ -204,7 +204,7 @@ async function migrateNews() {
 async function main() {
   try {
     console.log('🚀 Starting migration from SQLite to Supabase...')
-    
+
     // Check if SQLite database exists
     try {
       sqliteDb.prepare('SELECT 1').get()
@@ -229,10 +229,10 @@ async function main() {
     await migrateNews()
 
     console.log('🎉 Migration completed successfully!')
-    
+
     // Cleanup
     sqliteDb.close()
-    
+
   } catch (error) {
     console.error('❌ Migration failed:', error)
     process.exit(1)

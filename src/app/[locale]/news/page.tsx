@@ -18,7 +18,7 @@ interface NewsItem {
   is_featured: boolean
   view_count: number
   image_url: string | null
-  externalUrl: string | null
+  external_url: string | null
   location: {
     id: string
     name: string
@@ -305,9 +305,9 @@ export default function NewsPage() {
                 {/* Source */}
                 {item.source && (
                   <div className="text-xs text-gray-400">
-                    {t('news.source')}: {item.externalUrl ? (
+                    {t('news.source')}: {item.external_url ? (
                       <a 
-                        href={item.externalUrl}
+                        href={item.external_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-500 hover:text-blue-600 hover:underline transition-colors"
@@ -321,10 +321,10 @@ export default function NewsPage() {
                 )}
 
                 {/* Read More */}
-                {item.externalUrl && (
+                {item.external_url && (
                   <div className="mt-4">
                     <a
-                      href={item.externalUrl}
+                      href={item.external_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"

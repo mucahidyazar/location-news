@@ -59,34 +59,52 @@ export async function getLocations(): Promise<LocationWithStats[]> {
 }
 
 export async function getLocationByName(name: string): Promise<Location | null> {
+  // Get location data from news table since locations table no longer exists
   const { data, error } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('name', name)
+    .from('news')
+    .select('location_name, latitude, longitude')
+    .eq('location_name', name)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+    .limit(1)
     .single()
 
   if (error) {
     if (error.code === 'PGRST116') return null // Not found
-    console.error('Error fetching location:', error)
+    console.error('Error fetching location from news:', error)
     throw error
   }
 
-  return data
+  // Convert to Location format
+  return {
+    id: data.location_name || '',
+    name: data.location_name || '',
+    latitude: data.latitude || 0,
+    longitude: data.longitude || 0,
+    country: null,
+    region: null,
+    news_count: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as Location
 }
 
 export async function createLocation(location: LocationInsert): Promise<Location> {
-  const { data, error } = await supabaseAdmin
-    .from('locations')
-    .insert(location)
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Error creating location:', error)
-    throw error
+  // Locations are now embedded in news records, so we don't create separate location records
+  // This function now returns a virtual location object for compatibility
+  const virtualLocation: Location = {
+    id: location.name,
+    name: location.name,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    country: location.country || null,
+    region: location.region || null,
+    news_count: location.news_count || 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   }
 
-  return data
+  return virtualLocation
 }
 
 // =============================================
