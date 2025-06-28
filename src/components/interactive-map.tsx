@@ -9,6 +9,7 @@ import {
   getCategoryIcon,
 } from '@/lib/category-colors'
 import {useTranslations} from 'next-intl'
+import {useMainLayout} from '@/contexts/main-layout-context'
 
 const MapContainer = dynamic(
   () => import('react-leaflet').then(mod => mod.MapContainer),
@@ -36,7 +37,6 @@ interface InteractiveMapProps {
   selectedCategory?: string
   onLocationSelect: (location: string) => void
   useCustomIcons: boolean
-  onToggleIcons: () => void
 }
 
 export default function InteractiveMap({
@@ -46,9 +46,12 @@ export default function InteractiveMap({
   useCustomIcons,
 }: InteractiveMapProps) {
   const t = useTranslations()
+  const {isSidebarOpen, isSettingsSidebarOpen} = useMainLayout()
   const [isClient, setIsClient] = useState(false)
   const [L, setL] = useState<typeof import('leaflet') | null>(null)
   const [leafletReady, setLeafletReady] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [mapInstance, setMapInstance] = useState<any>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -63,6 +66,39 @@ export default function InteractiveMap({
         console.error('Failed to load Leaflet:', error)
       })
   }, [])
+
+  // Handle sidebar state changes to resize map
+  useEffect(() => {
+    if (mapInstance && leafletReady) {
+      const timer = setTimeout(() => {
+        try {
+          mapInstance.invalidateSize()
+          console.log('Map size invalidated due to sidebar change')
+        } catch (error) {
+          console.error('Error invalidating map size:', error)
+        }
+      }, 550) // Match the CSS transition duration (500ms) + small buffer
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isSidebarOpen, isSettingsSidebarOpen, mapInstance, leafletReady])
+
+  // Handle window resize events
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapInstance && leafletReady) {
+        try {
+          mapInstance.invalidateSize()
+          console.log('Map size invalidated due to window resize')
+        } catch (error) {
+          console.error('Error invalidating map size on resize:', error)
+        }
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [mapInstance, leafletReady])
 
   const getCategoryIconName = (categoryName: string): string => {
     // Get the key for this category name, then get the icon from the key-based system
@@ -231,12 +267,18 @@ export default function InteractiveMap({
   }
 
   return (
-    <div className="h-full rounded-lg overflow-hidden relative">
+    <div className="h-full rounded-lg overflow-hidden relative transition-all duration-500 ease-out">
       <MapContainer
         center={[39.9334, 32.8597]}
         zoom={6}
         className="h-full w-full"
+        style={{zIndex: 1}}
         zoomControl={false}
+        ref={(map) => {
+          if (map && !mapInstance) {
+            setMapInstance(map)
+          }
+        }}
       >
         <ZoomControl position="bottomright" />
         <TileLayer
