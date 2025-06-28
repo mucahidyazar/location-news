@@ -4,20 +4,42 @@ import {Badge} from '@/components/ui/badge'
 import {CalendarDays, MapPin} from 'lucide-react'
 import {NewsCardProps} from '@/lib/types'
 import {SourceLogo} from '@/lib/news-sources'
+import {
+  getCategoryKeyByName,
+  getCategoryColorByKey,
+} from '@/lib/category-colors'
+import {useTranslations, useLocale} from 'next-intl'
 import TwitterEmbed from './twitter-embed'
 
 export default function NewsCard({news, onLocationClick}: NewsCardProps) {
+  const t = useTranslations()
+  const locale = useLocale()
+  
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'Tarih belirtilmemiş'
+    if (!dateString) return t('common.loading')
     const date = new Date(dateString)
-    if (isNaN(date.getTime())) return 'Geçersiz tarih'
-    return date.toLocaleDateString('tr-TR', {
+    if (isNaN(date.getTime())) return t('common.error')
+    return date.toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
     })
+  }
+
+  // Use key-based system for better multilingual support
+  const rawCategoryName = typeof news.category === 'string'
+    ? news.category
+    : news.category?.name || ''
+  const categoryKey = getCategoryKeyByName(rawCategoryName)
+  const categoryStyle = getCategoryColorByKey(categoryKey)
+  
+  // Get translated category name
+  const getTranslatedCategoryName = (categoryName: string) => {
+    if (!categoryName) return ''
+    const key = getCategoryKeyByName(categoryName)
+    return t(`categories.${key}`)
   }
 
   // Check if source is Twitter
@@ -34,18 +56,10 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
         <div className="flex justify-between items-start mb-2">
           {news.category && (
             <Badge
-              style={{
-                backgroundColor:
-                  typeof news.category === 'string'
-                    ? '#6b7280'
-                    : news.category.color,
-                color: 'white',
-              }}
-              className="text-xs"
+              variant="secondary"
+              className={`${categoryStyle.badge} text-xs`}
             >
-              {typeof news.category === 'string'
-                ? news.category
-                : news.category.name}
+              {getTranslatedCategoryName(rawCategoryName)}
             </Badge>
           )}
           {news.external_url ? (
