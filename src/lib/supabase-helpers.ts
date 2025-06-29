@@ -117,6 +117,8 @@ export async function getNews(params: {
   limit?: number
   offset?: number
   featured?: boolean
+  startDate?: string
+  endDate?: string
 }): Promise<NewsWithRelations[]> {
   let query = supabase
     .from('news')
@@ -125,7 +127,7 @@ export async function getNews(params: {
       category:news_categories(*),
       source:news_sources(*)
     `)
-    .order('published_at', { ascending: false })
+    .order('created_at', { ascending: false })
 
   if (params.location) {
     query = query.eq('location_name', params.location)
@@ -137,6 +139,14 @@ export async function getNews(params: {
 
   if (params.featured) {
     query = query.eq('is_featured', true)
+  }
+
+  if (params.startDate) {
+    query = query.gte('created_at', params.startDate)
+  }
+
+  if (params.endDate) {
+    query = query.lte('created_at', params.endDate)
   }
 
   if (params.limit) {
@@ -318,7 +328,7 @@ export async function searchNews(
       config: 'english'
     })
     .limit(limit)
-    .order('published_at', { ascending: false })
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('Error searching news:', error)

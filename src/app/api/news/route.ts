@@ -7,9 +7,10 @@ export async function GET(request: NextRequest) {
     const location = searchParams.get('location');
     const category = searchParams.get('category');
     const search = searchParams.get('search');
-    const featured = searchParams.get('featured') === 'true';
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
+    const startDate = searchParams.get('start_date');
+    const endDate = searchParams.get('end_date');
 
     let news;
 
@@ -21,7 +22,8 @@ export async function GET(request: NextRequest) {
       news = await getNews({
         location: location || undefined,
         category: category || undefined,
-        featured: featured || undefined,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
         limit,
         offset
       });
