@@ -193,3 +193,6 @@ static/uploads/
 
 # Analytics and monitoring
 .lighthouseci/
+
+# n8n workflow files
+n8n/
