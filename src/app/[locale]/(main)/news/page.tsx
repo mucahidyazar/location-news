@@ -3,89 +3,109 @@
 import {useState, useEffect} from 'react'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
-import {Newspaper, Search, X, Star} from 'lucide-react'
+import {Newspaper, Search, X} from 'lucide-react'
 import NewsCard from '@/components/news-card'
-import {NewsItem, Location, Category} from '@/lib/types'
+import {NewsItem, Category} from '@/lib/types'
 import {useTranslations} from 'next-intl'
 
 export default function NewsPage() {
   const t = useTranslations()
   const [news, setNews] = useState<NewsItem[]>([])
-  const [locations, setLocations] = useState<Location[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [weeksLoaded, setWeeksLoaded] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState<string>('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [featuredOnly, setFeaturedOnly] = useState(false)
 
   useEffect(() => {
     loadData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    setWeeksLoaded(1)
+    setNews([])
+    setHasMore(true)
+    loadData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, selectedCategory])
 
   useEffect(() => {
     filterNews()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [news, searchTerm, selectedLocation, selectedCategory, featuredOnly])
+  }, [news])
 
-  const loadData = async () => {
+  const loadData = async (loadMore = false) => {
     try {
-      const [newsRes, locationsRes, categoriesRes] = await Promise.all([
-        fetch('/api/news'),
-        fetch('/api/locations'),
-        fetch('/api/categories'),
-      ])
+      if (loadMore) {
+        setLoadingMore(true)
+      } else {
+        setLoading(true)
+      }
 
-      const newsData = await newsRes.json()
-      const locationsData = await locationsRes.json()
-      const categoriesData = await categoriesRes.json()
+      const currentWeeks = loadMore ? weeksLoaded + 1 : 1
+      
+      // Calculate date range for the current weeks
+      const endDate = new Date()
+      const startDate = new Date()
+      startDate.setDate(endDate.getDate() - (currentWeeks * 7))
+      
+      const params = new URLSearchParams({
+        limit: '500',
+        offset: '0',
+        start_date: startDate.toISOString().split('T')[0],
+        end_date: endDate.toISOString().split('T')[0],
+      })
 
-      setNews(newsData)
-      setLocations(locationsData)
-      setCategories(categoriesData)
+      if (searchTerm) params.append('search', searchTerm)
+      if (selectedCategory) params.append('category', selectedCategory)
+
+      const promises = [
+        fetch(`/api/news?${params.toString()}`),
+      ]
+
+      if (!loadMore) {
+        promises.push(
+          fetch('/api/categories')
+        )
+      }
+
+      const responses = await Promise.all(promises)
+      const newsData = await responses[0].json()
+
+      if (loadMore) {
+        setNews(newsData) // Replace all data with extended date range
+        setWeeksLoaded(currentWeeks)
+      } else {
+        setNews(newsData)
+        setWeeksLoaded(1)
+        
+        if (responses.length > 1) {
+          const categoriesData = await responses[1].json()
+          setCategories(categoriesData)
+        }
+      }
+
+      // Check if we can load more weeks
+      setHasMore(currentWeeks < 12) // Limit to 12 weeks
     } catch (error) {
       console.error('Error loading data:', error)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }
 
   const filterNews = () => {
-    let filtered = news
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        item =>
-          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.content.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
-
-    if (selectedLocation) {
-      filtered = filtered.filter(
-        item => (typeof item.location === 'string' ? item.location : item.location?.name) === selectedLocation,
-      )
-    }
-
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        item => (typeof item.category === 'string' ? item.category : item.category?.name) === selectedCategory,
-      )
-    }
-
-    if (featuredOnly) {
-      filtered = filtered.filter(item => item.is_featured)
-    }
-
-    setFilteredNews(filtered)
+    setFilteredNews(news)
   }
 
   const clearFilters = () => {
     setSearchTerm('')
-    setSelectedLocation('')
     setSelectedCategory('')
-    setFeaturedOnly(false)
   }
 
   if (loading) {
@@ -109,26 +129,13 @@ export default function NewsPage() {
             <div className="relative flex-1 min-w-[300px]">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder={t('news.searchPlaceholder')}
+                placeholder="Search city, news title, or any keyword"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
 
-            {/* Location Filter */}
-            <select
-              value={selectedLocation}
-              onChange={e => setSelectedLocation(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="">{t('news.allCities')}</option>
-              {locations.map(location => (
-                <option key={location.id} value={location.name}>
-                  {location.name} ({location.news_count})
-                </option>
-              ))}
-            </select>
 
             {/* Category Filter */}
             <select
@@ -144,22 +151,10 @@ export default function NewsPage() {
               ))}
             </select>
 
-            {/* Featured Toggle */}
-            <Button
-              variant={featuredOnly ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setFeaturedOnly(!featuredOnly)}
-              className="flex items-center gap-2"
-            >
-              <Star className="w-4 h-4" />
-              {t('news.featured')}
-            </Button>
 
             {/* Clear Filters */}
             {(searchTerm ||
-              selectedLocation ||
-              selectedCategory ||
-              featuredOnly) && (
+              selectedCategory) && (
               <Button variant="ghost" size="sm" onClick={clearFilters}>
                 <X className="w-4 h-4 mr-1" />
                 {t('news.clearFilters')}
@@ -171,17 +166,37 @@ export default function NewsPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredNews.map(item => (
             <NewsCard 
               key={item.id} 
               news={item}
-              onLocationClick={(location) => setSelectedLocation(location)}
+              onLocationClick={() => {}}
             />
           ))}
         </div>
 
-        {filteredNews.length === 0 && (
+        {/* Load More Button */}
+        {hasMore && filteredNews.length > 0 && (
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={() => loadData(true)}
+              disabled={loadingMore}
+              className="px-8 py-2"
+            >
+              {loadingMore ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  {t('common.loading')}
+                </>
+              ) : (
+                t('news.loadMore')
+              )}
+            </Button>
+          </div>
+        )}
+
+        {filteredNews.length === 0 && !loading && (
           <div className="text-center py-12">
             <Newspaper className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-4 text-lg font-medium text-gray-900">

@@ -46,14 +46,13 @@
     "relatedNews": "İlgili Haberler",
     "newsCount": "{count} haber",
     "searchPlaceholder": "Ara...",
-    "allCities": "Tüm Şehirler",
     "allCategories": "Tüm Kategoriler",
-    "featured": "Öne Çıkanlar",
     "clearFilters": "Temizle",
     "newsFound": "{count} haber bulundu",
     "noNewsFound": "Haber bulunamadı",
     "changeSearchCriteria": "Arama kriterlerinizi değiştirip tekrar deneyin.",
-    "copyrightText": "© 2024 LocationNews. Tüm hakları saklıdır."
+    "copyrightText": "© 2024 LocationNews. Tüm hakları saklıdır.",
+    "loadMore": "Daha Fazla Yükle"
   },
   "categories": {
     "theft_robbery": "Hırsızlık ve Gasp",

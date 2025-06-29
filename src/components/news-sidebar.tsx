@@ -6,7 +6,8 @@ import NewsCard from './news-card'
 import NewsCardHorizontal from './news-card-horizontal'
 import NewsCardMinimal from './news-card-minimal'
 import {X, Grid3X3, LayoutList, AlignLeft, Newspaper} from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import {Button} from '@/components/ui/button'
+import {useTranslations} from 'next-intl'
 
 interface NewsSidebarProps {
   news: NewsItem[]
@@ -23,6 +24,9 @@ interface NewsSidebarProps {
   onViewTypeChange: (viewType: 'card' | 'horizontal' | 'minimal') => void
   onClearFilter?: () => void
   onClose?: () => void
+  onLoadMore?: () => void
+  hasMore?: boolean
+  loadingMore?: boolean
 }
 
 export default function NewsSidebar({
@@ -32,10 +36,15 @@ export default function NewsSidebar({
   onLocationSelect,
   onViewTypeChange,
   onClose,
+  onLoadMore,
+  hasMore = false,
+  loadingMore = false,
 }: NewsSidebarProps) {
-  const t = useTranslations();
+  const t = useTranslations()
   const sourceCount = news.reduce((acc, item) => {
-    const sourceName = typeof item.source === 'string' ? item.source : item.source?.name || ''
+    console.log('x1 item', item)
+    const sourceName =
+      typeof item.source === 'string' ? item.source : item.source?.name || ''
     if (sourceName) {
       acc[sourceName] = (acc[sourceName] || 0) + 1
     }
@@ -47,8 +56,10 @@ export default function NewsSidebar({
     .map(([source]) => source)
 
   const sortedNews = [...news].sort((a, b) => {
-    const aSourceName = typeof a.source === 'string' ? a.source : a.source?.name || ''
-    const bSourceName = typeof b.source === 'string' ? b.source : b.source?.name || ''
+    const aSourceName =
+      typeof a.source === 'string' ? a.source : a.source?.name || ''
+    const bSourceName =
+      typeof b.source === 'string' ? b.source : b.source?.name || ''
     const aIndex = sortedSources.indexOf(aSourceName)
     const bIndex = sortedSources.indexOf(bSourceName)
     return aIndex - bIndex
@@ -67,7 +78,8 @@ export default function NewsSidebar({
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm text-gray-600">
-              {t('news.newsCount', { count: news.length })} • {t('locations.locationCount', { count: locations.length })}
+              {t('news.newsCount', {count: news.length})} •{' '}
+              {t('locations.locationCount', {count: locations.length})}
             </div>
             {onClose && (
               <button
@@ -161,6 +173,27 @@ export default function NewsSidebar({
                   )
                 }
               })}
+            </div>
+          )}
+
+          {/* Load More Button */}
+          {hasMore && filteredNews.length > 0 && onLoadMore && (
+            <div className="flex justify-center mt-6">
+              <Button
+                onClick={onLoadMore}
+                disabled={loadingMore}
+                className="px-6 py-2"
+                variant="outline"
+              >
+                {loadingMore ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                    {t('common.loading')}
+                  </>
+                ) : (
+                  t('news.loadMore')
+                )}
+              </Button>
             </div>
           )}
         </div>
