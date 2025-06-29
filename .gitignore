@@ -136,6 +136,11 @@ Thumbs.db
 *.db.backup
 database-export/
 
+# Migration and temporary SQL files
+migration-*.sql
+temp-*.sql
+*-migration.sql
+
 # Local environment configuration
 .env
 .env.local

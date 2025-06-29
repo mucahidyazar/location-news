@@ -11,13 +11,13 @@ database for the mappy.news application.
 
 1. Open your Supabase Dashboard
 2. Go to **SQL Editor**
-3. Copy and paste the contents of `supabase-schema.sql`
+3. Copy and paste the contents of `sql/schema.sql`
 4. Click **Run** to create all tables, indexes, and functions
 
 ### 2. Apply Security Policies
 
 1. In the same SQL Editor
-2. Copy and paste the contents of `supabase-rls-policies.sql`
+2. Copy and paste the contents of `sql/rls-policies.sql`
 3. Click **Run** to enable Row Level Security and policies
 
 ### 3. Verify Installation
