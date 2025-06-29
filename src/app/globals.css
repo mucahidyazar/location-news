@@ -41,6 +41,57 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Theme System Colors */
+  --color-theme-primary-50: var(--theme-primary-50);
+  --color-theme-primary-100: var(--theme-primary-100);
+  --color-theme-primary-200: var(--theme-primary-200);
+  --color-theme-primary-300: var(--theme-primary-300);
+  --color-theme-primary-400: var(--theme-primary-400);
+  --color-theme-primary-500: var(--theme-primary-500);
+  --color-theme-primary-600: var(--theme-primary-600);
+  --color-theme-primary-700: var(--theme-primary-700);
+  --color-theme-primary-800: var(--theme-primary-800);
+  --color-theme-primary-900: var(--theme-primary-900);
+  --color-theme-primary-950: var(--theme-primary-950);
+
+  --color-theme-secondary-50: var(--theme-secondary-50);
+  --color-theme-secondary-100: var(--theme-secondary-100);
+  --color-theme-secondary-200: var(--theme-secondary-200);
+  --color-theme-secondary-300: var(--theme-secondary-300);
+  --color-theme-secondary-400: var(--theme-secondary-400);
+  --color-theme-secondary-500: var(--theme-secondary-500);
+  --color-theme-secondary-600: var(--theme-secondary-600);
+  --color-theme-secondary-700: var(--theme-secondary-700);
+  --color-theme-secondary-800: var(--theme-secondary-800);
+  --color-theme-secondary-900: var(--theme-secondary-900);
+  --color-theme-secondary-950: var(--theme-secondary-950);
+
+  --color-theme-bg-primary: var(--theme-bg-primary);
+  --color-theme-bg-secondary: var(--theme-bg-secondary);
+  --color-theme-bg-tertiary: var(--theme-bg-tertiary);
+  --color-theme-bg-overlay: var(--theme-bg-overlay);
+
+  --color-theme-surface-primary: var(--theme-surface-primary);
+  --color-theme-surface-secondary: var(--theme-surface-secondary);
+  --color-theme-surface-tertiary: var(--theme-surface-tertiary);
+  --color-theme-surface-elevated: var(--theme-surface-elevated);
+
+  --color-theme-text-primary: var(--theme-text-primary);
+  --color-theme-text-secondary: var(--theme-text-secondary);
+  --color-theme-text-tertiary: var(--theme-text-tertiary);
+  --color-theme-text-inverse: var(--theme-text-inverse);
+
+  --color-theme-border-primary: var(--theme-border-primary);
+  --color-theme-border-secondary: var(--theme-border-secondary);
+  --color-theme-border-focus: var(--theme-border-focus);
+  --color-theme-border-error: var(--theme-border-error);
+  --color-theme-border-success: var(--theme-border-success);
+
+  --color-theme-state-error: var(--theme-state-error);
+  --color-theme-state-warning: var(--theme-state-warning);
+  --color-theme-state-success: var(--theme-state-success);
+  --color-theme-state-info: var(--theme-state-info);
 }
 
 :root {
@@ -60,8 +111,8 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: var(--color-theme-border-primary);
+  --input: var(--color-theme-border-primary);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -140,32 +191,32 @@
 /* Date picker range selection styles */
 .rdp-range_start,
 .rdp-range_end {
-  background-color: #3b82f6 !important;
-  color: white !important;
+  background-color: var(--color-theme-primary-500) !important;
+  color: var(--color-theme-text-inverse) !important;
 }
 
 .rdp-range_start:hover,
 .rdp-range_end:hover {
-  background-color: #2563eb !important;
+  background-color: var(--color-theme-primary-600) !important;
 }
 
 .rdp-range_middle {
-  background-color: #dbeafe !important;
-  color: #1e40af !important;
+  background-color: var(--color-theme-primary-100) !important;
+  color: var(--color-theme-primary-800) !important;
 }
 
 .rdp-range_middle:hover {
-  background-color: #bfdbfe !important;
+  background-color: var(--color-theme-primary-200) !important;
 }
 
 .rdp-selected {
-  background-color: #3b82f6 !important;
-  color: white !important;
+  background-color: var(--color-theme-primary-500) !important;
+  color: var(--color-theme-text-inverse) !important;
 }
 
 .rdp-today {
-  background-color: #eff6ff !important;
-  color: #1e40af !important;
+  background-color: var(--color-theme-primary-50) !important;
+  color: var(--color-theme-primary-800) !important;
   font-weight: 600 !important;
 }
 
