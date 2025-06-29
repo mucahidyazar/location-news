@@ -57,7 +57,7 @@ export interface NewsItem {
   published_at: string;
   source: string;
   imageUrl?: string;
-  externalUrl?: string;
+  external_url?: string;
 }
 
 export interface Location {

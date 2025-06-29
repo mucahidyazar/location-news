@@ -14,7 +14,7 @@ import TwitterEmbed from './twitter-embed'
 export default function NewsCard({news, onLocationClick}: NewsCardProps) {
   const t = useTranslations()
   const locale = useLocale()
-  
+
   const formatDate = (dateString: string) => {
     if (!dateString) return t('common.loading')
     const date = new Date(dateString)
@@ -29,12 +29,13 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
   }
 
   // Use key-based system for better multilingual support
-  const rawCategoryName = typeof news.category === 'string'
-    ? news.category
-    : news.category?.name || ''
+  const rawCategoryName =
+    typeof news.category === 'string'
+      ? news.category
+      : news.category?.name || ''
   const categoryKey = getCategoryKeyByName(rawCategoryName)
   const categoryStyle = getCategoryColorByKey(categoryKey)
-  
+
   // Get translated category name
   const getTranslatedCategoryName = (categoryName: string) => {
     if (!categoryName) return ''
@@ -51,7 +52,7 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
     news.external_url?.includes('x.com')
 
   return (
-    <Card className="mb-4 hover:shadow-lg transition-shadow py-4">
+    <Card className="hover:shadow-lg transition-shadow py-4">
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
           {news.category && (
