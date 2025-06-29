@@ -2,32 +2,39 @@
 
 ## 🎉 Implementation Status: COMPLETED
 
-Location-News uygulamanız artık 20 farklı Türkiye haberi ile tam olarak çalışmaktadır!
+mappy.news uygulamanız artık 20 farklı Türkiye haberi ile tam olarak
+çalışmaktadır!
 
 ## 📊 Tamamlanan İşlemler
 
 ### 1. ✅ 20 Farklı Türkiye Haberi Oluşturuldu
+
 **Dosya:** `src/data/turkish-news-data.json`
 
 **Kapsanan Şehirler:**
+
 - İstanbul, Ankara, İzmir, Antalya, Bursa
 - Adana, Gaziantep, Konya, Trabzon, Eskişehir
 
 **Haber Kategorileri:**
+
 - Politics, Technology, Environment, Business, Health
 - Sports, Entertainment, Science, Education
 
 **Haber Kaynakları:**
+
 - Hürriyet, Milliyet, Sabah, Cumhuriyet, Sözcü
 - Habertürk, NTV, CNN Türk, TRT Haber, Anadolu Ajansı
 
 **Özellikler:**
+
 - Her haber gerçekçi içerik ve özet
 - Farklı yayın zamanları (1-16 saat önce)
 - Öne çıkan haberler işaretlendi
 - Gerçek koordinatlar ve bölge bilgileri
 
 ### 2. ✅ Seed Script Güncellendi
+
 **Dosya:** `src/lib/supabase-seed.ts`
 
 - Turkish news JSON verisi entegre edildi
@@ -38,6 +45,7 @@ Location-News uygulamanız artık 20 farklı Türkiye haberi ile tam olarak çal
 ### 3. ✅ API Endpoints Test Edildi
 
 **Test Sonuçları:**
+
 ```bash
 ✅ Seeding: 20 haber, 10 lokasyon, 10 kaynak başarıyla eklendi
 ✅ /api/news: Tüm haberler döndürülüyor
@@ -51,6 +59,7 @@ Location-News uygulamanız artık 20 farklı Türkiye haberi ile tam olarak çal
 ### 4. ✅ Frontend Geliştirmeleri
 
 **Yeni Özellikler Eklendi:**
+
 - **Öne Çıkanlar Filtresi**: Star ikonu ile featured haberler
 - **Database-driven Kategoriler**: Supabase'den dinamik kategoriler
 - **Kaynak Filtreleme**: Haber kaynaklarına göre filtreleme
@@ -60,20 +69,22 @@ Location-News uygulamanız artık 20 farklı Türkiye haberi ile tam olarak çal
 ## 🗄️ Veritabanı İçeriği
 
 ### Lokasyonlar (10 şehir)
-| Şehir | Bölge | Haber Sayısı |
-|-------|-------|--------------|
-| İstanbul | Marmara | 2 |
-| Ankara | İç Anadolu | 2 |
-| İzmir | Ege | 2 |
-| Antalya | Akdeniz | 2 |
-| Bursa | Marmara | 2 |
-| Adana | Akdeniz | 2 |
-| Gaziantep | Güneydoğu Anadolu | 2 |
-| Konya | İç Anadolu | 2 |
-| Trabzon | Karadeniz | 2 |
-| Eskişehir | İç Anadolu | 2 |
+
+| Şehir     | Bölge             | Haber Sayısı |
+| --------- | ----------------- | ------------ |
+| İstanbul  | Marmara           | 2            |
+| Ankara    | İç Anadolu        | 2            |
+| İzmir     | Ege               | 2            |
+| Antalya   | Akdeniz           | 2            |
+| Bursa     | Marmara           | 2            |
+| Adana     | Akdeniz           | 2            |
+| Gaziantep | Güneydoğu Anadolu | 2            |
+| Konya     | İç Anadolu        | 2            |
+| Trabzon   | Karadeniz         | 2            |
+| Eskişehir | İç Anadolu        | 2            |
 
 ### Haber Örnekleri
+
 1. **İstanbul'da Yeni Metro Hattı Açıldı** (Politics, Öne Çıkan)
 2. **Ankara'da Teknoloji Zirvesi Başladı** (Technology, Öne Çıkan)
 3. **İzmir'de Yenilenebilir Enerji Santrali** (Environment)
@@ -83,11 +94,12 @@ Location-News uygulamanız artık 20 farklı Türkiye haberi ile tam olarak çal
 ## 🚀 API Özellikler
 
 ### Gelişmiş Filtreleme
+
 ```bash
 # Lokasyon filtreleme
 GET /api/news?location=İstanbul
 
-# Kategori filtreleme  
+# Kategori filtreleme
 GET /api/news?category=Technology
 
 # Öne çıkanlar
@@ -101,6 +113,7 @@ GET /api/news?category=Business&featured=true&limit=5
 ```
 
 ### Yeni Endpoints
+
 - `GET /api/categories` - Tüm kategoriler
 - `GET /api/sources` - Aktif haber kaynakları
 - `GET /api/news/[id]` - Tekil haber detayı
@@ -109,6 +122,7 @@ GET /api/news?category=Business&featured=true&limit=5
 ## 📱 Frontend Güncellemeleri
 
 ### Yeni UI Bileşenleri
+
 - **Featured Toggle**: Öne çıkan haberleri göster/gizle
 - **Dynamic Categories**: Veritabanından kategoriler
 - **Source Pills**: Haber kaynaklarını görsel filtreleme
@@ -116,6 +130,7 @@ GET /api/news?category=Business&featured=true&limit=5
 - **News Statistics**: Her kategori/kaynak için haber sayısı
 
 ### Improved Filtering
+
 - Çoklu kategori seçimi
 - Kaynak bazlı filtreleme
 - Tarih aralığı seçimi
@@ -125,6 +140,7 @@ GET /api/news?category=Business&featured=true&limit=5
 ## 🔧 Technical Improvements
 
 ### Database Schema
+
 - UUID primary keys
 - Foreign key relationships
 - Automatic timestamps
@@ -132,12 +148,14 @@ GET /api/news?category=Business&featured=true&limit=5
 - Full-text search indexes
 
 ### Performance
+
 - Efficient pagination
 - Optimized queries
 - Rate-limited view tracking
 - Cached responses
 
 ### Type Safety
+
 - Complete TypeScript types
 - Database type generation
 - Helper functions
@@ -146,12 +164,14 @@ GET /api/news?category=Business&featured=true&limit=5
 ## 📊 Usage Examples
 
 ### Seed Database
+
 ```bash
 curl -X POST http://localhost:3001/api/seed
 # Returns: {"message":"Supabase database seeded successfully","stats":{"locations":10,"sources":10,"news":20}}
 ```
 
 ### Get Turkish News
+
 ```bash
 # Tüm haberler
 curl http://localhost:3001/api/news
@@ -170,11 +190,12 @@ curl 'http://localhost:3001/api/news?search=teknoloji'
 ```
 
 ### Get Categories & Sources
+
 ```bash
 # Kategoriler
 curl http://localhost:3001/api/categories
 
-# Kaynaklar  
+# Kaynaklar
 curl http://localhost:3001/api/sources
 
 # Lokasyonlar
@@ -228,6 +249,7 @@ npm run build
 ✅ **Supabase entegrasyonu** ile modern veritabanı  
 ✅ **Full-text search** ile gelişmiş arama  
 ✅ **API endpoints** tam test edildi ve çalışıyor  
-✅ **Frontend geliştirmeleri** kullanıcı deneyimini artırıyor  
+✅ **Frontend geliştirmeleri** kullanıcı deneyimini artırıyor
 
-**Result**: Location-News uygulamanız artık Türkiye haberleri ile tamamen çalışır durumda! 🇹🇷
+**Result**: mappy.news uygulamanız artık Türkiye haberleri ile tamamen çalışır
+durumda! 🇹🇷

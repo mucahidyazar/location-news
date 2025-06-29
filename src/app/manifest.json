@@ -1,6 +1,6 @@
 {
-  "name": "LocationNews",
-  "short_name": "LocationNews",
+  "name": "mappy.news",
+  "short_name": "mappy.news",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

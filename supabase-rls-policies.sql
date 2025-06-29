@@ -1,4 +1,4 @@
--- Row Level Security (RLS) Policies for Location-News
+-- Row Level Security (RLS) Policies for mappy.news
 -- Execute this AFTER creating the schema
 
 -- =============================================

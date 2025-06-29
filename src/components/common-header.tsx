@@ -25,7 +25,7 @@ interface CommonHeaderProps {
 }
 
 export default function CommonHeader({
-  title = 'LocationNews',
+  title = 'mappy.news',
   subtitle = 'Yerel Haberler, Gerçek Zamanlı',
   showNewsButton = false,
   showSidebarButton = false,
@@ -53,7 +53,7 @@ export default function CommonHeader({
         >
           <Image
             src="/logo.svg"
-            alt="LocationNews"
+            alt="mappy.news"
             width={52}
             height={52}
             className="h-10 w-10"
@@ -121,13 +121,17 @@ export default function CommonHeader({
                   onToggleSidebar()
                 }}
                 className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-blue-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isSidebarOpen ? 'text-blue-600 bg-blue-50 shadow-sm' : 'text-gray-600 hover:text-blue-500'
+                  isSidebarOpen
+                    ? 'text-blue-600 bg-blue-50 shadow-sm'
+                    : 'text-gray-600 hover:text-blue-500'
                 }`}
                 title="Feed"
               >
-                <List className={`w-5 h-5 mb-1 transition-transform duration-300 ${
-                  isSidebarOpen ? 'scale-110 rotate-12' : ''
-                }`} />
+                <List
+                  className={`w-5 h-5 mb-1 transition-transform duration-300 ${
+                    isSidebarOpen ? 'scale-110 rotate-12' : ''
+                  }`}
+                />
                 <span>Feed</span>
               </a>
               {isSidebarOpen && (
@@ -146,13 +150,17 @@ export default function CommonHeader({
                   onToggleSettingsSidebar()
                 }}
                 className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-blue-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isSettingsSidebarOpen ? 'text-blue-600 bg-blue-50 shadow-sm' : 'text-gray-600 hover:text-blue-500'
+                  isSettingsSidebarOpen
+                    ? 'text-blue-600 bg-blue-50 shadow-sm'
+                    : 'text-gray-600 hover:text-blue-500'
                 }`}
                 title="Settings"
               >
-                <Settings className={`w-5 h-5 mb-1 transition-transform duration-300 ${
-                  isSettingsSidebarOpen ? 'scale-110 rotate-90' : ''
-                }`} />
+                <Settings
+                  className={`w-5 h-5 mb-1 transition-transform duration-300 ${
+                    isSettingsSidebarOpen ? 'scale-110 rotate-90' : ''
+                  }`}
+                />
                 <span>Settings</span>
               </a>
               {isSettingsSidebarOpen && (
@@ -171,13 +179,17 @@ export default function CommonHeader({
                   onToggleUpdatesSidebar()
                 }}
                 className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-purple-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isUpdatesSidebarOpen ? 'text-purple-600 bg-purple-50 shadow-sm' : 'text-gray-600 hover:text-purple-500'
+                  isUpdatesSidebarOpen
+                    ? 'text-purple-600 bg-purple-50 shadow-sm'
+                    : 'text-gray-600 hover:text-purple-500'
                 }`}
                 title="Updates"
               >
-                <GitCommit className={`w-5 h-5 mb-1 transition-transform duration-300 ${
-                  isUpdatesSidebarOpen ? 'scale-110 rotate-12' : ''
-                }`} />
+                <GitCommit
+                  className={`w-5 h-5 mb-1 transition-transform duration-300 ${
+                    isUpdatesSidebarOpen ? 'scale-110 rotate-12' : ''
+                  }`}
+                />
                 <span>Updates</span>
               </a>
               {isUpdatesSidebarOpen && (
@@ -196,13 +208,17 @@ export default function CommonHeader({
                   onToggleMenuSidebar()
                 }}
                 className={`flex flex-col items-center py-2 px-0 hover:bg-green-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] ${
-                  isMenuSidebarOpen ? 'text-green-600 bg-green-50 shadow-sm' : 'text-gray-600 hover:text-green-500'
+                  isMenuSidebarOpen
+                    ? 'text-green-600 bg-green-50 shadow-sm'
+                    : 'text-gray-600 hover:text-green-500'
                 }`}
                 title="Menu"
               >
-                <Menu className={`w-5 h-5 mb-1 transition-transform duration-300 ${
-                  isMenuSidebarOpen ? 'scale-110 rotate-12' : ''
-                }`} />
+                <Menu
+                  className={`w-5 h-5 mb-1 transition-transform duration-300 ${
+                    isMenuSidebarOpen ? 'scale-110 rotate-12' : ''
+                  }`}
+                />
                 <span>Menu</span>
               </a>
               {isMenuSidebarOpen && (

@@ -1,4 +1,4 @@
--- Location-News Database Schema for Supabase
+-- mappy.news Database Schema for Supabase
 -- Execute this in your Supabase SQL Editor
 
 -- =============================================

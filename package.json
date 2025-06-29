@@ -1,8 +1,9 @@
 {
-  "name": "location-news-app",
+  "name": "mappy.news",
   "version": "0.1.0",
+  "description": "Interactive news-on-map application displaying location-based news articles with advanced filtering and responsive design",
   "private": true,
-  "homepage": "https://locations.news",
+  "homepage": "https://mappy.news",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

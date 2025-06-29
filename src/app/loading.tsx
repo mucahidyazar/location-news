@@ -7,7 +7,7 @@ export default function Loading() {
         <div className="relative">
           <Image
             src="/logo.svg"
-            alt="LocationNews"
+            alt="mappy.news"
             width={64}
             height={64}
             className="animate-pulse"
@@ -15,8 +15,12 @@ export default function Loading() {
           <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-blue-500"></div>
         </div>
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">Loading...</h2>
-          <p className="text-sm text-gray-500">Preparing your location-based news</p>
+          <h2 className="text-lg font-semibold text-gray-700 mb-2">
+            Loading...
+          </h2>
+          <p className="text-sm text-gray-500">
+            Preparing your location-based news
+          </p>
         </div>
       </div>
     </div>

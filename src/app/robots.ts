@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://locations.news/sitemap.xml',
+    sitemap: 'https://mappy.news/sitemap.xml',
   }
 }

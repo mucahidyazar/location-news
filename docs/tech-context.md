@@ -1,6 +1,7 @@
 # Technical Context
 
 ## Architecture Overview
+
 - **Framework**: Next.js 15 with App Router
 - **Styling**: Tailwind CSS 4 for utility-first styling
 - **UI Components**: shadcn/ui for consistent, accessible components
@@ -10,8 +11,9 @@
 - **Date Handling**: date-fns + react-day-picker for date operations
 
 ## Project Structure
+
 ```
-location-news/
+mappy.news/
 ├── src/
 │   ├── app/             # Next.js app directory (routes, layouts, pages)
 │   ├── components/      # Reusable UI components
@@ -24,6 +26,7 @@ location-news/
 ```
 
 ## Key Dependencies
+
 - `next`: React framework (v15)
 - `tailwindcss`: CSS framework (v4)
 - `@radix-ui/*`: Accessibility primitives for shadcn/ui
@@ -34,6 +37,7 @@ location-news/
 - `react-day-picker`: Date picker component
 
 ## Data Model
+
 ```sql
 CREATE TABLE news_articles (
   id INTEGER PRIMARY KEY,
@@ -49,6 +53,7 @@ CREATE TABLE news_articles (
 ```
 
 ## Development Workflow
+
 1. ✅ Set up Next.js project with TypeScript
 2. ✅ Configure Tailwind CSS and shadcn/ui
 3. ✅ Create database schema and seed data

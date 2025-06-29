@@ -21,7 +21,7 @@ const josefinSans = Josefin_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'LocationNews - News on Interactive Map',
+  title: 'mappy.news - News on Interactive Map',
   description:
     'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
   keywords: [
@@ -33,30 +33,30 @@ export const metadata: Metadata = {
     'konum',
     'interaktif harita',
   ],
-  authors: [{name: 'LocationNews Team'}],
-  creator: 'LocationNews',
-  publisher: 'LocationNews',
+  authors: [{name: 'mappy.news Team'}],
+  creator: 'mappy.news',
+  publisher: 'mappy.news',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://location-news.vercel.app'),
+  metadataBase: new URL('https://mappy.news'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'LocationNews - News on Interactive Map',
+    title: 'mappy.news - News on Interactive Map',
     description:
       'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
-    url: 'https://location-news.vercel.app',
-    siteName: 'LocationNews',
+    url: 'https://mappy.news',
+    siteName: 'mappy.news',
     images: [
       {
         url: '/logo.svg',
         width: 512,
         height: 512,
-        alt: 'LocationNews Logo',
+        alt: 'mappy.news Logo',
       },
     ],
     locale: 'en_US',
@@ -64,11 +64,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LocationNews - News on Interactive Map',
+    title: 'mappy.news - News on Interactive Map',
     description:
       'Discover location-based news articles on an interactive map with advanced filtering by categories, sources, and date ranges.',
     images: ['/logo.svg'],
-    creator: '@locationnews',
+    creator: '@mappynews',
   },
   robots: {
     index: true,
@@ -97,8 +97,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="apple-mobile-web-app-title" content="LocationNews" />
-        <meta name="application-name" content="LocationNews" />
+        <meta name="apple-mobile-web-app-title" content="mappy.news" />
+        <meta name="application-name" content="mappy.news" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="mobile-web-app-capable" content="yes" />

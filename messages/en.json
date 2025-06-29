@@ -12,7 +12,7 @@
     "close": "Close"
   },
   "header": {
-    "title": "LocationNews",
+    "title": "mappy.news",
     "subtitle": "Knowledge is Power, Security is Right",
     "language": "Language"
   },
@@ -51,11 +51,11 @@
     "newsFound": "{count} news found",
     "noNewsFound": "No news found",
     "changeSearchCriteria": "Try changing your search criteria.",
-    "copyrightText": "© 2024 LocationNews. All rights reserved."
+    "copyrightText": "© 2025 mappy.news. All rights reserved."
   },
   "categories": {
     "theft_robbery": "Theft & Robbery",
-    "fraud_scam": "Fraud & Scam", 
+    "fraud_scam": "Fraud & Scam",
     "violence": "Violence",
     "sexual_crimes": "Sexual Crimes",
     "traffic_incidents": "Traffic Incidents",
@@ -99,7 +99,7 @@
     "mostViewed": "Most Viewed"
   },
   "footer": {
-    "copyright": "© 2024 Location News. All rights reserved.",
+    "copyright": "© 2025 mappy.news. All rights reserved.",
     "about": "About",
     "contact": "Contact",
     "privacy": "Privacy Policy",
