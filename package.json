@@ -9,6 +9,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
+    "check": "npm run type-check && npm run lint",
+    "check:fix": "npm run type-check && npm run lint:fix",
+    "test:all": "npm run type-check && npm run lint && npm run build",
+    "validate": "npm run check && npm run build",
     "migrate": "npx tsx src/scripts/migrate-to-supabase.ts"
   },
   "dependencies": {
