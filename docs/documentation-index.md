@@ -1,6 +1,6 @@
 # mappy.news Documentation
 
-Welcome to the mappy.news documentation. This directory contains all project documentation organized by category.
+Welcome to the mappy.news documentation. This directory contains essential project documentation for development and deployment.
 
 ## 📖 Documentation Index
 
@@ -10,23 +10,15 @@ Welcome to the mappy.news documentation. This directory contains all project doc
 
 ### Setup & Configuration
 - **[Supabase Setup](./supabase-setup.md)** - Complete Supabase database setup guide
-- **[Supabase Migration Guide](./supabase-migration-guide.md)** - Migration from SQLite to Supabase
-- **[Database Alternatives](./database-alternatives.md)** - Comparison of different database options
-
-### Implementation Guides
-- **[Turkish News Implementation](./turkish-news-implementation.md)** - Turkish news data implementation details
 
 ## 📁 Documentation Structure
 
 ```
 docs/
-├── README.md                       # This file - documentation index
-├── project-overview.md             # Project description and features  
-├── technical-architecture.md       # Technology stack and architecture
-├── database-alternatives.md        # Database options comparison
-├── supabase-setup.md              # Supabase configuration guide
-├── supabase-migration-guide.md    # Migration documentation
-└── turkish-news-implementation.md # Turkish news feature guide
+├── documentation-index.md       # This file - documentation index
+├── project-overview.md          # Project description and features  
+├── technical-architecture.md    # Technology stack and architecture
+└── supabase-setup.md           # Supabase configuration guide
 ```
 
 ## 🎯 Quick Start
@@ -34,7 +26,6 @@ docs/
 1. Read the [Project Overview](./project-overview.md) to understand the application
 2. Check [Technical Architecture](./technical-architecture.md) for development setup
 3. Follow [Supabase Setup](./supabase-setup.md) for database configuration
-4. Review [Turkish News Implementation](./turkish-news-implementation.md) for content setup
 
 ## 📝 Documentation Standards
 
@@ -50,7 +41,6 @@ For new developers, we recommend reading the documents in this order:
 1. Project Overview
 2. Technical Architecture  
 3. Supabase Setup
-4. Turkish News Implementation
 
 ---
 
