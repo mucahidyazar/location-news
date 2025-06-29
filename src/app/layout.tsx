@@ -3,6 +3,7 @@ import {Geist, Geist_Mono, Josefin_Sans} from 'next/font/google'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
 import './marker-styles.css'
+import {ThemeProvider} from '@/contexts/theme-context'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -108,7 +109,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${josefinSans.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <script
           data-name="BMC-Widget"
           data-cfasync="false"

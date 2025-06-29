@@ -5,9 +5,12 @@ import CommonHeader from '@/components/common-header'
 import NewsSidebar from '@/components/news-sidebar'
 import UpdatesSidebar from '@/components/updates-sidebar'
 import MenuSidebar from '@/components/menu-sidebar'
+import LanguageSwitcher from '@/components/ui/language-switcher'
+import {ThemeSwitcher} from '@/components/ui/theme-switcher'
 import {useTranslations} from 'next-intl'
 import {MainLayoutProvider, useMainLayout} from '@/contexts/main-layout-context'
 import {NewsItem, Location} from '@/lib/types'
+import {cn} from '@/lib/utils'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -34,7 +37,8 @@ function MainLayoutInner({children}: MainLayoutProps) {
   const [, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [weeksLoaded, setWeeksLoaded] = useState(1)
+  const [newsLoaded, setNewsLoaded] = useState(0)
+  const NEWS_PER_PAGE = 20
 
   // Sidebar filters
   const [selectedLocation, setSelectedLocation] = useState<string>()
@@ -56,18 +60,12 @@ function MainLayoutInner({children}: MainLayoutProps) {
           setLoading(true)
         }
 
-        const currentWeeks = loadMore ? weeksLoaded + 1 : 1
-
-        // Calculate date range for the current weeks
-        const endDate = new Date()
-        const startDate = new Date()
-        startDate.setDate(endDate.getDate() - currentWeeks * 7)
+        const currentOffset = loadMore ? newsLoaded : 0
+        const currentLimit = loadMore ? NEWS_PER_PAGE : NEWS_PER_PAGE
 
         const params = new URLSearchParams({
-          limit: '500',
-          offset: '0',
-          start_date: startDate.toISOString().split('T')[0] + 'T00:00',
-          end_date: endDate.toISOString().split('T')[0] + 'T23:59',
+          limit: currentLimit.toString(),
+          offset: currentOffset.toString(),
         })
 
         const promises = [fetch(`/api/news?${params.toString()}`)]
@@ -80,11 +78,14 @@ function MainLayoutInner({children}: MainLayoutProps) {
         const newsData = await responses[0].json()
 
         if (loadMore) {
-          setNews(newsData) // Replace all data with extended date range
-          setWeeksLoaded(currentWeeks)
+          setNews(prev => {
+            const newNews = [...prev, ...newsData]
+            return newNews
+          })
+          setNewsLoaded(prev => prev + newsData.length)
         } else {
           setNews(newsData)
-          setWeeksLoaded(1)
+          setNewsLoaded(newsData.length)
 
           if (responses.length > 1) {
             const locationsData = await responses[1].json()
@@ -111,7 +112,8 @@ function MainLayoutInner({children}: MainLayoutProps) {
           }
         }
 
-        setHasMore(currentWeeks < 12) // Limit to 12 weeks
+        // Check if there are more news to load (if we got less than requested, no more)
+        setHasMore(newsData.length === NEWS_PER_PAGE)
       } catch (error) {
         console.error('Error loading sidebar data:', error)
       } finally {
@@ -119,12 +121,14 @@ function MainLayoutInner({children}: MainLayoutProps) {
         setLoadingMore(false)
       }
     },
-    [weeksLoaded],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [newsLoaded, NEWS_PER_PAGE],
   )
 
   useEffect(() => {
     loadSidebarData()
-  }, [loadSidebarData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleClearFilter = () => {
     setSelectedLocation(undefined)
@@ -262,20 +266,45 @@ function MainLayoutInner({children}: MainLayoutProps) {
 
         {/* Settings Sidebar */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] bg-white shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
+          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
             isSettingsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
+          style={{
+            backgroundColor: 'var(--color-theme-surface-primary)',
+            borderColor: 'var(--color-theme-border-primary)',
+          }}
         >
-          <div className="h-full flex flex-col bg-white">
+          <div
+            className="h-full flex flex-col"
+            style={{backgroundColor: 'var(--color-theme-surface-primary)'}}
+          >
             {/* Settings Header */}
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <div
+              className="flex items-center justify-between p-4 border-b"
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--color-theme-secondary-200) 0%, var(--color-theme-secondary-300) 50%, var(--color-theme-primary-200) 100%)',
+                borderColor: 'var(--color-theme-border-primary)',
+              }}
+            >
+              <h2
+                className="text-lg font-semibold flex items-center gap-2"
+                style={{color: 'var(--color-theme-text-primary)'}}
+              >
                 <span>⚙️</span>
                 {t('settings.title')}
               </h2>
               <button
                 onClick={() => setIsSettingsSidebarOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded"
+                className="p-1 rounded transition-colors"
+                style={{color: 'var(--color-theme-text-secondary)'}}
+                onMouseEnter={e => {
+                  e.currentTarget.style.backgroundColor =
+                    'var(--color-theme-surface-secondary)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
               >
                 ✕
               </button>
@@ -285,17 +314,20 @@ function MainLayoutInner({children}: MainLayoutProps) {
             <div className="flex-1 p-4 space-y-6">
               {/* Map Icons Setting */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                <h3
+                  className="text-sm font-medium flex items-center gap-2"
+                  style={{color: 'var(--color-theme-text-primary)'}}
+                >
                   🗺️ {t('settings.mapIcons.title')}
                 </h3>
                 <div className="space-y-2">
                   <button
                     onClick={() => setUseCustomIcons(false)}
-                    className={`w-full p-3 rounded-lg border-2 transition-all text-left ${
-                      !useCustomIcons
-                        ? 'border-blue-500 bg-blue-50 text-blue-900'
-                        : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300'
-                    }`}
+                    className={cn(
+                      'text-left w-full p-3 rounded-lg border transition-colors cursor-pointer hover:bg-[var(--color-theme-primary-50)] hover:border-[var(--color-theme-primary-200)] hover:text-[var(--color-theme-primary-900)]',
+                      !useCustomIcons &&
+                        'bg-[var(--color-theme-primary-50)] border-[var(--color-theme-primary-200)] text-[var(--color-theme-primary-900)]',
+                    )}
                   >
                     <div className="font-medium">
                       {t('settings.mapIcons.default')}
@@ -306,11 +338,11 @@ function MainLayoutInner({children}: MainLayoutProps) {
                   </button>
                   <button
                     onClick={() => setUseCustomIcons(true)}
-                    className={`w-full p-3 rounded-lg border-2 transition-all text-left ${
-                      useCustomIcons
-                        ? 'border-blue-500 bg-blue-50 text-blue-900'
-                        : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300'
-                    }`}
+                    className={cn(
+                      'text-left w-full p-3 rounded-lg border transition-colors cursor-pointer hover:bg-[var(--color-theme-primary-50)] hover:border-[var(--color-theme-primary-200)] hover:text-[var(--color-theme-primary-900)]',
+                      useCustomIcons &&
+                        'bg-[var(--color-theme-primary-50)] border-[var(--color-theme-primary-200)] text-[var(--color-theme-primary-900)]',
+                    )}
                   >
                     <div className="font-medium">
                       {t('settings.mapIcons.custom')}
@@ -324,33 +356,52 @@ function MainLayoutInner({children}: MainLayoutProps) {
 
               {/* Language Setting */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                <h3
+                  className="text-sm font-medium flex items-center gap-2"
+                  style={{color: 'var(--color-theme-text-primary)'}}
+                >
                   🌐 {t('settings.language.title')}
                 </h3>
-                <div className="p-3 rounded-lg border bg-gray-50">
-                  <p className="text-sm text-gray-600">
-                    Language switcher will be here
-                  </p>
+                <div
+                  className="py-3 rounded-lg border"
+                  style={{
+                    backgroundColor: 'var(--color-theme-surface-secondary)',
+                    borderColor: 'var(--color-theme-border-primary)',
+                  }}
+                >
+                  <LanguageSwitcher />
                 </div>
               </div>
+
+              {/* Theme Setting */}
+
+              <ThemeSwitcher variant="preview" />
             </div>
           </div>
         </div>
 
         {/* Updates Sidebar */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] bg-white shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
+          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
             isUpdatesSidebarOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
+          style={{
+            backgroundColor: 'var(--color-theme-surface-primary)',
+            borderColor: 'var(--color-theme-border-primary)',
+          }}
         >
           <UpdatesSidebar onClose={() => setIsUpdatesSidebarOpen(false)} />
         </div>
 
         {/* Menu Sidebar (Mobile only) */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] bg-white shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
+          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
             isMenuSidebarOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
+          style={{
+            backgroundColor: 'var(--color-theme-surface-primary)',
+            borderColor: 'var(--color-theme-border-primary)',
+          }}
         >
           <MenuSidebar
             onClose={() => setIsMenuSidebarOpen(false)}

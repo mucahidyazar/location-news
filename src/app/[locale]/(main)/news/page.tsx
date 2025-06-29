@@ -3,6 +3,7 @@
 import {useState, useEffect} from 'react'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import {Newspaper, Search, X} from 'lucide-react'
 import NewsCard from '@/components/news-card'
 import {NewsItem, Category} from '@/lib/types'
@@ -16,9 +17,10 @@ export default function NewsPage() {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [weeksLoaded, setWeeksLoaded] = useState(1)
+  const [newsLoaded, setNewsLoaded] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const NEWS_PER_PAGE = 20
 
   useEffect(() => {
     loadData()
@@ -26,7 +28,7 @@ export default function NewsPage() {
   }, [])
 
   useEffect(() => {
-    setWeeksLoaded(1)
+    setNewsLoaded(0)
     setNews([])
     setHasMore(true)
     loadData()
@@ -46,18 +48,12 @@ export default function NewsPage() {
         setLoading(true)
       }
 
-      const currentWeeks = loadMore ? weeksLoaded + 1 : 1
-      
-      // Calculate date range for the current weeks
-      const endDate = new Date()
-      const startDate = new Date()
-      startDate.setDate(endDate.getDate() - (currentWeeks * 7))
+      const currentOffset = loadMore ? newsLoaded : 0
+      const currentLimit = NEWS_PER_PAGE
       
       const params = new URLSearchParams({
-        limit: '500',
-        offset: '0',
-        start_date: startDate.toISOString().split('T')[0],
-        end_date: endDate.toISOString().split('T')[0],
+        limit: currentLimit.toString(),
+        offset: currentOffset.toString(),
       })
 
       if (searchTerm) params.append('search', searchTerm)
@@ -77,11 +73,11 @@ export default function NewsPage() {
       const newsData = await responses[0].json()
 
       if (loadMore) {
-        setNews(newsData) // Replace all data with extended date range
-        setWeeksLoaded(currentWeeks)
+        setNews(prev => [...prev, ...newsData]) // Append new news
+        setNewsLoaded(prev => prev + newsData.length)
       } else {
         setNews(newsData)
-        setWeeksLoaded(1)
+        setNewsLoaded(newsData.length)
         
         if (responses.length > 1) {
           const categoriesData = await responses[1].json()
@@ -89,8 +85,8 @@ export default function NewsPage() {
         }
       }
 
-      // Check if we can load more weeks
-      setHasMore(currentWeeks < 12) // Limit to 12 weeks
+      // Check if there are more news to load (if we got less than requested, no more)
+      setHasMore(newsData.length === NEWS_PER_PAGE)
     } catch (error) {
       console.error('Error loading data:', error)
     } finally {
@@ -112,17 +108,17 @@ export default function NewsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('common.loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-theme-primary-600)' }}></div>
+          <p style={{ color: 'var(--color-theme-text-secondary)' }}>{t('common.loading')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="h-full bg-gray-50 overflow-auto">
+    <div className="h-full overflow-auto" style={{ backgroundColor: 'var(--color-theme-surface-primary)' }}>
       {/* Filters */}
-      <div className="bg-white shadow-sm">
+      <div className="shadow-sm" style={{ backgroundColor: 'var(--color-theme-surface-secondary)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Search */}
@@ -138,18 +134,19 @@ export default function NewsPage() {
 
 
             {/* Category Filter */}
-            <select
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="">{t('news.allCategories')}</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+            <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder={t('news.allCategories')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('news.allCategories')}</SelectItem>
+                {categories.map(category => (
+                  <SelectItem key={category.id} value={category.name}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
 
             {/* Clear Filters */}
@@ -198,11 +195,11 @@ export default function NewsPage() {
 
         {filteredNews.length === 0 && !loading && (
           <div className="text-center py-12">
-            <Newspaper className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-4 text-lg font-medium text-gray-900">
+            <Newspaper className="mx-auto h-12 w-12" style={{ color: 'var(--color-theme-text-tertiary)' }} />
+            <h3 className="mt-4 text-lg font-medium" style={{ color: 'var(--color-theme-text-primary)' }}>
               {t('news.noNewsFound')}
             </h3>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2" style={{ color: 'var(--color-theme-text-secondary)' }}>
               {t('news.changeSearchCriteria')}
             </p>
           </div>
@@ -210,9 +207,9 @@ export default function NewsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-12">
+      <footer className="border-t mt-12" style={{ backgroundColor: 'var(--color-theme-surface-secondary)', borderColor: 'var(--color-theme-border-primary)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-500">
+          <div className="text-center" style={{ color: 'var(--color-theme-text-tertiary)' }}>
             <p>{t('news.copyrightText')}</p>
           </div>
         </div>

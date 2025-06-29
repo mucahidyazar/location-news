@@ -256,7 +256,19 @@ export default function HomePage() {
   return (
     <div className="h-full w-full relative">
       {/* Floating Filters Panel */}
-      <div className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] bg-white/65 hover:bg-white/85 transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4">
+      <div
+        className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4"
+        style={{
+          backgroundColor: 'var(--color-theme-surface-primary)',
+          opacity: 0.85,
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.opacity = '0.95'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.opacity = '0.85'
+        }}
+      >
         {/* Search and Main Filters */}
         <div className="flex gap-2 md:gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[150px] md:min-w-[200px]">
@@ -265,7 +277,7 @@ export default function HomePage() {
               placeholder="Search city, news title, or any keyword"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="pl-10 h-8 text-sm bg-white"
+              className="pl-10 h-8 text-sm"
             />
           </div>
 
@@ -285,7 +297,7 @@ export default function HomePage() {
               variant="ghost"
               size="sm"
               onClick={handleClearFilter}
-              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 h-8 px-2 text-xs"
+              className="text-red-600 hover:text-red-800 hover:bg-red-50 h-8 px-2 text-xs cursor-pointer"
             >
               <X className="w-3 h-3 mr-1" />
               {t('common.clear')}
@@ -303,11 +315,34 @@ export default function HomePage() {
                 <button
                   key={source}
                   onClick={() => handleSourceSelect(source)}
-                  className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all hover:bg-blue-100 ${
+                  className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all border-2 ${
                     selectedSources.includes(source)
-                      ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 shadow-sm'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border-2 border-transparent'
+                      ? 'shadow-sm'
+                      : 'border-transparent'
                   }`}
+                  style={{
+                    backgroundColor: selectedSources.includes(source)
+                      ? 'var(--color-theme-primary-50)'
+                      : 'var(--color-theme-surface-secondary)',
+                    color: selectedSources.includes(source)
+                      ? 'var(--color-theme-primary-600)'
+                      : 'var(--color-theme-text-primary)',
+                    borderColor: selectedSources.includes(source)
+                      ? 'var(--color-theme-primary-300)'
+                      : 'transparent',
+                  }}
+                  onMouseEnter={e => {
+                    if (!selectedSources.includes(source)) {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--color-theme-surface-tertiary)'
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!selectedSources.includes(source)) {
+                      e.currentTarget.style.backgroundColor =
+                        'var(--color-theme-surface-secondary)'
+                    }
+                  }}
                 >
                   <IconComponent className="w-4 h-4" />
                   <div className="flex flex-col items-start">
