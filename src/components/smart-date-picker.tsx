@@ -17,14 +17,35 @@ import { type DateRange } from "react-day-picker"
 interface SmartDatePickerProps {
   onDateRangeChange: (start?: string, end?: string) => void;
   className?: string;
+  defaultToLastWeek?: boolean;
 }
 
 export default function SmartDatePicker({
   onDateRangeChange,
   className,
+  defaultToLastWeek = false,
 }: SmartDatePickerProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>()
+  const [date, setDate] = React.useState<DateRange | undefined>(() => {
+    if (defaultToLastWeek) {
+      const endDate = new Date()
+      const startDate = new Date()
+      startDate.setDate(endDate.getDate() - 7)
+      return { from: startDate, to: endDate }
+    }
+    return undefined
+  })
   const [isOpen, setIsOpen] = React.useState(false)
+
+  // Initialize with last week if defaultToLastWeek is true
+  React.useEffect(() => {
+    if (defaultToLastWeek && date?.from && date?.to) {
+      onDateRangeChange(
+        `${format(date.from, "yyyy-MM-dd")}T00:00`,
+        `${format(date.to, "yyyy-MM-dd")}T23:59`
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultToLastWeek]) // Only run when defaultToLastWeek changes
 
   const handleDateSelect = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate)
@@ -80,7 +101,7 @@ export default function SmartDatePicker({
             {formatDisplayText()}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-3 bg-white border shadow-lg z-[2000]" align="start">
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-3 bg-white border shadow-lg z-[9999]" align="start">
           <Calendar
             mode="range"
             defaultMonth={date?.from}
