@@ -1,6 +1,5 @@
 import Database from 'better-sqlite3';
 import { join } from 'path';
-import { NewsItem, Location } from './types';
 
 let db: Database.Database | null = null;
 
