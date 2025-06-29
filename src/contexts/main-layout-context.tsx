@@ -11,6 +11,8 @@ interface MainLayoutContextType {
   setIsSettingsSidebarOpen: (value: boolean) => void
   isUpdatesSidebarOpen: boolean
   setIsUpdatesSidebarOpen: (value: boolean) => void
+  isMenuSidebarOpen: boolean
+  setIsMenuSidebarOpen: (value: boolean) => void
 }
 
 const MainLayoutContext = createContext<MainLayoutContextType | undefined>(undefined)
@@ -28,6 +30,7 @@ export function MainLayoutProvider({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isSettingsSidebarOpen, setIsSettingsSidebarOpen] = useState(false)
   const [isUpdatesSidebarOpen, setIsUpdatesSidebarOpen] = useState(false)
+  const [isMenuSidebarOpen, setIsMenuSidebarOpen] = useState(false)
 
   return (
     <MainLayoutContext.Provider value={{
@@ -38,7 +41,9 @@ export function MainLayoutProvider({ children }: { children: ReactNode }) {
       isSettingsSidebarOpen,
       setIsSettingsSidebarOpen,
       isUpdatesSidebarOpen,
-      setIsUpdatesSidebarOpen
+      setIsUpdatesSidebarOpen,
+      isMenuSidebarOpen,
+      setIsMenuSidebarOpen
     }}>
       {children}
     </MainLayoutContext.Provider>
