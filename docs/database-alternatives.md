@@ -1,6 +1,6 @@
-# Data Management Alternatives for LocationNews
+# Data Management Alternatives for mappy.news
 
-Bu dokuman LocationNews projesi için en uygun maliyetli ve kolay data
+Bu dokuman mappy.news projesi için en uygun maliyetli ve kolay data
 saklama/girişi alternativlerini sunar.
 
 ## 🎯 Değerlendirme Kriterleri
