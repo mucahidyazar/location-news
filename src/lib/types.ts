@@ -9,7 +9,6 @@ export interface NewsItem {
   published_at?: string
   image_url?: string | null
   imageUrl?: string | null // Legacy support
-  external_url?: string | null
   external_url?: string | null // Legacy support
   is_featured?: boolean
   view_count?: number

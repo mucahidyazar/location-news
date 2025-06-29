@@ -42,7 +42,6 @@ export default function NewsSidebar({
 }: NewsSidebarProps) {
   const t = useTranslations()
   const sourceCount = news.reduce((acc, item) => {
-    console.log('x1 item', item)
     const sourceName =
       typeof item.source === 'string' ? item.source : item.source?.name || ''
     if (sourceName) {
