@@ -8,7 +8,6 @@ export interface NewsItem {
   created_at?: string
   published_at?: string
   image_url?: string | null
-  imageUrl?: string | null // Legacy support
   external_url?: string | null // Legacy support
   is_featured?: boolean
   view_count?: number
@@ -39,7 +38,7 @@ export interface LegacyNewsItem {
   category: string
   published_at: string
   source: string
-  imageUrl?: string | null
+  image_url?: string | null
   external_url?: string | null
 }
 
@@ -49,7 +48,6 @@ export interface Location {
   latitude: number
   longitude: number
   news_count?: number
-  newsCount?: number // Legacy support
   primary_category?: string
   primaryCategory?: string // Legacy support
   created_at?: string

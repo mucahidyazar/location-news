@@ -27,7 +27,7 @@ interface SQLiteLocation {
   name: string
   latitude: number
   longitude: number
-  newsCount: number
+  news_count: number
 }
 
 interface SQLiteNews {
@@ -40,7 +40,7 @@ interface SQLiteNews {
   category: string
   published_at: string
   source: string
-  imageUrl?: string
+  image_url?: string
 }
 
 async function migrateCategories() {
@@ -119,7 +119,7 @@ async function migrateLocations() {
         name: location.name,
         latitude: location.latitude,
         longitude: location.longitude,
-        news_count: location.newsCount
+        news_count: location.news_count
       })
 
     if (error) {
@@ -179,7 +179,7 @@ async function migrateNews() {
           location_id: locationId,
           category_id: categoryId,
           source_id: sourceId,
-          image_url: newsItem.imageUrl,
+          image_url: newsItem.image_url,
           published_at: newsItem.published_at
         })
 

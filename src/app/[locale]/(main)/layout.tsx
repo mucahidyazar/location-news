@@ -103,7 +103,7 @@ function MainLayoutInner({children}: MainLayoutProps) {
                 name: item.name,
                 latitude: item.latitude,
                 longitude: item.longitude,
-                newsCount: item.news_count,
+                news_count: item.news_count,
                 primaryCategory: item.primary_category,
               }),
             )
@@ -212,7 +212,7 @@ function MainLayoutInner({children}: MainLayoutProps) {
                   : item.category?.name || '',
               published_at: item.published_at || '',
               source: item.source,
-              imageUrl: item.image_url,
+              image_url: item.image_url,
               external_url: item.external_url,
             }))}
             locations={locations}

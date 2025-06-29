@@ -1,4 +1,4 @@
-import { insertNews, insertLocation, updateLocationNewsCount, NewsItem } from './database';
+import { insertNews, insertLocation, updateLocationNewsCount } from './database';
 
 const sampleNews = [
   {
@@ -10,7 +10,7 @@ const sampleNews = [
     category: "Ulaştırma",
     published_at: "2024-01-15T10:00:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
+    image_url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
   },
   {
     title: "Ankara'da Teknoloji Zirvesi Başladı",
@@ -21,7 +21,7 @@ const sampleNews = [
     category: "Teknoloji",
     published_at: "2024-01-14T09:30:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
+    image_url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
   },
   {
     title: "İzmir'de Kültür Festivali Düzenleniyor",
@@ -32,7 +32,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2024-01-13T14:15:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Bursa'da Yeni Hastane Açılışı",
@@ -43,7 +43,7 @@ const sampleNews = [
     category: "Sağlık",
     published_at: "2024-01-12T11:00:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
+    image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
   },
   {
     title: "Antalya'da Turizm Rekoru",
@@ -54,7 +54,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2024-01-11T16:20:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "Konya'da Tarım Fuarı",
@@ -65,7 +65,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2024-01-10T13:45:00Z",
     source: "AP News",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Adana'da Spor Kompleksi Açıldı",
@@ -76,7 +76,7 @@ const sampleNews = [
     category: "Spor",
     published_at: "2024-01-09T08:30:00Z",
     source: "AP News",
-    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400"
+    image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400"
   },
   {
     title: "Trabzon'da Çevre Projesi",
@@ -87,7 +87,7 @@ const sampleNews = [
     category: "Çevre",
     published_at: "2024-01-08T12:00:00Z",
     source: "AP News",
-    imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
+    image_url: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
   },
   {
     title: "İstanbul Beşiktaş'ta Sanat Sergisi",
@@ -98,7 +98,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2024-01-07T15:30:00Z",
     source: "BBC News",
-    imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
+    image_url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
   },
   {
     title: "Üsküdar'da Sağlık Taraması",
@@ -109,7 +109,7 @@ const sampleNews = [
     category: "Sağlık",
     published_at: "2024-01-06T11:00:00Z",
     source: "BBC News",
-    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
+    image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
   },
   {
     title: "Ankara Kızılay'da Teknoloji Fuarı",
@@ -120,7 +120,7 @@ const sampleNews = [
     category: "Teknoloji",
     published_at: "2024-01-05T14:20:00Z",
     source: "BBC News",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
+    image_url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
   },
   {
     title: "İzmir Konak'ta Çevre Etkinliği",
@@ -131,7 +131,7 @@ const sampleNews = [
     category: "Çevre",
     published_at: "2024-01-04T09:45:00Z",
     source: "CNN",
-    imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
+    image_url: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
   },
   {
     title: "Gaziantep'te Gastronomi Festivali",
@@ -142,7 +142,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2024-01-03T16:30:00Z",
     source: "CNN",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Kayseri'de Sanayi Yatırımı",
@@ -153,7 +153,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2024-01-02T13:15:00Z",
     source: "CNN",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Eskişehir'de Üniversite İşbirliği",
@@ -164,7 +164,7 @@ const sampleNews = [
     category: "Eğitim",
     published_at: "2024-01-01T11:00:00Z",
     source: "TRT Haber",
-    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400"
+    image_url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400"
   },
   {
     title: "Samsun'da Balık Üretimi Artışı",
@@ -175,7 +175,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-31T14:45:00Z",
     source: "TRT Haber",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Denizli'de Tekstil Fuarı",
@@ -186,7 +186,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-30T09:20:00Z",
     source: "TRT Haber",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Malatya'da Kayısı Hasadı",
@@ -197,7 +197,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-29T16:10:00Z",
     source: "France24",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Van'da Kış Turizmi",
@@ -208,7 +208,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2023-12-28T12:35:00Z",
     source: "France24",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "Erzurum'da Kış Sporları Merkezi",
@@ -219,7 +219,7 @@ const sampleNews = [
     category: "Spor",
     published_at: "2023-12-27T10:25:00Z",
     source: "France24",
-    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400"
+    image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400"
   },
   {
     title: "Diyarbakır'da Tarihi Restorasyon",
@@ -230,7 +230,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-26T15:50:00Z",
     source: "Deutsche Welle",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Mersin'de Liman Yatırımı",
@@ -241,7 +241,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-25T08:15:00Z",
     source: "Deutsche Welle",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Şanlıurfa'da Arkeolojik Keşif",
@@ -252,7 +252,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-24T13:40:00Z",
     source: "Deutsche Welle",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Hatay'da Zeytin Hasadı",
@@ -263,7 +263,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-23T11:20:00Z",
     source: "Al Jazeera",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Muğla'da Doğa Koruma Projesi",
@@ -274,7 +274,7 @@ const sampleNews = [
     category: "Çevre",
     published_at: "2023-12-22T14:55:00Z",
     source: "Al Jazeera",
-    imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
+    image_url: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
   },
   {
     title: "Rize'de Çay Üretimi",
@@ -285,7 +285,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-21T09:30:00Z",
     source: "Al Jazeera",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Aydın'da Jeotermal Enerji",
@@ -296,7 +296,7 @@ const sampleNews = [
     category: "Enerji",
     published_at: "2023-12-20T16:45:00Z",
     source: "Sky News",
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+    image_url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
   },
   {
     title: "Çanakkale'de Tarihi Etkinlik",
@@ -307,7 +307,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-19T12:10:00Z",
     source: "Sky News",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Balıkesir'de Tarım Teknolojisi",
@@ -318,7 +318,7 @@ const sampleNews = [
     category: "Teknoloji",
     published_at: "2023-12-18T10:55:00Z",
     source: "Sky News",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
+    image_url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
   },
   {
     title: "Kırıkkale'de Sanayi Üretimi",
@@ -329,7 +329,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-17T14:25:00Z",
     source: "Euronews",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Afyonkarahisar'da Termal Turizm",
@@ -340,7 +340,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2023-12-16T11:35:00Z",
     source: "Euronews",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "Isparta'da Gül Festivali",
@@ -351,7 +351,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-15T13:20:00Z",
     source: "Euronews",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Manisa'da Üzüm Hasadı",
@@ -362,7 +362,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-14T15:45:00Z",
     source: "Associated Press",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Uşak'ta Tekstil İhracatı",
@@ -373,7 +373,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-13T09:15:00Z",
     source: "Associated Press",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Zonguldak'ta Kömür Üretimi",
@@ -384,7 +384,7 @@ const sampleNews = [
     category: "Enerji",
     published_at: "2023-12-12T12:30:00Z",
     source: "Associated Press",
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+    image_url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
   },
   {
     title: "Sakarya'da Otomotiv Yatırımı",
@@ -395,7 +395,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-11T16:20:00Z",
     source: "Bloomberg",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Düzce'de Orman Koruma",
@@ -406,7 +406,7 @@ const sampleNews = [
     category: "Çevre",
     published_at: "2023-12-10T10:40:00Z",
     source: "Bloomberg",
-    imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
+    image_url: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400"
   },
   {
     title: "Bolu'da Turizm Yatırımları",
@@ -417,7 +417,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2023-12-09T14:55:00Z",
     source: "Bloomberg",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "Çorum'da Tarih Müzesi",
@@ -428,7 +428,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-08T11:25:00Z",
     source: "Financial Times",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Tokat'ta Organik Tarım",
@@ -439,7 +439,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-07T13:50:00Z",
     source: "Financial Times",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Amasya'da Elma Üretimi",
@@ -450,7 +450,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-06T15:15:00Z",
     source: "Financial Times",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Sivas'ta Gıda Sanayi",
@@ -461,7 +461,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-12-05T08:40:00Z",
     source: "Wall Street Journal",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Yozgat'ta Hayvancılık",
@@ -472,7 +472,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-12-04T12:05:00Z",
     source: "Wall Street Journal",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Kırşehir'de Enerji Projesi",
@@ -483,7 +483,7 @@ const sampleNews = [
     category: "Enerji",
     published_at: "2023-12-03T14:30:00Z",
     source: "Wall Street Journal",
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+    image_url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
   },
   {
     title: "Nevşehir'de Balon Turizmi",
@@ -494,7 +494,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2023-12-02T16:45:00Z",
     source: "Guardian",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "Kilis'te Gastronomi",
@@ -505,7 +505,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-12-01T10:20:00Z",
     source: "Guardian",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Osmaniye'de Tarımsal Araştırma",
@@ -516,7 +516,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-11-30T13:35:00Z",
     source: "Guardian",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Batman'da Petrol Keşfi",
@@ -527,7 +527,7 @@ const sampleNews = [
     category: "Enerji",
     published_at: "2023-11-29T11:50:00Z",
     source: "NTV",
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+    image_url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
   },
   {
     title: "Şırnak'ta Sınır Güvenliği",
@@ -538,7 +538,7 @@ const sampleNews = [
     category: "Güvenlik",
     published_at: "2023-11-28T15:25:00Z",
     source: "NTV",
-    imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
+    image_url: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
   },
   {
     title: "Mardin'de Kültür Turizmi",
@@ -549,7 +549,7 @@ const sampleNews = [
     category: "Turizm",
     published_at: "2023-11-27T09:10:00Z",
     source: "NTV",
-    imageUrl: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
+    image_url: "https://images.unsplash.com/photo-1539650116574-75c0c6d73fef?w=400"
   },
   {
     title: "İstanbul'da Uyuşturucu Operasyonu",
@@ -560,7 +560,7 @@ const sampleNews = [
     category: "Suç",
     published_at: "2023-11-26T14:30:00Z",
     source: "CNN",
-    imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
+    image_url: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
   },
   {
     title: "Ankara'da Siber Suç Operasyonu",
@@ -571,7 +571,7 @@ const sampleNews = [
     category: "Suç",
     published_at: "2023-11-25T16:45:00Z",
     source: "TRT Haber",
-    imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
+    image_url: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400"
   },
   {
     title: "Ukrayna'da Savaş Devam Ediyor",
@@ -582,7 +582,7 @@ const sampleNews = [
     category: "Savaş",
     published_at: "2023-11-24T12:20:00Z",
     source: "BBC News",
-    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
+    image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
   },
   {
     title: "Gazze'de Savaş Sürüyor",
@@ -593,7 +593,7 @@ const sampleNews = [
     category: "Savaş",
     published_at: "2023-11-23T09:15:00Z",
     source: "Al Jazeera",
-    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
+    image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400"
   },
   {
     title: "İstanbul'da Oyun Festivali",
@@ -604,7 +604,7 @@ const sampleNews = [
     category: "Oyunlar",
     published_at: "2023-11-22T18:30:00Z",
     source: "Reuters",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Ankara'da E-Spor Turnuvası",
@@ -615,7 +615,7 @@ const sampleNews = [
     category: "Oyunlar",
     published_at: "2023-11-21T15:45:00Z",
     source: "Sky News",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "İzmir'de Oyun Geliştirme Merkezi",
@@ -626,7 +626,7 @@ const sampleNews = [
     category: "Oyunlar",
     published_at: "2023-11-20T11:00:00Z",
     source: "Euronews",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Bursa'da Otomotiv İhracatı",
@@ -637,7 +637,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-11-19T14:20:00Z",
     source: "Habertürk",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Antalya'da Film Festivali",
@@ -648,7 +648,7 @@ const sampleNews = [
     category: "Kültür",
     published_at: "2023-11-18T16:45:00Z",
     source: "Habertürk",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400"
   },
   {
     title: "Konya'da Güneş Enerji Santrali",
@@ -659,7 +659,7 @@ const sampleNews = [
     category: "Enerji",
     published_at: "2023-11-17T10:30:00Z",
     source: "Milliyet",
-    imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+    image_url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
   },
   {
     title: "Trabzon'da Balık İhracatı",
@@ -670,7 +670,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-11-16T13:15:00Z",
     source: "Milliyet",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "İstanbul'da Teknoloji Startupları",
@@ -681,7 +681,7 @@ const sampleNews = [
     category: "Teknoloji",
     published_at: "2023-11-15T11:50:00Z",
     source: "Sabah",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
+    image_url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
   },
   {
     title: "Ankara'da Bilim Merkezi",
@@ -692,7 +692,7 @@ const sampleNews = [
     category: "Eğitim",
     published_at: "2023-11-14T15:25:00Z",
     source: "Sabah",
-    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400"
+    image_url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400"
   },
   {
     title: "İzmir'de Deniz Ulaşımı",
@@ -703,7 +703,7 @@ const sampleNews = [
     category: "Ulaştırma",
     published_at: "2023-11-13T09:40:00Z",
     source: "Cumhuriyet",
-    imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
+    image_url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400"
   },
   {
     title: "Adana'da Tarım Teknolojisi",
@@ -714,7 +714,7 @@ const sampleNews = [
     category: "Tarım",
     published_at: "2023-11-12T12:10:00Z",
     source: "Cumhuriyet",
-    imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+    image_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
   },
   {
     title: "Gaziantep'te Sanayi Üretimi",
@@ -725,7 +725,7 @@ const sampleNews = [
     category: "Ekonomi",
     published_at: "2023-11-11T14:30:00Z",
     source: "Hürriyet Daily News",
-    imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
+    image_url: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400"
   },
   {
     title: "Kayseri'de Havacılık Sanayi",
@@ -736,31 +736,31 @@ const sampleNews = [
     category: "Teknoloji",
     published_at: "2023-11-10T16:55:00Z",
     source: "Hürriyet Daily News",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
+    image_url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400"
   }
 ];
 
 const locations = [
-  { name: "İstanbul - Kadıköy", latitude: 40.9779, longitude: 29.0310, newsCount: 0 },
-  { name: "İstanbul - Beşiktaş", latitude: 41.0422, longitude: 29.0100, newsCount: 0 },
-  { name: "İstanbul - Üsküdar", latitude: 41.0214, longitude: 29.0665, newsCount: 0 },
-  { name: "İstanbul - Fatih", latitude: 41.0082, longitude: 28.9784, newsCount: 0 },
-  { name: "Ankara - Çankaya", latitude: 39.9180, longitude: 32.8540, newsCount: 0 },
-  { name: "Ankara - Kızılay", latitude: 39.9208, longitude: 32.8541, newsCount: 0 },
-  { name: "İzmir - Alsancak", latitude: 38.4370, longitude: 27.1430, newsCount: 0 },
-  { name: "İzmir - Konak", latitude: 38.4189, longitude: 27.1287, newsCount: 0 },
-  { name: "Bursa - Nilüfer", latitude: 40.2270, longitude: 28.9870, newsCount: 0 },
-  { name: "Bursa - Osmangazi", latitude: 40.1956, longitude: 29.0610, newsCount: 0 },
-  { name: "Antalya - Kaleiçi", latitude: 36.8840, longitude: 30.7020, newsCount: 0 },
-  { name: "Antalya - Lara", latitude: 36.8580, longitude: 30.7780, newsCount: 0 },
-  { name: "Konya - Selçuklu", latitude: 37.8630, longitude: 32.5180, newsCount: 0 },
-  { name: "Konya - Meram", latitude: 37.8520, longitude: 32.4650, newsCount: 0 },
-  { name: "Adana - Seyhan", latitude: 37.0150, longitude: 35.3420, newsCount: 0 },
-  { name: "Adana - Yüreğir", latitude: 36.9850, longitude: 35.3080, newsCount: 0 },
-  { name: "Trabzon - Ortahisar", latitude: 41.0120, longitude: 39.7250, newsCount: 0 },
-  { name: "Trabzon - Akçaabat", latitude: 41.0200, longitude: 39.5700, newsCount: 0 },
-  { name: "Kiev - Merkez", latitude: 50.4501, longitude: 30.5234, newsCount: 0 },
-  { name: "Gazze - Merkez", latitude: 31.5017, longitude: 34.4668, newsCount: 0 }
+  { name: "İstanbul - Kadıköy", latitude: 40.9779, longitude: 29.0310, news_count: 0 },
+  { name: "İstanbul - Beşiktaş", latitude: 41.0422, longitude: 29.0100, news_count: 0 },
+  { name: "İstanbul - Üsküdar", latitude: 41.0214, longitude: 29.0665, news_count: 0 },
+  { name: "İstanbul - Fatih", latitude: 41.0082, longitude: 28.9784, news_count: 0 },
+  { name: "Ankara - Çankaya", latitude: 39.9180, longitude: 32.8540, news_count: 0 },
+  { name: "Ankara - Kızılay", latitude: 39.9208, longitude: 32.8541, news_count: 0 },
+  { name: "İzmir - Alsancak", latitude: 38.4370, longitude: 27.1430, news_count: 0 },
+  { name: "İzmir - Konak", latitude: 38.4189, longitude: 27.1287, news_count: 0 },
+  { name: "Bursa - Nilüfer", latitude: 40.2270, longitude: 28.9870, news_count: 0 },
+  { name: "Bursa - Osmangazi", latitude: 40.1956, longitude: 29.0610, news_count: 0 },
+  { name: "Antalya - Kaleiçi", latitude: 36.8840, longitude: 30.7020, news_count: 0 },
+  { name: "Antalya - Lara", latitude: 36.8580, longitude: 30.7780, news_count: 0 },
+  { name: "Konya - Selçuklu", latitude: 37.8630, longitude: 32.5180, news_count: 0 },
+  { name: "Konya - Meram", latitude: 37.8520, longitude: 32.4650, news_count: 0 },
+  { name: "Adana - Seyhan", latitude: 37.0150, longitude: 35.3420, news_count: 0 },
+  { name: "Adana - Yüreğir", latitude: 36.9850, longitude: 35.3080, news_count: 0 },
+  { name: "Trabzon - Ortahisar", latitude: 41.0120, longitude: 39.7250, news_count: 0 },
+  { name: "Trabzon - Akçaabat", latitude: 41.0200, longitude: 39.5700, news_count: 0 },
+  { name: "Kiev - Merkez", latitude: 50.4501, longitude: 30.5234, news_count: 0 },
+  { name: "Gazze - Merkez", latitude: 31.5017, longitude: 34.4668, news_count: 0 }
 ];
 
 export function seedDatabase() {
@@ -770,7 +770,17 @@ export function seedDatabase() {
     });
 
     sampleNews.forEach(news => {
-      insertNews(news as unknown as NewsItem);
+      insertNews({
+        title: news.title,
+        content: news.content,
+        location: news.location,
+        latitude: news.latitude,
+        longitude: news.longitude,
+        category: news.category,
+        published_at: news.published_at,
+        source: news.source,
+        image_url: news.image_url
+      });
     });
 
     locations.forEach(location => {

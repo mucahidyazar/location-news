@@ -186,7 +186,7 @@ export default function HomePage() {
           name: item.name,
           latitude: item.latitude,
           longitude: item.longitude,
-          newsCount: item.news_count,
+          news_count: item.news_count,
           primaryCategory: item.primary_category,
         }),
       )
@@ -389,7 +389,7 @@ export default function HomePage() {
                 : item.category?.name || '',
             published_at: item.published_at || '',
             source: item.source,
-            imageUrl: item.image_url,
+            image_url: item.image_url,
             external_url: item.external_url,
           }))}
           selectedLocation={selectedLocation}
