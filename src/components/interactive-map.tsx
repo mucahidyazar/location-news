@@ -40,13 +40,12 @@ interface InteractiveMapProps {
 }
 
 export default function InteractiveMap({
-  locations,
   filteredNews,
   onLocationSelect,
   useCustomIcons,
 }: InteractiveMapProps) {
   const t = useTranslations()
-  const {isSidebarOpen, isSettingsSidebarOpen} = useMainLayout()
+  const {isSidebarOpen, isSettingsSidebarOpen, isUpdatesSidebarOpen, isMenuSidebarOpen} = useMainLayout()
   const [isClient, setIsClient] = useState(false)
   const [L, setL] = useState<typeof import('leaflet') | null>(null)
   const [leafletReady, setLeafletReady] = useState(false)
@@ -58,7 +57,6 @@ export default function InteractiveMap({
     // Dynamically import Leaflet on client side
     import('leaflet')
       .then(leaflet => {
-        console.log('Leaflet loaded successfully')
         setL(leaflet.default)
         setLeafletReady(true)
       })
@@ -73,7 +71,6 @@ export default function InteractiveMap({
       const timer = setTimeout(() => {
         try {
           mapInstance.invalidateSize()
-          console.log('Map size invalidated due to sidebar change')
         } catch (error) {
           console.error('Error invalidating map size:', error)
         }
@@ -81,7 +78,7 @@ export default function InteractiveMap({
       
       return () => clearTimeout(timer)
     }
-  }, [isSidebarOpen, isSettingsSidebarOpen, mapInstance, leafletReady])
+  }, [isSidebarOpen, isSettingsSidebarOpen, isUpdatesSidebarOpen, isMenuSidebarOpen, mapInstance, leafletReady])
 
   // Handle window resize events
   useEffect(() => {
@@ -89,7 +86,6 @@ export default function InteractiveMap({
       if (mapInstance && leafletReady) {
         try {
           mapInstance.invalidateSize()
-          console.log('Map size invalidated due to window resize')
         } catch (error) {
           console.error('Error invalidating map size on resize:', error)
         }
@@ -104,14 +100,11 @@ export default function InteractiveMap({
     // Get the key for this category name, then get the icon from the key-based system
     const categoryKey = getCategoryKeyByName(categoryName)
     const iconName = getCategoryIcon(categoryKey)
-    console.log('Icon name resolution:', {categoryName, categoryKey, iconName})
     return iconName
   }
 
   const createSimpleIcon = (color: string) => {
     if (!L || !L.divIcon || !leafletReady) return undefined
-
-    console.log('Creating simple icon with color:', color)
 
     try {
       return L.divIcon({
@@ -147,17 +140,6 @@ export default function InteractiveMap({
 
     const iconName = getCategoryIconName(category)
     const iconPath = getIconPath(iconName)
-
-    // Debug logging
-    console.log(
-      'Creating icon for category:',
-      category,
-      'iconName:',
-      iconName,
-      'color:',
-      color,
-    )
-    console.log('Icon path length:', iconPath.length)
 
     try {
       return L.divIcon({
@@ -207,7 +189,6 @@ export default function InteractiveMap({
   }
 
   const getIconPath = (iconName: string): string => {
-    console.log('Getting icon path for:', iconName)
     const iconPaths: Record<string, string> = {
       // Original icons
       'angry-man':
@@ -249,12 +230,6 @@ export default function InteractiveMap({
     }
 
     const path = iconPaths[iconName] || iconPaths['newspaper-sharp']
-    console.log(
-      'Icon path for',
-      iconName,
-      ':',
-      path ? 'found' : 'using fallback',
-    )
     return path
   }
 
@@ -286,84 +261,55 @@ export default function InteractiveMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {locations.map(location => {
-          // Filter news for this specific location
-          const locationNews = filteredNews.filter(
-            news => news.location === location.name,
-          )
-
-          // Don't show pin if no filtered news for this location
-          if (locationNews.length === 0) {
+        {filteredNews.map((news) => {
+          // Skip news without coordinates
+          if (!news.latitude || !news.longitude) {
             return null
           }
 
-          // Get the most common category for this location from filtered news
-          const categoryCount = locationNews.reduce((acc, news) => {
-            const categoryName = typeof news.category === 'string' ? news.category : news.category?.name || ''
-            acc[categoryName] = (acc[categoryName] || 0) + 1
-            return acc
-          }, {} as Record<string, number>)
-
-          const primaryCategory = Object.entries(categoryCount).sort(
-            ([, a], [, b]) => b - a,
-          )[0]?.[0]
-
+          // Get category for this news
+          const categoryName = typeof news.category === 'string' ? news.category : news.category?.name || ''
+          
           // Use key-based system for better multilingual support
-          const categoryKey = primaryCategory
-            ? getCategoryKeyByName(primaryCategory)
+          const categoryKey = categoryName
+            ? getCategoryKeyByName(categoryName)
             : 'other_incidents'
           const categoryColors = getCategoryColorByKey(categoryKey)
           const categoryColor = categoryColors.pin
 
-          console.log('Creating marker for location:', {
-            location: location.name,
-            primaryCategory,
-            categoryKey,
-            categoryColor,
-            useCustomIcons,
-            leafletReady,
-          })
 
           const icon = createCategoryIcon(
-            primaryCategory || 'Diğer Olaylar',
+            categoryName || 'Diğer Olaylar',
             categoryColor,
           )
 
           // Skip marker if icon creation failed (L not ready)
           if (!icon) {
-            console.warn(
-              'Failed to create icon for location:',
-              location.name,
-              'category:',
-              primaryCategory,
-            )
             return null
           }
 
-          console.log('Successfully created icon for:', location.name)
-
           return (
             <Marker
-              key={location.id}
-              position={[location.latitude, location.longitude]}
+              key={`news-${news.id}`}
+              position={[news.latitude, news.longitude]}
               icon={icon}
               eventHandlers={{
-                click: () => onLocationSelect(location.name),
+                click: () => onLocationSelect(typeof news.location === 'string' ? news.location : ''),
               }}
             >
               <Popup>
                 <div>
-                  <h3 className="font-semibold text-lg">{location.name}</h3>
+                  <h3 className="font-semibold text-lg">{news.title}</h3>
                   <p className="text-sm text-gray-600">
-                    {t('map.newsCount', {count: locationNews.length})}
-                    {primaryCategory && (
+                    {typeof news.location === 'string' ? news.location : ''}
+                    {categoryName && (
                       <span className="block text-xs text-gray-500">
-                        {t('map.mostCommon', {category: primaryCategory})}
+                        {categoryName}
                       </span>
                     )}
                   </p>
                   <button
-                    onClick={() => onLocationSelect(location.name)}
+                    onClick={() => onLocationSelect(typeof news.location === 'string' ? news.location : '')}
                     style={{
                       marginTop: '8px',
                       backgroundColor: '#10b981',

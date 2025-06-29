@@ -5,11 +5,12 @@ export interface NewsItem {
   title: string
   content: string
   summary?: string | null
+  created_at?: string
   published_at?: string
   image_url?: string | null
   imageUrl?: string | null // Legacy support
   external_url?: string | null
-  externalUrl?: string | null // Legacy support
+  external_url?: string | null // Legacy support
   is_featured?: boolean
   view_count?: number
   location_name?: string | null
@@ -40,7 +41,7 @@ export interface LegacyNewsItem {
   published_at: string
   source: string
   imageUrl?: string | null
-  externalUrl?: string | null
+  external_url?: string | null
 }
 
 export interface Location {
