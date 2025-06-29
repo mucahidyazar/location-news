@@ -43,7 +43,11 @@ export default function CommonHeader({
   const pathname = usePathname()
   return (
     <header
-      className={`bg-white border-b px-4 lg:px-6 py-1 z-[100] ${className}`}
+      className={`border-b px-4 lg:px-6 py-1 z-[100] ${className}`}
+      style={{
+        backgroundColor: 'var(--color-theme-surface-primary)',
+        borderColor: 'var(--color-theme-border-primary)',
+      }}
     >
       <div className="flex items-center justify-between">
         {/* Left: Logo */}
@@ -59,33 +63,82 @@ export default function CommonHeader({
             className="h-10 w-10"
           />
           <div>
-            <h1 className="text-lg lg:text-xl font-bold text-gray-900 font-[family-name:var(--font-josefin-sans)]">
+            <h1
+              className="text-lg lg:text-xl font-bold font-[family-name:var(--font-josefin-sans)]"
+              style={{color: 'var(--color-theme-text-primary)'}}
+            >
               {title}
             </h1>
-            <p className="text-xs text-center text-gray-600 hidden leading-4 lg:block font-[family-name:var(--font-josefin-sans)]">
+            <p
+              className="text-xs text-center hidden leading-4 lg:block font-[family-name:var(--font-josefin-sans)]"
+              style={{color: 'var(--color-theme-text-secondary)'}}
+            >
               {subtitle}
             </p>
           </div>
         </Link>
 
         {/* Center: Pages (Desktop only) */}
-        <ul className="nav-pages hidden md:flex items-center">
+        <ul className="nav-pages hidden md:flex items-center gap-2">
           {/* Home/Map Page */}
           <li className="relative">
             <Link
               href="/"
-              className={`flex flex-col items-center p-3 hover:bg-gray-50 transition-colors text-xs min-w-[80px] ${
-                pathname === '/' || !pathname.includes('/news')
-                  ? 'text-blue-600'
-                  : 'text-gray-600'
-              }`}
+              className="flex flex-col items-center p-3 transition-all duration-200 text-xs min-w-[80px] rounded-lg"
+              style={{
+                color:
+                  pathname === '/' ||
+                  (!pathname.includes('/news') && pathname !== '/news')
+                    ? 'var(--color-theme-primary-600)'
+                    : 'var(--color-theme-text-secondary)',
+                backgroundColor:
+                  pathname === '/' ||
+                  (!pathname.includes('/news') && pathname !== '/news')
+                    ? 'var(--color-theme-primary-50)'
+                    : 'transparent',
+                fontWeight:
+                  pathname === '/' ||
+                  (!pathname.includes('/news') && pathname !== '/news')
+                    ? '600'
+                    : '400',
+              }}
+              onMouseEnter={e => {
+                if (
+                  !(
+                    pathname === '/' ||
+                    (!pathname.includes('/news') && pathname !== '/news')
+                  )
+                ) {
+                  e.currentTarget.style.backgroundColor =
+                    'var(--color-theme-primary-50)'
+                  e.currentTarget.style.color = 'var(--color-theme-primary-600)'
+                  e.currentTarget.style.fontWeight = '600'
+                }
+              }}
+              onMouseLeave={e => {
+                if (
+                  !(
+                    pathname === '/' ||
+                    (!pathname.includes('/news') && pathname !== '/news')
+                  )
+                ) {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                  e.currentTarget.style.color =
+                    'var(--color-theme-text-secondary)'
+                  e.currentTarget.style.fontWeight = '400'
+                }
+              }}
               title="Map"
             >
               <MapPin className="w-5 h-5 mb-1" />
               <span>Map</span>
             </Link>
-            {(pathname === '/' || !pathname.includes('/news')) && (
-              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600"></div>
+            {(pathname === '/' ||
+              (!pathname.includes('/news') && pathname !== '/news')) && (
+              <div
+                className="absolute -bottom-1 left-0 right-0 h-0.5 shadow-lg"
+                style={{backgroundColor: 'var(--color-theme-primary-100)'}}
+              ></div>
             )}
           </li>
 
@@ -94,16 +147,43 @@ export default function CommonHeader({
             <li className="relative">
               <Link
                 href="/news"
-                className={`flex flex-col items-center p-3 hover:bg-gray-50 transition-colors text-xs min-w-[80px] ${
-                  pathname.includes('/news') ? 'text-blue-600' : 'text-gray-600'
-                }`}
+                className="flex flex-col items-center p-3 transition-all duration-200 text-xs min-w-[80px] rounded-lg"
+                style={{
+                  color: pathname.includes('/news')
+                    ? 'var(--color-theme-primary-600)'
+                    : 'var(--color-theme-text-secondary)',
+                  backgroundColor: pathname.includes('/news')
+                    ? 'var(--color-theme-primary-50)'
+                    : 'transparent',
+                  fontWeight: pathname.includes('/news') ? '600' : '400',
+                }}
+                onMouseEnter={e => {
+                  if (!pathname.includes('/news')) {
+                    e.currentTarget.style.backgroundColor =
+                      'var(--color-theme-primary-50)'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-primary-600)'
+                    e.currentTarget.style.fontWeight = '600'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!pathname.includes('/news')) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-text-secondary)'
+                    e.currentTarget.style.fontWeight = '400'
+                  }
+                }}
                 title="News"
               >
                 <Grid3x3 className="w-5 h-5 mb-1" />
                 <span>News</span>
               </Link>
               {pathname.includes('/news') && (
-                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600"></div>
+                <div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 shadow-lg"
+                  style={{backgroundColor: 'var(--color-theme-primary-100)'}}
+                ></div>
               )}
             </li>
           )}
@@ -120,11 +200,33 @@ export default function CommonHeader({
                   e.preventDefault()
                   onToggleSidebar()
                 }}
-                className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-blue-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isSidebarOpen
-                    ? 'text-blue-600 bg-blue-50 shadow-sm'
-                    : 'text-gray-600 hover:text-blue-500'
-                }`}
+                className="flex flex-col items-center py-2 px-0 md:p-3 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px]"
+                style={{
+                  color: isSidebarOpen
+                    ? 'var(--color-theme-primary-600)'
+                    : 'var(--color-theme-text-secondary)',
+                  backgroundColor: isSidebarOpen
+                    ? 'var(--color-theme-primary-50)'
+                    : 'transparent',
+                  boxShadow: isSidebarOpen
+                    ? '0 1px 2px 0 var(--color-theme-bg-overlay)'
+                    : 'none',
+                }}
+                onMouseEnter={e => {
+                  if (!isSidebarOpen) {
+                    e.currentTarget.style.backgroundColor =
+                      'var(--color-theme-primary-50)'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-primary-500)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isSidebarOpen) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-text-secondary)'
+                  }
+                }}
                 title="Feed"
               >
                 <List
@@ -135,7 +237,10 @@ export default function CommonHeader({
                 <span>Feed</span>
               </a>
               {isSidebarOpen && (
-                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 animate-pulse shadow-lg"></div>
+                <div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 shadow-lg"
+                  style={{backgroundColor: 'var(--color-theme-primary-100)'}}
+                ></div>
               )}
             </li>
           )}
@@ -149,11 +254,33 @@ export default function CommonHeader({
                   e.preventDefault()
                   onToggleSettingsSidebar()
                 }}
-                className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-blue-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isSettingsSidebarOpen
-                    ? 'text-blue-600 bg-blue-50 shadow-sm'
-                    : 'text-gray-600 hover:text-blue-500'
-                }`}
+                className="flex flex-col items-center py-2 px-0 md:p-3 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px]"
+                style={{
+                  color: isSettingsSidebarOpen
+                    ? 'var(--color-theme-primary-600)'
+                    : 'var(--color-theme-text-secondary)',
+                  backgroundColor: isSettingsSidebarOpen
+                    ? 'var(--color-theme-primary-50)'
+                    : 'transparent',
+                  boxShadow: isSettingsSidebarOpen
+                    ? '0 1px 2px 0 var(--color-theme-bg-overlay)'
+                    : 'none',
+                }}
+                onMouseEnter={e => {
+                  if (!isSettingsSidebarOpen) {
+                    e.currentTarget.style.backgroundColor =
+                      'var(--color-theme-primary-50)'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-primary-500)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isSettingsSidebarOpen) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-text-secondary)'
+                  }
+                }}
                 title="Settings"
               >
                 <Settings
@@ -164,7 +291,10 @@ export default function CommonHeader({
                 <span>Settings</span>
               </a>
               {isSettingsSidebarOpen && (
-                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 animate-pulse shadow-lg"></div>
+                <div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 shadow-lg"
+                  style={{backgroundColor: 'var(--color-theme-primary-100)'}}
+                ></div>
               )}
             </li>
           )}
@@ -178,11 +308,33 @@ export default function CommonHeader({
                   e.preventDefault()
                   onToggleUpdatesSidebar()
                 }}
-                className={`flex flex-col items-center py-2 px-0 md:p-3 hover:bg-purple-50 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] ${
-                  isUpdatesSidebarOpen
-                    ? 'text-purple-600 bg-purple-50 shadow-sm'
-                    : 'text-gray-600 hover:text-purple-500'
-                }`}
+                className="flex flex-col items-center py-2 px-0 md:p-3 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px]"
+                style={{
+                  color: isUpdatesSidebarOpen
+                    ? 'var(--color-theme-primary-600)'
+                    : 'var(--color-theme-text-secondary)',
+                  backgroundColor: isUpdatesSidebarOpen
+                    ? 'var(--color-theme-primary-50)'
+                    : 'transparent',
+                  boxShadow: isUpdatesSidebarOpen
+                    ? '0 1px 2px 0 var(--color-theme-bg-overlay)'
+                    : 'none',
+                }}
+                onMouseEnter={e => {
+                  if (!isUpdatesSidebarOpen) {
+                    e.currentTarget.style.backgroundColor =
+                      'var(--color-theme-primary-50)'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-primary-500)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isUpdatesSidebarOpen) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                    e.currentTarget.style.color =
+                      'var(--color-theme-text-secondary)'
+                  }
+                }}
                 title="Updates"
               >
                 <GitCommit
@@ -193,7 +345,10 @@ export default function CommonHeader({
                 <span>Updates</span>
               </a>
               {isUpdatesSidebarOpen && (
-                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-purple-600 animate-pulse shadow-lg"></div>
+                <div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 shadow-lg"
+                  style={{backgroundColor: 'var(--color-theme-primary-100)'}}
+                ></div>
               )}
             </li>
           )}

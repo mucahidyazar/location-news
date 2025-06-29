@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Calendar, GitCommit, User, ExternalLink, X } from 'lucide-react'
+import { useTheme } from '@/contexts/theme-context'
 
 interface GitCommit {
   sha: string
@@ -19,6 +20,7 @@ interface UpdatesSidebarProps {
 }
 
 export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
+  const { palette } = useTheme()
   const [commits, setCommits] = useState<GitCommit[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -116,16 +118,26 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
   }
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col" style={{backgroundColor: palette.surface.primary}}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-purple-50 to-blue-50">
-        <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <GitCommit className="w-5 h-5 text-purple-600" />
+      <div className="flex items-center justify-between p-4 border-b" style={{
+        background: 'linear-gradient(135deg, var(--color-theme-secondary-100) 0%, var(--color-theme-secondary-200) 50%, var(--color-theme-primary-100) 100%)',
+        borderColor: palette.border.primary
+      }}>
+        <h2 className="text-lg font-semibold flex items-center gap-2" style={{color: palette.text.primary}}>
+          <GitCommit className="w-5 h-5" style={{color: palette.secondary[600]}} />
           🚀 Updates & Changes
         </h2>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          className="p-1 rounded-full transition-colors"
+          style={{color: palette.text.secondary}}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = palette.surface.secondary
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent'
+          }}
         >
           <X className="w-4 h-4" />
         </button>
@@ -135,15 +147,25 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
       <div className="flex-1 overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-            <span className="ml-3 text-gray-600">Loading updates...</span>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor: palette.secondary[600]}}></div>
+            <span className="ml-3" style={{color: palette.text.secondary}}>Loading updates...</span>
           </div>
         ) : error ? (
-          <div className="p-4 text-center text-red-600">
+          <div className="p-4 text-center" style={{color: palette.state.error}}>
             <p>{error}</p>
             <button
               onClick={fetchCommits}
-              className="mt-2 px-4 py-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+              className="mt-2 px-4 py-2 rounded-lg transition-colors"
+              style={{
+                backgroundColor: palette.state.error + '20',
+                color: palette.state.error
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = palette.state.error + '30'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = palette.state.error + '20'
+              }}
             >
               Try Again
             </button>
@@ -153,31 +175,59 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
             {commits.map((commit, index) => (
               <div
                 key={commit.sha}
-                className="group relative p-4 rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 bg-white hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50"
+                className="group relative p-4 rounded-lg border transition-all duration-200"
+                style={{
+                  borderColor: palette.border.secondary,
+                  backgroundColor: palette.surface.primary
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = palette.border.focus
+                  e.currentTarget.style.boxShadow = '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
+                  e.currentTarget.style.backgroundColor = palette.surface.secondary
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = palette.border.secondary
+                  e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.backgroundColor = palette.surface.primary
+                }}
               >
                 {/* Commit Type Icon */}
-                <div className="absolute -left-2 top-4 w-8 h-8 bg-white border-2 border-purple-200 rounded-full flex items-center justify-center text-sm">
+                <div className="absolute -left-2 top-4 w-8 h-8 border-2 rounded-full flex items-center justify-center text-sm" style={{
+                  backgroundColor: palette.surface.primary,
+                  borderColor: palette.secondary[200]
+                }}>
                   {getCommitTypeIcon(commit.message)}
                 </div>
 
                 {/* Commit Info */}
                 <div className="ml-6">
                   <div className="flex items-start justify-between">
-                    <h3 className="font-medium text-gray-900 group-hover:text-purple-700 line-clamp-2 leading-tight">
+                    <h3 className="font-medium line-clamp-2 leading-tight transition-colors" style={{
+                      color: palette.text.primary
+                    }}>
                       {commit.message}
                     </h3>
                     <a
                       href={commit.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="ml-2 p-1 opacity-0 group-hover:opacity-100 hover:bg-purple-100 rounded transition-all"
+                      className="ml-2 p-1 opacity-0 group-hover:opacity-100 rounded transition-all"
+                      style={{
+                        backgroundColor: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = palette.secondary[100]
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent'
+                      }}
                       title="View on GitHub"
                     >
-                      <ExternalLink className="w-3 h-3 text-purple-600" />
+                      <ExternalLink className="w-3 h-3" style={{color: palette.secondary[600]}} />
                     </a>
                   </div>
 
-                  <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                  <div className="mt-2 flex items-center gap-4 text-xs" style={{color: palette.text.tertiary}}>
                     <div className="flex items-center gap-1">
                       <User className="w-3 h-3" />
                       <span>{commit.author.name}</span>
@@ -188,14 +238,16 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
                     </div>
                   </div>
 
-                  <div className="mt-2 text-xs font-mono text-gray-400">
+                  <div className="mt-2 text-xs font-mono" style={{color: palette.text.tertiary}}>
                     {commit.sha.substring(0, 7)}
                   </div>
                 </div>
 
                 {/* Timeline line */}
                 {index < commits.length - 1 && (
-                  <div className="absolute left-2 top-12 w-px h-6 bg-gradient-to-b from-purple-200 to-transparent"></div>
+                  <div className="absolute left-2 top-12 w-px h-6" style={{
+                    background: `linear-gradient(to bottom, ${palette.secondary[200]}, transparent)`
+                  }}></div>
                 )}
               </div>
             ))}

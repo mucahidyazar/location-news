@@ -42,25 +42,41 @@ export default function SettingsSidebar({
           <div className="space-y-2">
             <button
               onClick={onToggleIcons}
-              className={`w-full p-3 rounded-lg border-2 transition-all text-left ${
+              className={`w-full p-3 rounded-lg border-1 transition-all text-left ${
                 !useCustomIcons
-                  ? 'border-blue-500 bg-blue-50 text-blue-900'
-                  : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-500 text-blue-900'
+                  : 'border-gray-200 text-gray-700 hover:border-gray-300'
               }`}
+              style={{
+                backgroundColor: !useCustomIcons
+                  ? 'var(--color-theme-surface-secondary)'
+                  : 'var(--color-theme-surface-secondary)',
+              }}
             >
-              <div className="font-medium">{t('settings.mapIcons.default')}</div>
-              <div className="text-xs opacity-75">{t('settings.mapIcons.defaultDesc')}</div>
+              <div className="font-medium">
+                {t('settings.mapIcons.default')}
+              </div>
+              <div className="text-xs opacity-75">
+                {t('settings.mapIcons.defaultDesc')}
+              </div>
             </button>
             <button
               onClick={onToggleIcons}
-              className={`w-full p-3 rounded-lg border-2 transition-all text-left ${
+              className={`w-full p-3 rounded-lg border-1 transition-all text-left ${
                 useCustomIcons
-                  ? 'border-blue-500 bg-blue-50 text-blue-900'
-                  : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-500 text-blue-900'
+                  : 'border-gray-200 text-gray-700 hover:border-gray-300'
               }`}
+              style={{
+                backgroundColor: useCustomIcons
+                  ? 'var(--color-theme-surface-secondary)'
+                  : 'var(--color-theme-surface-secondary)',
+              }}
             >
               <div className="font-medium">{t('settings.mapIcons.custom')}</div>
-              <div className="text-xs opacity-75">{t('settings.mapIcons.customDesc')}</div>
+              <div className="text-xs opacity-75">
+                {t('settings.mapIcons.customDesc')}
+              </div>
             </button>
           </div>
         </div>
@@ -71,7 +87,10 @@ export default function SettingsSidebar({
             <Globe className="w-4 h-4" />
             {t('settings.language.title')}
           </h3>
-          <div className="p-3 rounded-lg border bg-gray-50">
+          <div
+            className="p-3 rounded-lg border"
+            style={{backgroundColor: 'var(--color-theme-surface-secondary)'}}
+          >
             <LanguageSwitcher />
           </div>
         </div>

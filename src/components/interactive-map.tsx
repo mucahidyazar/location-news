@@ -45,7 +45,12 @@ export default function InteractiveMap({
   useCustomIcons,
 }: InteractiveMapProps) {
   const t = useTranslations()
-  const {isSidebarOpen, isSettingsSidebarOpen, isUpdatesSidebarOpen, isMenuSidebarOpen} = useMainLayout()
+  const {
+    isSidebarOpen,
+    isSettingsSidebarOpen,
+    isUpdatesSidebarOpen,
+    isMenuSidebarOpen,
+  } = useMainLayout()
   const [isClient, setIsClient] = useState(false)
   const [L, setL] = useState<typeof import('leaflet') | null>(null)
   const [leafletReady, setLeafletReady] = useState(false)
@@ -75,10 +80,17 @@ export default function InteractiveMap({
           console.error('Error invalidating map size:', error)
         }
       }, 550) // Match the CSS transition duration (500ms) + small buffer
-      
+
       return () => clearTimeout(timer)
     }
-  }, [isSidebarOpen, isSettingsSidebarOpen, isUpdatesSidebarOpen, isMenuSidebarOpen, mapInstance, leafletReady])
+  }, [
+    isSidebarOpen,
+    isSettingsSidebarOpen,
+    isUpdatesSidebarOpen,
+    isMenuSidebarOpen,
+    mapInstance,
+    leafletReady,
+  ])
 
   // Handle window resize events
   useEffect(() => {
@@ -115,10 +127,11 @@ export default function InteractiveMap({
           width: 20px;
           height: 20px;
           border-radius: 50%;
-          border: 2px solid white;
+          border: 1px solid white;
           box-shadow: 0 2px 4px rgba(0,0,0,0.3);
           position: relative;
           z-index: 1000;
+          opacity: 0.8;
         "></div>
       `,
         iconSize: [20, 20],
@@ -150,7 +163,7 @@ export default function InteractiveMap({
           width: 35px;
           height: 35px;
           border-radius: 50%;
-          border: 3px solid white;
+          border: 1px solid white;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -158,20 +171,9 @@ export default function InteractiveMap({
           position: relative;
           z-index: 1000;
         ">
-          <svg width="18" height="18" viewBox="0 0 120 120" style="fill: white; stroke: none; overflow: visible;" xmlns="http://www.w3.org/2000/svg">
+          <svg width="24" height="24" viewBox="0 0 120 120" style="fill: white; stroke: none; overflow: visible;" xmlns="http://www.w3.org/2000/svg">
             <path d="${iconPath}" fill="white" stroke="none"/>
           </svg>
-          <div style="
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid ${color};
-          "></div>
         </div>
       `,
         iconSize: [35, 43],
@@ -249,7 +251,7 @@ export default function InteractiveMap({
         className="h-full w-full"
         style={{zIndex: 1}}
         zoomControl={false}
-        ref={(map) => {
+        ref={map => {
           if (map && !mapInstance) {
             setMapInstance(map)
           }
@@ -261,22 +263,24 @@ export default function InteractiveMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {filteredNews.map((news) => {
+        {filteredNews.map(news => {
           // Skip news without coordinates
           if (!news.latitude || !news.longitude) {
             return null
           }
 
           // Get category for this news
-          const categoryName = typeof news.category === 'string' ? news.category : news.category?.name || ''
-          
+          const categoryName =
+            typeof news.category === 'string'
+              ? news.category
+              : news.category?.name || ''
+
           // Use key-based system for better multilingual support
           const categoryKey = categoryName
             ? getCategoryKeyByName(categoryName)
             : 'other_incidents'
           const categoryColors = getCategoryColorByKey(categoryKey)
           const categoryColor = categoryColors.pin
-
 
           const icon = createCategoryIcon(
             categoryName || 'Diğer Olaylar',
@@ -294,7 +298,10 @@ export default function InteractiveMap({
               position={[news.latitude, news.longitude]}
               icon={icon}
               eventHandlers={{
-                click: () => onLocationSelect(typeof news.location === 'string' ? news.location : ''),
+                click: () =>
+                  onLocationSelect(
+                    typeof news.location === 'string' ? news.location : '',
+                  ),
               }}
             >
               <Popup>
@@ -309,7 +316,11 @@ export default function InteractiveMap({
                     )}
                   </p>
                   <button
-                    onClick={() => onLocationSelect(typeof news.location === 'string' ? news.location : '')}
+                    onClick={() =>
+                      onLocationSelect(
+                        typeof news.location === 'string' ? news.location : '',
+                      )
+                    }
                     style={{
                       marginTop: '8px',
                       backgroundColor: '#10b981',
@@ -319,10 +330,16 @@ export default function InteractiveMap({
                       fontSize: '14px',
                       width: '100%',
                       border: 'none',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     }}
-                    onMouseEnter={(e) => (e.target as HTMLButtonElement).style.backgroundColor = '#059669'}
-                    onMouseLeave={(e) => (e.target as HTMLButtonElement).style.backgroundColor = '#10b981'}
+                    onMouseEnter={e =>
+                      ((e.target as HTMLButtonElement).style.backgroundColor =
+                        '#059669')
+                    }
+                    onMouseLeave={e =>
+                      ((e.target as HTMLButtonElement).style.backgroundColor =
+                        '#10b981')
+                    }
                   >
                     {t('map.viewNews')}
                   </button>
