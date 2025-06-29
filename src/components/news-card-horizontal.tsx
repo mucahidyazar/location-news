@@ -3,7 +3,9 @@ import { NewsItem } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, MapPin } from 'lucide-react';
-import { getCategoryKeyByName, getCategoryColorByKey } from '@/lib/category-colors';
+import { getCategoryKeyByName } from '@/lib/category-colors';
+import { getCategoryColorByKey } from '@/lib/theme-category-colors';
+import { useTheme } from '@/contexts/theme-context';
 import { SourceLogo } from '@/lib/news-sources'
 import TwitterEmbed from './twitter-embed';
 
@@ -13,6 +15,7 @@ interface NewsCardHorizontalProps {
 }
 
 export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHorizontalProps) {
+  const { palette } = useTheme();
   const formatDate = (dateString: string) => {
     if (!dateString) return 'Tarih belirtilmemiş'
     const date = new Date(dateString)
@@ -28,7 +31,7 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
 
   // Use key-based system for better multilingual support
   const categoryKey = getCategoryKeyByName(typeof news.category === 'string' ? news.category : news.category?.name || '');
-  const categoryStyle = getCategoryColorByKey(categoryKey);
+  const categoryStyle = getCategoryColorByKey(categoryKey, palette);
 
   // Check if source is Twitter
   const sourceName = typeof news.source === 'string' ? news.source : news.source?.name || ''
@@ -59,7 +62,15 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
             {/* Content */}
             <div className="flex-1 min-w-0 flex flex-col">
             <div className="flex items-start justify-between mb-2 gap-2">
-              <Badge variant="secondary" className={`${categoryStyle.badge} text-xs flex-shrink-0`}>
+              <Badge 
+                variant="secondary" 
+                className="text-xs flex-shrink-0"
+                style={{
+                  backgroundColor: categoryStyle?.badge?.background || palette.surface.secondary,
+                  color: categoryStyle?.badge?.text || palette.text.primary,
+                  borderColor: categoryStyle?.badge?.border || palette.border.secondary
+                }}
+              >
                 {typeof news.category === 'string' ? news.category : news.category?.name || ''}
               </Badge>
               {news.external_url ? (
@@ -67,13 +78,22 @@ export default function NewsCardHorizontal({ news, onLocationClick }: NewsCardHo
                   href={news.external_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors truncate group"
+                  className="flex items-center gap-1 text-xs transition-colors truncate group"
+                  style={{
+                    color: palette.text.tertiary
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = palette.primary[600]
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = palette.text.tertiary
+                  }}
                 >
                   <SourceLogo source={news.source} />
                   <span className="truncate group-hover:underline">{sourceName}</span>
                 </a>
               ) : (
-                <div className="flex items-center gap-1 text-xs text-gray-500 truncate">
+                <div className="flex items-center gap-1 text-xs truncate" style={{color: palette.text.tertiary}}>
                   <SourceLogo source={news.source} />
                   <span className="truncate">{sourceName}</span>
                 </div>

@@ -4,16 +4,16 @@ import {Badge} from '@/components/ui/badge'
 import {CalendarDays, MapPin} from 'lucide-react'
 import {NewsCardProps} from '@/lib/types'
 import {SourceLogo} from '@/lib/news-sources'
-import {
-  getCategoryKeyByName,
-  getCategoryColorByKey,
-} from '@/lib/category-colors'
+import {getCategoryKeyByName} from '@/lib/category-colors'
+import {getCategoryColorByKey} from '@/lib/theme-category-colors'
+import {useTheme} from '@/contexts/theme-context'
 import {useTranslations, useLocale} from 'next-intl'
 import TwitterEmbed from './twitter-embed'
 
 export default function NewsCard({news, onLocationClick}: NewsCardProps) {
   const t = useTranslations()
   const locale = useLocale()
+  const {palette} = useTheme()
 
   const formatDate = (dateString: string) => {
     if (!dateString) return t('common.loading')
@@ -34,7 +34,7 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
       ? news.category
       : news.category?.name || ''
   const categoryKey = getCategoryKeyByName(rawCategoryName)
-  const categoryStyle = getCategoryColorByKey(categoryKey)
+  const categoryStyle = getCategoryColorByKey(categoryKey, palette)
 
   // Get translated category name
   const getTranslatedCategoryName = (categoryName: string) => {
@@ -58,7 +58,12 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
           {news.category && (
             <Badge
               variant="secondary"
-              className={`${categoryStyle.badge} text-xs`}
+              className="text-xs"
+              style={{
+                backgroundColor: categoryStyle?.badge?.background || palette.surface.secondary,
+                color: categoryStyle?.badge?.text || palette.text.primary,
+                borderColor: categoryStyle?.badge?.border || palette.border.secondary
+              }}
             >
               {getTranslatedCategoryName(rawCategoryName)}
             </Badge>
@@ -68,13 +73,22 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
               href={news.external_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors group hover:underline"
+              className="flex items-center gap-1 text-xs transition-colors group hover:underline"
+              style={{
+                color: palette.text.tertiary
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = palette.primary[600]
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = palette.text.tertiary
+              }}
             >
               <SourceLogo source={news.source} />
               <span>{sourceName}</span>
             </a>
           ) : (
-            <div className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-1 text-xs" style={{color: palette.text.tertiary}}>
               <SourceLogo source={news.source} />
               <span>{sourceName}</span>
             </div>
