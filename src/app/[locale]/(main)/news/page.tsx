@@ -15,6 +15,7 @@ import {Newspaper, Search, X} from 'lucide-react'
 import NewsCard from '@/components/news-card'
 import {useTranslations} from 'next-intl'
 import {LoadingSpinner} from '@/components/ui/loading-spinner'
+import {LogoLoading} from '@/components/ui/logo-loading'
 import {useInfiniteNews, useCategories} from '@/hooks/use-news'
 
 // Separate component for news data to isolate re-renders
@@ -58,9 +59,7 @@ const NewsContent = memo(
     }
 
     if (isNewsLoading) {
-      return (
-        <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
-      )
+      return <LogoLoading variant="page" text={t('common.loading')} size="lg" />
     }
 
     return (
@@ -159,9 +158,7 @@ export default function NewsPage() {
   )
 
   if (isCategoriesLoading) {
-    return (
-      <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
-    )
+    return <LogoLoading variant="page" text={t('common.loading')} size="xl" />
   }
 
   return (
