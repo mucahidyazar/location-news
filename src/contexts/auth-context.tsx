@@ -27,6 +27,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
   const [loading, setLoading] = useState(true)
   const [profileLoading, setProfileLoading] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   const loadUserProfile = async (userEmail: string) => {
     try {
@@ -48,13 +49,21 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
   }
 
   useEffect(() => {
+    setMounted(true)
+    let initialLoadCompleted = false
+    
     // Get initial session
     const getInitialSession = async () => {
-      console.log('x1 getInitialSession')
+      console.log('AuthProvider: Getting initial session')
       try {
+        // Add a small delay to ensure proper hydration
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
         const {
           data: {session},
         } = await supabase.auth.getSession()
+        
+        console.log('AuthProvider: Initial session', session?.user?.email || 'No user')
         setUser(session?.user ?? null)
 
         if (session?.user) {
@@ -64,11 +73,16 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
           }
         } else {
           setUserProfile(null)
+          setIsAdmin(false)
         }
       } catch (error) {
         console.error('Error getting initial session:', error)
+        setUser(null)
+        setUserProfile(null)
+        setIsAdmin(false)
       } finally {
-        console.log('x1 getInitialSession finally')
+        console.log('AuthProvider: Initial session loading complete')
+        initialLoadCompleted = true
         setLoading(false)
       }
     }
@@ -79,7 +93,13 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     const {
       data: {subscription},
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('x1 onAuthStateChange')
+      console.log('AuthProvider: Auth state changed', event, session?.user?.email || 'No user')
+      
+      // Skip if this is the initial session load
+      if (!initialLoadCompleted && event === 'INITIAL_SESSION') {
+        return
+      }
+      
       setUser(session?.user ?? null)
 
       if (session?.user) {
@@ -91,8 +111,11 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
         setIsAdmin(false)
         setUserProfile(null)
       }
-      console.log('x1 onAuthStateChange finally')
-      setLoading(false)
+      
+      // Set loading to false for auth state changes after initial load
+      if (initialLoadCompleted) {
+        setLoading(false)
+      }
     })
 
     return () => subscription.unsubscribe()

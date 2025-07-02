@@ -17,25 +17,30 @@ export function AuthWrapper({ children }: AuthWrapperProps = {}) {
   const { user, signOut, loading } = useAuth()
 
   useEffect(() => {
-    setMounted(true)
-    
-    // Only show in development
-    const isDev = process.env.NODE_ENV === 'development'
-    if (!isDev) {
-      return
-    }
+    // Add a small delay to ensure proper hydration
+    const timer = setTimeout(() => {
+      setMounted(true)
+      
+      // Only show in development
+      const isDev = process.env.NODE_ENV === 'development'
+      if (!isDev) {
+        return
+      }
 
-    // Check secret login status
-    const envSecret = process.env.NEXT_PUBLIC_SECRET_LOGIN_CHECK
-    const cookieSecret = getSecretLoginCookie()
+      // Check secret login status
+      const envSecret = process.env.NEXT_PUBLIC_SECRET_LOGIN_CHECK
+      const cookieSecret = getSecretLoginCookie()
+      
+      console.log('AuthWrapper Debug:', { 
+        envSecret, 
+        cookieSecret, 
+        hasAccess: !!envSecret && envSecret === cookieSecret 
+      })
+      
+      setHasSecretAccess(!!envSecret && envSecret === cookieSecret)
+    }, 50)
     
-    console.log('AuthWrapper Debug:', { 
-      envSecret, 
-      cookieSecret, 
-      hasAccess: !!envSecret && envSecret === cookieSecret 
-    })
-    
-    setHasSecretAccess(!!envSecret && envSecret === cookieSecret)
+    return () => clearTimeout(timer)
   }, [])
 
   if (!mounted || loading) {

@@ -20,9 +20,11 @@ import {LoadingSpinner} from '@/components/ui/loading-spinner'
 import {FloatingReportButton} from '@/components/floating-report-button'
 import {NewsReportForm} from '@/components/news-report-form'
 import {cn} from '@/lib/utils'
+import {useAuth} from '@/contexts/auth-context'
 
 export default function HomePage() {
   const t = useTranslations()
+  const {loading: authLoading} = useAuth()
   const {
     useCustomIcons,
     isSidebarOpen,
@@ -331,7 +333,7 @@ export default function HomePage() {
     setSelectedMapCoordinates({lat, lng})
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
     )
