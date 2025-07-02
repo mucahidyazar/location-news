@@ -16,21 +16,26 @@ import {Input} from '@/components/ui/input'
 import {Newspaper, Search, X, Globe, Tv, Building} from 'lucide-react'
 import SmartDatePicker from '@/components/smart-date-picker'
 import {useTranslations} from 'next-intl'
-import {LoadingSpinner} from '@/components/ui/loading-spinner'
+import {LogoLoading} from '@/components/ui/logo-loading'
 import {FloatingReportButton} from '@/components/floating-report-button'
+import {FloatingMenuButton} from '@/components/floating-menu-button'
 import {NewsReportForm} from '@/components/news-report-form'
 import {cn} from '@/lib/utils'
 import {useAuth} from '@/contexts/auth-context'
 
 export default function HomePage() {
   const t = useTranslations()
-  const {loading: authLoading} = useAuth()
+  const {loading: authLoading, isAdmin} = useAuth()
   const {
     useCustomIcons,
     isSidebarOpen,
+    setIsSidebarOpen,
     isSettingsSidebarOpen,
+    setIsSettingsSidebarOpen,
     isUpdatesSidebarOpen,
+    setIsUpdatesSidebarOpen,
     isAdminSidebarOpen,
+    setIsAdminSidebarOpen,
     isMenuSidebarOpen,
     isUserSidebarOpen,
   } = useMainLayout()
@@ -333,18 +338,43 @@ export default function HomePage() {
     setSelectedMapCoordinates({lat, lng})
   }
 
+  // Floating menu handlers
+  const handleModerateClick = () => {
+    setIsAdminSidebarOpen(true)
+    setIsSidebarOpen(false)
+    setIsSettingsSidebarOpen(false)
+    setIsUpdatesSidebarOpen(false)
+  }
+
+  const handleUpdatesClick = () => {
+    setIsUpdatesSidebarOpen(true)
+    setIsSidebarOpen(false)
+    setIsSettingsSidebarOpen(false)
+    setIsAdminSidebarOpen(false)
+  }
+
+  const handleSettingsClick = () => {
+    setIsSettingsSidebarOpen(true)
+    setIsSidebarOpen(false)
+    setIsUpdatesSidebarOpen(false)
+    setIsAdminSidebarOpen(false)
+  }
+
+  const handleFeedClick = () => {
+    setIsSidebarOpen(true)
+    setIsSettingsSidebarOpen(false)
+    setIsUpdatesSidebarOpen(false)
+    setIsAdminSidebarOpen(false)
+  }
+
   if (loading || authLoading) {
-    return (
-      <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
-    )
+    return <LogoLoading variant="page" text={t('common.loading')} size="xl" />
   }
 
   return (
     <div className="h-full w-full relative">
       {/* Floating Filters Panel */}
-      <div
-        className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4 opacity-85 hover:opacity-95 bg-[var(--color-theme-surface-primary)]"
-      >
+      <div className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4 opacity-85 hover:opacity-95 bg-[var(--color-theme-surface-primary)]">
         {/* Search and Main Filters */}
         <div className="flex gap-2 md:gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[150px] md:min-w-[200px]">
@@ -373,7 +403,7 @@ export default function HomePage() {
               variant="ghost"
               size="sm"
               onClick={handleClearFilter}
-              className="text-red-600 hover:text-red-800 hover:bg-red-50 h-8 px-2 text-xs cursor-pointer"
+              className="text-red-600 hover:text-red-800 hover:bg-red-50 h-8 px-2 text-xs cursor-pointer mx-auto"
             >
               <X className="w-3 h-3 mr-1" />
               {t('common.clear')}
@@ -395,7 +425,7 @@ export default function HomePage() {
                     'flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all border-2',
                     selectedSources.includes(source)
                       ? 'shadow-sm border-[var(--color-theme-primary-300)] bg-[var(--color-theme-primary-50)] text-[var(--color-theme-primary-600)]'
-                      : 'border-transparent bg-[var(--color-theme-surface-secondary)] text-[var(--color-theme-text-primary)] hover:bg-[var(--color-theme-surface-tertiary)]'
+                      : 'border-transparent bg-[var(--color-theme-surface-secondary)] text-[var(--color-theme-text-primary)] hover:bg-[var(--color-theme-surface-tertiary)]',
                   )}
                 >
                   <IconComponent className="w-4 h-4" />
@@ -493,6 +523,16 @@ export default function HomePage() {
           isReportMode={isReportFormOpen}
         />
       </div>
+
+      {/* Floating Menu Button */}
+      <FloatingMenuButton
+        onModerateClick={handleModerateClick}
+        onUpdatesClick={handleUpdatesClick}
+        onSettingsClick={handleSettingsClick}
+        onFeedClick={handleFeedClick}
+        isSidebarOpen={isAnySidebarOpen}
+        isAdmin={isAdmin}
+      />
 
       {/* Floating Report Button */}
       <FloatingReportButton

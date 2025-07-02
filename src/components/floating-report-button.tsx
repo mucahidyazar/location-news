@@ -20,7 +20,7 @@ export function FloatingReportButton({
     <button
       onClick={onClick}
       className={cn(
-        'fixed bottom-6 z-50',
+        'fixed z-50',
         'w-14 h-14 rounded-full shadow-lg',
         'flex items-center justify-center',
         'transition-all duration-300 ease-out',
@@ -29,12 +29,15 @@ export function FloatingReportButton({
         '[background-color:var(--color-theme-primary-500)]',
         'text-white',
         'hover:[background-color:var(--color-theme-primary-600)]',
-        // Dynamic positioning based on sidebar state
-        isSidebarOpen ? 'right-[420px]' : 'right-6',
         // Smooth transition for icon change
         'transition-transform duration-200 ease-in-out',
         className
       )}
+      style={{
+        bottom: '24px',
+        right: isSidebarOpen ? '420px' : '24px',
+        transition: 'all 300ms ease-out'
+      }}
       title={isFormOpen ? "Formu Kapat" : "Haber Bildir"}
       aria-label={isFormOpen ? "Haber bildirimi formunu kapat" : "Yeni haber bildirimi oluştur"}
     >
