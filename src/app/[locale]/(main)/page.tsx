@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import InteractiveMap from '@/components/interactive-map'
 import {NewsItem, Location} from '@/lib/types'
 import {useMainLayout} from '@/contexts/main-layout-context'
@@ -16,10 +16,31 @@ import {Input} from '@/components/ui/input'
 import {Newspaper, Search, X, Globe, Tv, Building} from 'lucide-react'
 import SmartDatePicker from '@/components/smart-date-picker'
 import {useTranslations} from 'next-intl'
+import {LoadingSpinner} from '@/components/ui/loading-spinner'
+import {FloatingReportButton} from '@/components/floating-report-button'
+import {NewsReportForm} from '@/components/news-report-form'
+import {cn} from '@/lib/utils'
 
 export default function HomePage() {
   const t = useTranslations()
-  const {useCustomIcons} = useMainLayout()
+  const {
+    useCustomIcons,
+    isSidebarOpen,
+    isSettingsSidebarOpen,
+    isUpdatesSidebarOpen,
+    isAdminSidebarOpen,
+    isMenuSidebarOpen,
+    isUserSidebarOpen,
+  } = useMainLayout()
+
+  // Check if any sidebar is open
+  const isAnySidebarOpen =
+    isSidebarOpen ||
+    isSettingsSidebarOpen ||
+    isUpdatesSidebarOpen ||
+    isMenuSidebarOpen ||
+    isAdminSidebarOpen ||
+    isUserSidebarOpen
 
   // Generate dynamic categories based on translations
   const getLocalizedCategories = () => {
@@ -41,10 +62,39 @@ export default function HomePage() {
   const [, setViewType] = useState<'card' | 'horizontal' | 'minimal'>('card')
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
+  // Input için local state (focus problemi çözülür)
+  const [inputValue, setInputValue] = useState('')
+  // API call için debounced search term
+  const [, setDebouncedSearchTerm] = useState('')
+  const [isReportFormOpen, setIsReportFormOpen] = useState(false)
+  const [selectedMapCoordinates, setSelectedMapCoordinates] = useState<{
+    lat: number
+    lng: number
+  } | null>(null)
 
   useEffect(() => {
     loadData()
+  }, [])
+
+  // inputValue değiştiğinde 500ms sonra debouncedSearchTerm'i güncelle ve API call yap
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      setDebouncedSearchTerm(inputValue)
+      // API call yap
+      await loadData(inputValue)
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [inputValue])
+
+  // Listen for news approval events to refresh data
+  useEffect(() => {
+    const handleNewsApproved = () => {
+      loadData()
+    }
+
+    window.addEventListener('newsApproved', handleNewsApproved)
+    return () => window.removeEventListener('newsApproved', handleNewsApproved)
   }, [])
 
   useEffect(() => {
@@ -79,13 +129,7 @@ export default function HomePage() {
       )
     }
 
-    if (searchTerm) {
-      filtered = filtered.filter(
-        item =>
-          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.content.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
+    // Search filtering artık API'de yapılıyor, client-side filtering kaldırıldı
 
     if (dateRange.start) {
       filtered = filtered.filter(
@@ -109,7 +153,6 @@ export default function HomePage() {
     selectedCategories,
     selectedSources,
     dateRange,
-    searchTerm,
     news,
     t, // Added missing dependency
   ])
@@ -149,7 +192,7 @@ export default function HomePage() {
     return Globe
   }
 
-  const loadData = async () => {
+  const loadData = async (searchTerm?: string) => {
     try {
       // Load last month's data by default
       const endDate = new Date()
@@ -161,6 +204,11 @@ export default function HomePage() {
         end_date: endDate.toISOString().split('T')[0] + 'T23:59',
         limit: '500',
       })
+
+      // Search parametresini ekle
+      if (searchTerm && searchTerm.trim()) {
+        params.append('search', searchTerm.trim())
+      }
 
       // Load data from Supabase APIs
       const [newsResponse, locationsResponse] = await Promise.all([
@@ -209,8 +257,16 @@ export default function HomePage() {
     setSelectedCategories([t('filters.all')])
     setSelectedSources([])
     setDateRange({})
-    setSearchTerm('')
+    setInputValue('')
+    setDebouncedSearchTerm('')
   }
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value)
+    },
+    [],
+  )
 
   const handleCategorySelect = (category: string) => {
     if (category === t('filters.all')) {
@@ -242,14 +298,42 @@ export default function HomePage() {
     setDateRange({start, end})
   }
 
+  const handleNewsReport = async (reportData: unknown) => {
+    try {
+      const response = await fetch('/api/news-reports', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reportData),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit news report')
+      }
+
+      // Show success message (could be improved with a toast notification)
+      alert(
+        'Haber başarıyla gönderildi! Admin onayından sonra yayınlanacaktır.',
+      )
+
+      // Optionally reload data to show the new pending news
+      // loadData()
+    } catch (error) {
+      console.error('Error submitting news report:', error)
+      throw error
+    }
+  }
+
+  const handleMapClick = (lat: number, lng: number) => {
+    setSelectedMapCoordinates({lat, lng})
+  }
+
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('common.loading')}</p>
-        </div>
-      </div>
+      <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
     )
   }
 
@@ -257,17 +341,7 @@ export default function HomePage() {
     <div className="h-full w-full relative">
       {/* Floating Filters Panel */}
       <div
-        className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4"
-        style={{
-          backgroundColor: 'var(--color-theme-surface-primary)',
-          opacity: 0.85,
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.opacity = '0.95'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.opacity = '0.85'
-        }}
+        className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4 opacity-85 hover:opacity-95 bg-[var(--color-theme-surface-primary)]"
       >
         {/* Search and Main Filters */}
         <div className="flex gap-2 md:gap-3 flex-wrap">
@@ -275,8 +349,8 @@ export default function HomePage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               placeholder="Search city, news title, or any keyword"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              value={inputValue}
+              onChange={handleInputChange}
               className="pl-10 h-8 text-sm"
             />
           </div>
@@ -290,7 +364,7 @@ export default function HomePage() {
           {(selectedLocation ||
             !selectedCategories.includes(t('filters.all')) ||
             selectedSources.length > 0 ||
-            searchTerm ||
+            inputValue ||
             dateRange?.start ||
             dateRange?.end) && (
             <Button
@@ -315,34 +389,12 @@ export default function HomePage() {
                 <button
                   key={source}
                   onClick={() => handleSourceSelect(source)}
-                  className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all border-2 ${
+                  className={cn(
+                    'flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all border-2',
                     selectedSources.includes(source)
-                      ? 'shadow-sm'
-                      : 'border-transparent'
-                  }`}
-                  style={{
-                    backgroundColor: selectedSources.includes(source)
-                      ? 'var(--color-theme-primary-50)'
-                      : 'var(--color-theme-surface-secondary)',
-                    color: selectedSources.includes(source)
-                      ? 'var(--color-theme-primary-600)'
-                      : 'var(--color-theme-text-primary)',
-                    borderColor: selectedSources.includes(source)
-                      ? 'var(--color-theme-primary-300)'
-                      : 'transparent',
-                  }}
-                  onMouseEnter={e => {
-                    if (!selectedSources.includes(source)) {
-                      e.currentTarget.style.backgroundColor =
-                        'var(--color-theme-surface-tertiary)'
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!selectedSources.includes(source)) {
-                      e.currentTarget.style.backgroundColor =
-                        'var(--color-theme-surface-secondary)'
-                    }
-                  }}
+                      ? 'shadow-sm border-[var(--color-theme-primary-300)] bg-[var(--color-theme-primary-50)] text-[var(--color-theme-primary-600)]'
+                      : 'border-transparent bg-[var(--color-theme-surface-secondary)] text-[var(--color-theme-text-primary)] hover:bg-[var(--color-theme-surface-tertiary)]'
+                  )}
                 >
                   <IconComponent className="w-4 h-4" />
                   <div className="flex flex-col items-start">
@@ -435,8 +487,26 @@ export default function HomePage() {
           }
           onLocationSelect={handleLocationSelect}
           useCustomIcons={useCustomIcons}
+          onMapClick={handleMapClick}
+          isReportMode={isReportFormOpen}
         />
       </div>
+
+      {/* Floating Report Button */}
+      <FloatingReportButton
+        onClick={() => setIsReportFormOpen(!isReportFormOpen)}
+        isFormOpen={isReportFormOpen}
+        isSidebarOpen={isAnySidebarOpen}
+      />
+
+      {/* News Report Form */}
+      <NewsReportForm
+        isOpen={isReportFormOpen}
+        onClose={() => setIsReportFormOpen(false)}
+        onSubmit={handleNewsReport}
+        isSidebarOpen={isAnySidebarOpen}
+        selectedCoordinates={selectedMapCoordinates}
+      />
     </div>
   )
 }

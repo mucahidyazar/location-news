@@ -1,124 +1,173 @@
 'use client'
 
-import {useState, useEffect} from 'react'
+import {useState, useCallback, useEffect, useMemo, memo} from 'react'
+import {useSearchParams} from 'next/navigation'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {Newspaper, Search, X} from 'lucide-react'
 import NewsCard from '@/components/news-card'
-import {NewsItem, Category} from '@/lib/types'
 import {useTranslations} from 'next-intl'
+import {LoadingSpinner} from '@/components/ui/loading-spinner'
+import {useInfiniteNews, useCategories} from '@/hooks/use-news'
+
+// Separate component for news data to isolate re-renders
+const NewsContent = memo(
+  ({
+    searchTerm,
+    selectedCategory,
+  }: {
+    searchTerm: string
+    selectedCategory: string
+  }) => {
+    const t = useTranslations()
+    const NEWS_PER_PAGE = 20
+
+    const newsOptions = useMemo(
+      () => ({
+        searchTerm: searchTerm || undefined,
+        selectedCategory: selectedCategory || undefined,
+        limit: NEWS_PER_PAGE,
+      }),
+      [searchTerm, selectedCategory],
+    )
+
+    const {
+      data,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+      isPending: isNewsLoading,
+    } = useInfiniteNews(newsOptions)
+
+    // Tüm sayfaları flat array haline getir
+    const news = useMemo(() => {
+      return data?.pages.flat() || []
+    }, [data])
+
+    const loadMore = async () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        await fetchNextPage()
+      }
+    }
+
+    if (isNewsLoading) {
+      return (
+        <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
+      )
+    }
+
+    return (
+      <>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {news.map(item => (
+            <NewsCard key={item.id} news={item} onLocationClick={() => {}} />
+          ))}
+        </div>
+
+        {hasNextPage && news.length > 0 && (
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={loadMore}
+              disabled={isFetchingNextPage}
+              className="px-8 py-2"
+            >
+              {isFetchingNextPage ? (
+                <LoadingSpinner
+                  size="sm"
+                  variant="button"
+                  text={t('common.loading')}
+                  showText={false}
+                />
+              ) : (
+                t('news.loadMore')
+              )}
+            </Button>
+          </div>
+        )}
+
+        {news.length === 0 && (
+          <div className="text-center py-12">
+            <Newspaper className="mx-auto h-12 w-12 text-[var(--color-theme-text-tertiary)]" />
+            <h3 className="mt-4 text-lg font-medium text-[var(--color-theme-text-primary)]">
+              {t('news.noNewsFound')}
+            </h3>
+            <p className="mt-2 text-[var(--color-theme-text-secondary)]">
+              {t('news.changeSearchCriteria')}
+            </p>
+          </div>
+        )}
+      </>
+    )
+  },
+)
+
+NewsContent.displayName = 'NewsContent'
 
 export default function NewsPage() {
   const t = useTranslations()
-  const [news, setNews] = useState<NewsItem[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [filteredNews, setFilteredNews] = useState<NewsItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [newsLoaded, setNewsLoaded] = useState(0)
-  const [searchTerm, setSearchTerm] = useState('')
+  // const router = useRouter()
+  const searchParams = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const NEWS_PER_PAGE = 20
 
+  // Input için local state (focus problemi çözülür)
+  const [inputValue, setInputValue] = useState(searchParams.get('search') || '')
+  // API call için debounced search term
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
+    searchParams.get('search') || '',
+  )
+
+  // Categories için ayrı hook
+  const {data: categories = [], isPending: isCategoriesLoading} =
+    useCategories()
+
+  // inputValue değiştiğinde 500ms sonra debouncedSearchTerm'i güncelle
   useEffect(() => {
-    loadData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchTerm(inputValue)
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [inputValue])
+
+  // URL'den gelen search parametresini input'a populate et (sadece ilk yüklemede)
+  useEffect(() => {
+    const urlSearch = searchParams.get('search')
+    if (urlSearch) {
+      setInputValue(urlSearch)
+      setDebouncedSearchTerm(urlSearch)
+    }
+  }, [searchParams]) // searchParams dependency added
+
+  const clearFilters = useCallback(() => {
+    setInputValue('')
+    setDebouncedSearchTerm('')
+    setSelectedCategory('')
   }, [])
 
-  useEffect(() => {
-    setNewsLoaded(0)
-    setNews([])
-    setHasMore(true)
-    loadData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, selectedCategory])
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value)
+    },
+    [],
+  )
 
-  useEffect(() => {
-    filterNews()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [news])
-
-  const loadData = async (loadMore = false) => {
-    try {
-      if (loadMore) {
-        setLoadingMore(true)
-      } else {
-        setLoading(true)
-      }
-
-      const currentOffset = loadMore ? newsLoaded : 0
-      const currentLimit = NEWS_PER_PAGE
-      
-      const params = new URLSearchParams({
-        limit: currentLimit.toString(),
-        offset: currentOffset.toString(),
-      })
-
-      if (searchTerm) params.append('search', searchTerm)
-      if (selectedCategory) params.append('category', selectedCategory)
-
-      const promises = [
-        fetch(`/api/news?${params.toString()}`),
-      ]
-
-      if (!loadMore) {
-        promises.push(
-          fetch('/api/categories')
-        )
-      }
-
-      const responses = await Promise.all(promises)
-      const newsData = await responses[0].json()
-
-      if (loadMore) {
-        setNews(prev => [...prev, ...newsData]) // Append new news
-        setNewsLoaded(prev => prev + newsData.length)
-      } else {
-        setNews(newsData)
-        setNewsLoaded(newsData.length)
-        
-        if (responses.length > 1) {
-          const categoriesData = await responses[1].json()
-          setCategories(categoriesData)
-        }
-      }
-
-      // Check if there are more news to load (if we got less than requested, no more)
-      setHasMore(newsData.length === NEWS_PER_PAGE)
-    } catch (error) {
-      console.error('Error loading data:', error)
-    } finally {
-      setLoading(false)
-      setLoadingMore(false)
-    }
-  }
-
-  const filterNews = () => {
-    setFilteredNews(news)
-  }
-
-  const clearFilters = () => {
-    setSearchTerm('')
-    setSelectedCategory('')
-  }
-
-  if (loading) {
+  if (isCategoriesLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-theme-primary-600)' }}></div>
-          <p style={{ color: 'var(--color-theme-text-secondary)' }}>{t('common.loading')}</p>
-        </div>
-      </div>
+      <LoadingSpinner size="xl" variant="page" text={t('common.loading')} />
     )
   }
 
   return (
-    <div className="h-full overflow-auto" style={{ backgroundColor: 'var(--color-theme-surface-primary)' }}>
+    <div className="h-full overflow-auto bg-[var(--color-theme-surface-primary)]">
       {/* Filters */}
-      <div className="shadow-sm" style={{ backgroundColor: 'var(--color-theme-surface-secondary)' }}>
+      <div className="shadow-sm bg-[var(--color-theme-surface-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Search */}
@@ -126,15 +175,19 @@ export default function NewsPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search city, news title, or any keyword"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                value={inputValue}
+                onChange={handleInputChange}
                 className="pl-10"
               />
             </div>
 
-
             {/* Category Filter */}
-            <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}>
+            <Select
+              value={selectedCategory || 'all'}
+              onValueChange={value =>
+                setSelectedCategory(value === 'all' ? '' : value)
+              }
+            >
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder={t('news.allCategories')} />
               </SelectTrigger>
@@ -148,10 +201,8 @@ export default function NewsPage() {
               </SelectContent>
             </Select>
 
-
             {/* Clear Filters */}
-            {(searchTerm ||
-              selectedCategory) && (
+            {(inputValue || selectedCategory) && (
               <Button variant="ghost" size="sm" onClick={clearFilters}>
                 <X className="w-4 h-4 mr-1" />
                 {t('news.clearFilters')}
@@ -163,57 +214,11 @@ export default function NewsPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredNews.map(item => (
-            <NewsCard 
-              key={item.id} 
-              news={item}
-              onLocationClick={() => {}}
-            />
-          ))}
-        </div>
-
-        {/* Load More Button */}
-        {hasMore && filteredNews.length > 0 && (
-          <div className="flex justify-center mt-8">
-            <Button
-              onClick={() => loadData(true)}
-              disabled={loadingMore}
-              className="px-8 py-2"
-            >
-              {loadingMore ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  {t('common.loading')}
-                </>
-              ) : (
-                t('news.loadMore')
-              )}
-            </Button>
-          </div>
-        )}
-
-        {filteredNews.length === 0 && !loading && (
-          <div className="text-center py-12">
-            <Newspaper className="mx-auto h-12 w-12" style={{ color: 'var(--color-theme-text-tertiary)' }} />
-            <h3 className="mt-4 text-lg font-medium" style={{ color: 'var(--color-theme-text-primary)' }}>
-              {t('news.noNewsFound')}
-            </h3>
-            <p className="mt-2" style={{ color: 'var(--color-theme-text-secondary)' }}>
-              {t('news.changeSearchCriteria')}
-            </p>
-          </div>
-        )}
+        <NewsContent
+          searchTerm={debouncedSearchTerm}
+          selectedCategory={selectedCategory}
+        />
       </main>
-
-      {/* Footer */}
-      <footer className="border-t mt-12" style={{ backgroundColor: 'var(--color-theme-surface-secondary)', borderColor: 'var(--color-theme-border-primary)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center" style={{ color: 'var(--color-theme-text-tertiary)' }}>
-            <p>{t('news.copyrightText')}</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

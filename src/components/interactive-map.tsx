@@ -9,7 +9,7 @@ import {
   getCategoryIcon,
 } from '@/lib/category-colors'
 import {useTranslations} from 'next-intl'
-import {useMainLayout} from '@/contexts/main-layout-context'
+import {NoSSR} from '@/components/ui/no-ssr'
 
 const MapContainer = dynamic(
   () => import('react-leaflet').then(mod => mod.MapContainer),
@@ -29,6 +29,8 @@ const ZoomControl = dynamic(
   () => import('react-leaflet').then(mod => mod.ZoomControl),
   {ssr: false},
 )
+// Import useMapEvents statically for hooks to work properly
+import {useMapEvents} from 'react-leaflet'
 
 interface InteractiveMapProps {
   locations: Location[]
@@ -37,25 +39,36 @@ interface InteractiveMapProps {
   selectedCategory?: string
   onLocationSelect: (location: string) => void
   useCustomIcons: boolean
+  onMapClick?: (lat: number, lng: number) => void
+  isReportMode?: boolean
 }
 
 export default function InteractiveMap({
   filteredNews,
   onLocationSelect,
   useCustomIcons,
+  onMapClick,
+  isReportMode = false,
 }: InteractiveMapProps) {
   const t = useTranslations()
-  const {
-    isSidebarOpen,
-    isSettingsSidebarOpen,
-    isUpdatesSidebarOpen,
-    isMenuSidebarOpen,
-  } = useMainLayout()
+
   const [isClient, setIsClient] = useState(false)
   const [L, setL] = useState<typeof import('leaflet') | null>(null)
   const [leafletReady, setLeafletReady] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapInstance, setMapInstance] = useState<any>(null)
+
+  // Map click handler component
+  const MapClickHandler = () => {
+    useMapEvents({
+      click: e => {
+        if (isReportMode && onMapClick) {
+          onMapClick(e.latlng.lat, e.latlng.lng)
+        }
+      },
+    })
+    return null
+  }
 
   useEffect(() => {
     setIsClient(true)
@@ -69,28 +82,6 @@ export default function InteractiveMap({
         console.error('Failed to load Leaflet:', error)
       })
   }, [])
-
-  // Handle sidebar state changes to resize map
-  useEffect(() => {
-    if (mapInstance && leafletReady) {
-      const timer = setTimeout(() => {
-        try {
-          mapInstance.invalidateSize()
-        } catch (error) {
-          console.error('Error invalidating map size:', error)
-        }
-      }, 550) // Match the CSS transition duration (500ms) + small buffer
-
-      return () => clearTimeout(timer)
-    }
-  }, [
-    isSidebarOpen,
-    isSettingsSidebarOpen,
-    isUpdatesSidebarOpen,
-    isMenuSidebarOpen,
-    mapInstance,
-    leafletReady,
-  ])
 
   // Handle window resize events
   useEffect(() => {
@@ -235,120 +226,112 @@ export default function InteractiveMap({
     return path
   }
 
-  if (!isClient || !leafletReady) {
-    return (
-      <div className="h-full bg-gray-100 rounded-lg flex items-center justify-center">
-        <div className="text-gray-500">{t('map.loading')}</div>
-      </div>
-    )
-  }
-
   return (
-    <div className="h-full rounded-lg overflow-hidden relative transition-all duration-500 ease-out">
-      <MapContainer
-        center={[39.9334, 32.8597]}
-        zoom={6}
-        className="h-full w-full"
-        style={{zIndex: 1}}
-        zoomControl={false}
-        ref={map => {
-          if (map && !mapInstance) {
-            setMapInstance(map)
-          }
-        }}
-      >
-        <ZoomControl position="bottomright" />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+    <NoSSR
+      fallback={
+        <div className="h-full bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="text-gray-500">{t('map.loading')}</div>
+        </div>
+      }
+    >
+      {!isClient || !leafletReady ? (
+        <div className="h-full bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="text-gray-500">{t('map.loading')}</div>
+        </div>
+      ) : (
+        <div className="h-full rounded-lg overflow-hidden relative transition-all duration-500 ease-out">
+          <MapContainer
+            center={[39.9334, 32.8597]}
+            zoom={6}
+            className="h-full w-full z-[1]"
+            zoomControl={false}
+            ref={map => {
+              if (map && !mapInstance) {
+                setMapInstance(map)
+              }
+            }}
+          >
+            <ZoomControl position="bottomright" />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
 
-        {filteredNews.map(news => {
-          // Skip news without coordinates
-          if (!news.latitude || !news.longitude) {
-            return null
-          }
+            {/* Map click handler for report mode */}
+            {isReportMode && <MapClickHandler />}
 
-          // Get category for this news
-          const categoryName =
-            typeof news.category === 'string'
-              ? news.category
-              : news.category?.name || ''
+            {filteredNews.map(news => {
+              // Skip news without coordinates
+              if (!news.latitude || !news.longitude) {
+                return null
+              }
 
-          // Use key-based system for better multilingual support
-          const categoryKey = categoryName
-            ? getCategoryKeyByName(categoryName)
-            : 'other_incidents'
-          const categoryColors = getCategoryColorByKey(categoryKey)
-          const categoryColor = categoryColors.pin
+              // Get category for this news
+              const categoryName =
+                typeof news.category === 'string'
+                  ? news.category
+                  : news.category?.name || ''
 
-          const icon = createCategoryIcon(
-            categoryName || 'Diğer Olaylar',
-            categoryColor,
-          )
+              // Use key-based system for better multilingual support
+              const categoryKey = categoryName
+                ? getCategoryKeyByName(categoryName)
+                : 'other_incidents'
+              const categoryColors = getCategoryColorByKey(categoryKey)
+              const categoryColor = categoryColors.pin
 
-          // Skip marker if icon creation failed (L not ready)
-          if (!icon) {
-            return null
-          }
+              const icon = createCategoryIcon(
+                categoryName || 'Diğer Olaylar',
+                categoryColor,
+              )
 
-          return (
-            <Marker
-              key={`news-${news.id}`}
-              position={[news.latitude, news.longitude]}
-              icon={icon}
-              eventHandlers={{
-                click: () =>
-                  onLocationSelect(
-                    typeof news.location === 'string' ? news.location : '',
-                  ),
-              }}
-            >
-              <Popup>
-                <div>
-                  <h3 className="font-semibold text-lg">{news.title}</h3>
-                  <p className="text-sm text-gray-600">
-                    {typeof news.location === 'string' ? news.location : ''}
-                    {categoryName && (
-                      <span className="block text-xs text-gray-500">
-                        {categoryName}
-                      </span>
-                    )}
-                  </p>
-                  <button
-                    onClick={() =>
+              // Skip marker if icon creation failed (L not ready)
+              if (!icon) {
+                return null
+              }
+
+              return (
+                <Marker
+                  key={`news-${news.id}`}
+                  position={[news.latitude, news.longitude]}
+                  icon={icon}
+                  eventHandlers={{
+                    click: () =>
                       onLocationSelect(
                         typeof news.location === 'string' ? news.location : '',
-                      )
-                    }
-                    style={{
-                      marginTop: '8px',
-                      backgroundColor: '#10b981',
-                      color: 'white',
-                      padding: '4px 12px',
-                      borderRadius: '4px',
-                      fontSize: '14px',
-                      width: '100%',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                    onMouseEnter={e =>
-                      ((e.target as HTMLButtonElement).style.backgroundColor =
-                        '#059669')
-                    }
-                    onMouseLeave={e =>
-                      ((e.target as HTMLButtonElement).style.backgroundColor =
-                        '#10b981')
-                    }
-                  >
-                    {t('map.viewNews')}
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          )
-        })}
-      </MapContainer>
-    </div>
+                      ),
+                  }}
+                >
+                  <Popup>
+                    <div>
+                      <h3 className="font-semibold text-lg">{news.title}</h3>
+                      <p className="text-sm text-gray-600">
+                        {typeof news.location === 'string' ? news.location : ''}
+                        {categoryName && (
+                          <span className="block text-xs text-gray-500">
+                            {categoryName}
+                          </span>
+                        )}
+                      </p>
+                      <button
+                        onClick={() =>
+                          onLocationSelect(
+                            typeof news.location === 'string'
+                              ? news.location
+                              : '',
+                          )
+                        }
+                        className='mt-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm w-full border-none cursor-pointer'
+                      >
+                        {t('map.viewNews')}
+                      </button>
+                    </div>
+                  </Popup>
+                </Marker>
+              )
+            })}
+          </MapContainer>
+        </div>
+      )}
+    </NoSSR>
   )
 }
