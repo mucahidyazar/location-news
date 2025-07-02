@@ -164,39 +164,6 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsAdminSidebarOpen(false)
           }
         }}
-        onToggleSettingsSidebar={() => {
-          setIsSettingsSidebarOpen(!isSettingsSidebarOpen)
-          if (!isSettingsSidebarOpen) {
-            setIsSidebarOpen(false)
-            setIsUpdatesSidebarOpen(false)
-            setIsMenuSidebarOpen(false)
-            setIsLoginSidebarOpen(false)
-            setIsUserSidebarOpen(false)
-            setIsAdminSidebarOpen(false)
-          }
-        }}
-        onToggleUpdatesSidebar={() => {
-          setIsUpdatesSidebarOpen(!isUpdatesSidebarOpen)
-          if (!isUpdatesSidebarOpen) {
-            setIsSidebarOpen(false)
-            setIsSettingsSidebarOpen(false)
-            setIsMenuSidebarOpen(false)
-            setIsLoginSidebarOpen(false)
-            setIsUserSidebarOpen(false)
-            setIsAdminSidebarOpen(false)
-          }
-        }}
-        onToggleMenuSidebar={() => {
-          setIsMenuSidebarOpen(!isMenuSidebarOpen)
-          if (!isMenuSidebarOpen) {
-            setIsSidebarOpen(false)
-            setIsSettingsSidebarOpen(false)
-            setIsUpdatesSidebarOpen(false)
-            setIsLoginSidebarOpen(false)
-            setIsUserSidebarOpen(false)
-            setIsAdminSidebarOpen(false)
-          }
-        }}
         onToggleLoginSidebar={() => {
           setIsLoginSidebarOpen(!isLoginSidebarOpen)
           if (!isLoginSidebarOpen) {
@@ -219,24 +186,9 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsAdminSidebarOpen(false)
           }
         }}
-        onToggleAdminSidebar={() => {
-          setIsAdminSidebarOpen(!isAdminSidebarOpen)
-          if (!isAdminSidebarOpen) {
-            setIsSidebarOpen(false)
-            setIsSettingsSidebarOpen(false)
-            setIsUpdatesSidebarOpen(false)
-            setIsMenuSidebarOpen(false)
-            setIsLoginSidebarOpen(false)
-            setIsUserSidebarOpen(false)
-          }
-        }}
         isSidebarOpen={isSidebarOpen}
-        isSettingsSidebarOpen={isSettingsSidebarOpen}
-        isUpdatesSidebarOpen={isUpdatesSidebarOpen}
-        isMenuSidebarOpen={isMenuSidebarOpen}
         isLoginSidebarOpen={isLoginSidebarOpen}
         isUserSidebarOpen={isUserSidebarOpen}
-        isAdminSidebarOpen={isAdminSidebarOpen}
       />
 
       <main className="flex-1 overflow-hidden relative">

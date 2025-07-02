@@ -239,16 +239,12 @@ export function AdminSidebar({isOpen, onClose}: AdminSidebarProps) {
     [],
   )
 
+  if (!isOpen) {
+    return null
+  }
+
   return (
-    <div
-      className={cn(
-        'fixed top-0 right-0 h-full w-[400px] z-50 transform transition-transform duration-300 ease-in-out',
-        '[background-color:var(--color-theme-surface-primary)]',
-        '[border-left:1px_solid_var(--color-theme-border-primary)]',
-        'shadow-2xl',
-        isOpen ? 'translate-x-0' : 'translate-x-full',
-      )}
-    >
+    <div className="h-full flex flex-col [background-color:var(--color-theme-surface-primary)]">
       <SidebarHeader
         icon={<Shield className="w-5 h-5" />}
         title="Moderasyon"
