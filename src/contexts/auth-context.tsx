@@ -27,6 +27,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
   const [loading, setLoading] = useState(true)
   const [profileLoading, setProfileLoading] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mounted, setMounted] = useState(false)
 
   const loadUserProfile = async (userEmail: string) => {
@@ -50,40 +51,53 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
   useEffect(() => {
     setMounted(true)
-    let initialLoadCompleted = false
+    let isMounted = true
+    
+    // Safety timeout to prevent infinite loading
+    const safetyTimeout = setTimeout(() => {
+      if (isMounted) {
+        console.warn('AuthProvider: Safety timeout triggered, setting loading to false')
+        setLoading(false)
+      }
+    }, 5000)
     
     // Get initial session
     const getInitialSession = async () => {
       console.log('AuthProvider: Getting initial session')
       try {
-        // Add a small delay to ensure proper hydration
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
         const {
           data: {session},
         } = await supabase.auth.getSession()
+        
+        if (!isMounted) return
         
         console.log('AuthProvider: Initial session', session?.user?.email || 'No user')
         setUser(session?.user ?? null)
 
         if (session?.user) {
           await checkAdminStatus(session.user.id)
-          if (session.user.email) {
+          if (session.user.email && isMounted) {
             await loadUserProfile(session.user.email)
           }
         } else {
-          setUserProfile(null)
-          setIsAdmin(false)
+          if (isMounted) {
+            setUserProfile(null)
+            setIsAdmin(false)
+          }
         }
       } catch (error) {
         console.error('Error getting initial session:', error)
-        setUser(null)
-        setUserProfile(null)
-        setIsAdmin(false)
+        if (isMounted) {
+          setUser(null)
+          setUserProfile(null)
+          setIsAdmin(false)
+        }
       } finally {
         console.log('AuthProvider: Initial session loading complete')
-        initialLoadCompleted = true
-        setLoading(false)
+        if (isMounted) {
+          clearTimeout(safetyTimeout)
+          setLoading(false)
+        }
       }
     }
 
@@ -95,8 +109,10 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('AuthProvider: Auth state changed', event, session?.user?.email || 'No user')
       
-      // Skip if this is the initial session load
-      if (!initialLoadCompleted && event === 'INITIAL_SESSION') {
+      if (!isMounted) return
+      
+      // Skip the initial session event since we handle it above
+      if (event === 'INITIAL_SESSION') {
         return
       }
       
@@ -104,21 +120,22 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
       if (session?.user) {
         await checkAdminStatus(session.user.id)
-        if (session.user.email) {
+        if (session.user.email && isMounted) {
           await loadUserProfile(session.user.email)
         }
       } else {
-        setIsAdmin(false)
-        setUserProfile(null)
-      }
-      
-      // Set loading to false for auth state changes after initial load
-      if (initialLoadCompleted) {
-        setLoading(false)
+        if (isMounted) {
+          setIsAdmin(false)
+          setUserProfile(null)
+        }
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      isMounted = false
+      clearTimeout(safetyTimeout)
+      subscription.unsubscribe()
+    }
   }, [])
 
   const checkAdminStatus = async (userId: string) => {
