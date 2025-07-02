@@ -1,8 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Calendar, GitCommit, User, ExternalLink, X } from 'lucide-react'
+import { Calendar, GitCommit, User, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/contexts/theme-context'
+import {cn} from '@/lib/utils'
+import {SidebarHeader} from '@/components/ui/sidebar-header'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 interface GitCommit {
   sha: string
@@ -118,54 +121,29 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
   }
 
   return (
-    <div className="h-full flex flex-col" style={{backgroundColor: palette.surface.primary}}>
+    <div className={cn("h-full flex flex-col", `[background-color:${palette.surface.primary}]`)}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b" style={{
-        background: 'linear-gradient(135deg, var(--color-theme-secondary-100) 0%, var(--color-theme-secondary-200) 50%, var(--color-theme-primary-100) 100%)',
-        borderColor: palette.border.primary
-      }}>
-        <h2 className="text-lg font-semibold flex items-center gap-2" style={{color: palette.text.primary}}>
-          <GitCommit className="w-5 h-5" style={{color: palette.secondary[600]}} />
-          🚀 Updates & Changes
-        </h2>
-        <button
-          onClick={onClose}
-          className="p-1 rounded-full transition-colors"
-          style={{color: palette.text.secondary}}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = palette.surface.secondary
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent'
-          }}
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+      <SidebarHeader
+        icon={<><GitCommit className={cn("w-5 h-5", `[color:${palette.secondary[600]}]`)} />🚀</>}
+        title="Updates & Changes"
+        onClose={onClose}
+      />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor: palette.secondary[600]}}></div>
-            <span className="ml-3" style={{color: palette.text.secondary}}>Loading updates...</span>
-          </div>
+          <LoadingSpinner size="lg" text="Loading updates..." />
         ) : error ? (
-          <div className="p-4 text-center" style={{color: palette.state.error}}>
+          <div className={cn("p-4 text-center", `[color:${palette.state.error}]`)}>
             <p>{error}</p>
             <button
               onClick={fetchCommits}
-              className="mt-2 px-4 py-2 rounded-lg transition-colors"
-              style={{
-                backgroundColor: palette.state.error + '20',
-                color: palette.state.error
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = palette.state.error + '30'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = palette.state.error + '20'
-              }}
+              className={cn(
+                "mt-2 px-4 py-2 rounded-lg transition-colors",
+                `[background-color:${palette.state.error}20]`,
+                `[color:${palette.state.error}]`,
+                `hover:[background-color:${palette.state.error}30]`
+              )}
             >
               Try Again
             </button>
@@ -175,59 +153,45 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
             {commits.map((commit, index) => (
               <div
                 key={commit.sha}
-                className="group relative p-4 rounded-lg border transition-all duration-200"
-                style={{
-                  borderColor: palette.border.secondary,
-                  backgroundColor: palette.surface.primary
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = palette.border.focus
-                  e.currentTarget.style.boxShadow = '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
-                  e.currentTarget.style.backgroundColor = palette.surface.secondary
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = palette.border.secondary
-                  e.currentTarget.style.boxShadow = 'none'
-                  e.currentTarget.style.backgroundColor = palette.surface.primary
-                }}
+                className={cn(
+                  "group relative p-4 rounded-lg border transition-all duration-200",
+                  `[border-color:${palette.border.secondary}]`,
+                  `[background-color:${palette.surface.primary}]`,
+                  `hover:[border-color:${palette.border.focus}]`,
+                  "hover:shadow-sm",
+                  `hover:[background-color:${palette.surface.secondary}]`
+                )}
               >
                 {/* Commit Type Icon */}
-                <div className="absolute -left-2 top-4 w-8 h-8 border-2 rounded-full flex items-center justify-center text-sm" style={{
-                  backgroundColor: palette.surface.primary,
-                  borderColor: palette.secondary[200]
-                }}>
+                <div className={cn(
+                  "absolute -left-2 top-4 w-8 h-8 border-2 rounded-full flex items-center justify-center text-sm",
+                  `[background-color:${palette.surface.primary}]`,
+                  `[border-color:${palette.secondary[200]}]`
+                )}>
                   {getCommitTypeIcon(commit.message)}
                 </div>
 
                 {/* Commit Info */}
                 <div className="ml-6">
                   <div className="flex items-start justify-between">
-                    <h3 className="font-medium line-clamp-2 leading-tight transition-colors" style={{
-                      color: palette.text.primary
-                    }}>
+                    <h3 className={cn("font-medium line-clamp-2 leading-tight transition-colors", `[color:${palette.text.primary}]`)}>
                       {commit.message}
                     </h3>
                     <a
                       href={commit.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="ml-2 p-1 opacity-0 group-hover:opacity-100 rounded transition-all"
-                      style={{
-                        backgroundColor: 'transparent'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = palette.secondary[100]
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent'
-                      }}
+                      className={cn(
+                        "ml-2 p-1 opacity-0 group-hover:opacity-100 rounded transition-all",
+                        `hover:[background-color:${palette.secondary[100]}]`
+                      )}
                       title="View on GitHub"
                     >
-                      <ExternalLink className="w-3 h-3" style={{color: palette.secondary[600]}} />
+                      <ExternalLink className={cn("w-3 h-3", `[color:${palette.secondary[600]}]`)} />
                     </a>
                   </div>
 
-                  <div className="mt-2 flex items-center gap-4 text-xs" style={{color: palette.text.tertiary}}>
+                  <div className={cn("mt-2 flex items-center gap-4 text-xs", `[color:${palette.text.tertiary}]`)}>
                     <div className="flex items-center gap-1">
                       <User className="w-3 h-3" />
                       <span>{commit.author.name}</span>
@@ -238,16 +202,17 @@ export default function UpdatesSidebar({ onClose }: UpdatesSidebarProps) {
                     </div>
                   </div>
 
-                  <div className="mt-2 text-xs font-mono" style={{color: palette.text.tertiary}}>
+                  <div className={cn("mt-2 text-xs font-mono", `[color:${palette.text.tertiary}]`)}>
                     {commit.sha.substring(0, 7)}
                   </div>
                 </div>
 
                 {/* Timeline line */}
                 {index < commits.length - 1 && (
-                  <div className="absolute left-2 top-12 w-px h-6" style={{
-                    background: `linear-gradient(to bottom, ${palette.secondary[200]}, transparent)`
-                  }}></div>
+                  <div className={cn(
+                    "absolute left-2 top-12 w-px h-6",
+                    `[background:linear-gradient(to_bottom,${palette.secondary[200]},transparent)]`
+                  )}></div>
                 )}
               </div>
             ))}

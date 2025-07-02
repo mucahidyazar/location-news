@@ -1,6 +1,9 @@
 import { NewsItem } from '@/lib/types';
-import { SourceLogo } from '@/lib/news-sources'
+import { NewsSourceDisplay } from '@/components/ui/news-source-display'
 import { useTheme } from '@/contexts/theme-context';
+import { useDateFormatter } from '@/hooks/use-date-formatter';
+// Removed unused imports since useDateFormatter handles locale internally
+import {cn} from '@/lib/utils'
 
 interface NewsCardMinimalProps {
   news: NewsItem;
@@ -9,52 +12,20 @@ interface NewsCardMinimalProps {
 
 export default function NewsCardMinimal({ news }: NewsCardMinimalProps) {
   const { palette } = useTheme();
-  
-  const formatDate = (dateString: string) => {
-    if (!dateString) return 'Tarih belirtilmemiş'
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) return 'Geçersiz tarih'
-    return date.toLocaleDateString('tr-TR', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  const { formatDate } = useDateFormatter();
 
 
   return (
     <div className="mb-2 p-2">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-xs" style={{color: palette.text.tertiary}}>{formatDate(news.published_at || '')}</span>
-        {news.external_url ? (
-          <a 
-            href={news.external_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs transition-colors group"
-            style={{
-              color: palette.text.tertiary
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = palette.primary[600]
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = palette.text.tertiary
-            }}
-          >
-            <SourceLogo source={news.source} />
-            <span className="group-hover:underline">{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
-          </a>
-        ) : (
-          <div className="flex items-center gap-1 text-xs" style={{color: palette.text.tertiary}}>
-            <SourceLogo source={news.source} />
-            <span>{typeof news.source === 'string' ? news.source : news.source?.name || ''}</span>
-          </div>
-        )}
+        <span className={cn("text-xs", `[color:${palette.text.tertiary}]`)}>{formatDate(news.published_at)}</span>
+        <NewsSourceDisplay
+          source={news.source}
+          externalUrl={news.external_url}
+        />
       </div>
       
-      <h3 className="font-medium text-sm leading-tight line-clamp-2" style={{color: palette.text.primary}}>
+      <h3 className={cn("font-medium text-sm leading-tight line-clamp-2", `[color:${palette.text.primary}]`)}>
         {news.title}
       </h3>
     </div>

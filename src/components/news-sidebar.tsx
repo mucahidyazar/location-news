@@ -5,9 +5,12 @@ import {NewsItem} from '@/lib/types'
 import NewsCard from './news-card'
 import NewsCardHorizontal from './news-card-horizontal'
 import NewsCardMinimal from './news-card-minimal'
-import {X, Grid3X3, LayoutList, AlignLeft, Newspaper} from 'lucide-react'
+import {Grid3X3, LayoutList, AlignLeft, Newspaper} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {useTranslations} from 'next-intl'
+import {SidebarHeader} from '@/components/ui/sidebar-header'
+import {LoadingSpinner} from '@/components/ui/loading-spinner'
+import {cn} from '@/lib/utils'
 
 interface NewsSidebarProps {
   news: NewsItem[]
@@ -67,122 +70,69 @@ export default function NewsSidebar({
   const filteredNews = sortedNews
 
   return (
-    <div className="h-screen w-full flex flex-col" style={{backgroundColor: 'var(--color-theme-bg-primary)'}}>
+    <div
+      className="h-screen w-full flex flex-col bg-[var(--color-theme-bg-primary)]"
+    >
       {/* Header - Fixed */}
-      <div className="flex-none p-4 border-b" style={{
-        background: 'linear-gradient(135deg, var(--color-theme-secondary-200) 0%, var(--color-theme-secondary-300) 50%, var(--color-theme-primary-200) 100%)',
-        borderColor: 'var(--color-theme-border-primary)'
-      }}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Newspaper className="w-5 h-5" style={{color: 'var(--color-theme-primary-600)'}} />
-            <h2 className="text-xl font-bold" style={{color: 'var(--color-theme-text-primary)'}}>{t('news.title')}</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-sm" style={{color: 'var(--color-theme-text-secondary)'}}>
-              {t('news.newsCount', {count: news.length})} •{' '}
-              {t('locations.locationCount', {count: locations.length})}
-            </div>
-            {onClose && (
-              <button
-                onClick={onClose}
-                className="p-2 rounded-md transition-colors"
-                style={{color: 'var(--color-theme-text-secondary)'}}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-secondary)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="text-sm" style={{color: 'var(--color-theme-text-secondary)'}}>
-          {filteredNews.length} haber bulundu
-        </div>
+      <div className="flex-none">
+        <SidebarHeader
+          icon={
+            <Newspaper
+              className="w-5 h-5 text-[var(--color-theme-primary-600)]"
+            />
+          }
+          title={t('news.title')}
+          subtitle={`${filteredNews.length} haber bulundu`}
+          onClose={onClose || (() => {})}
+          showCount={{
+            label: `${t('news.newsCount', {count: news.length})} • ${t(
+              'locations.locationCount',
+              {count: locations.length},
+            )}`,
+            count: filteredNews.length,
+          }}
+        />
       </div>
 
       {/* View Type Tabs - Fixed */}
-      <div className="flex-none p-4 border-b" style={{
-        backgroundColor: 'var(--color-theme-surface-primary)',
-        borderColor: 'var(--color-theme-border-primary)'
-      }}>
-        <div className="flex rounded-lg" style={{backgroundColor: 'var(--color-theme-surface-tertiary)'}}>
+      <div
+        className="flex-none p-4 border-b bg-[var(--color-theme-surface-primary)] border-[var(--color-theme-border-primary)]"
+      >
+        <div
+          className="flex rounded-lg bg-[var(--color-theme-surface-tertiary)]"
+        >
           <button
             onClick={() => onViewTypeChange('card')}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all"
-            style={{
-              backgroundColor: viewType === 'card' ? 'var(--color-theme-primary-500)' : 'transparent',
-              color: viewType === 'card' ? 'var(--color-theme-text-inverse)' : 'var(--color-theme-text-secondary)',
-              border: viewType === 'card' ? '1px solid var(--color-theme-primary-600)' : 'none',
-              boxShadow: viewType === 'card' ? '0 1px 2px 0 var(--color-theme-bg-overlay)' : 'none'
-            }}
-            onMouseEnter={(e) => {
-              if (viewType !== 'card') {
-                e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-tertiary)'
-                e.currentTarget.style.color = 'var(--color-theme-text-primary)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (viewType !== 'card') {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = 'var(--color-theme-text-secondary)'
-              }
-            }}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
+              viewType === 'card'
+                ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+            )}
           >
             <Grid3X3 className="w-4 h-4" />
             Kart
           </button>
           <button
             onClick={() => onViewTypeChange('horizontal')}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all"
-            style={{
-              backgroundColor: viewType === 'horizontal' ? 'var(--color-theme-primary-500)' : 'transparent',
-              color: viewType === 'horizontal' ? 'var(--color-theme-text-inverse)' : 'var(--color-theme-text-secondary)',
-              border: viewType === 'horizontal' ? '1px solid var(--color-theme-primary-600)' : 'none',
-              boxShadow: viewType === 'horizontal' ? '0 1px 2px 0 var(--color-theme-bg-overlay)' : 'none'
-            }}
-            onMouseEnter={(e) => {
-              if (viewType !== 'horizontal') {
-                e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-tertiary)'
-                e.currentTarget.style.color = 'var(--color-theme-text-primary)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (viewType !== 'horizontal') {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = 'var(--color-theme-text-secondary)'
-              }
-            }}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
+              viewType === 'horizontal'
+                ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+            )}
           >
             <LayoutList className="w-4 h-4" />
             Yatay
           </button>
           <button
             onClick={() => onViewTypeChange('minimal')}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all"
-            style={{
-              backgroundColor: viewType === 'minimal' ? 'var(--color-theme-primary-500)' : 'transparent',
-              color: viewType === 'minimal' ? 'var(--color-theme-text-inverse)' : 'var(--color-theme-text-secondary)',
-              border: viewType === 'minimal' ? '1px solid var(--color-theme-primary-600)' : 'none',
-              boxShadow: viewType === 'minimal' ? '0 1px 2px 0 var(--color-theme-bg-overlay)' : 'none'
-            }}
-            onMouseEnter={(e) => {
-              if (viewType !== 'minimal') {
-                e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-tertiary)'
-                e.currentTarget.style.color = 'var(--color-theme-text-primary)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (viewType !== 'minimal') {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = 'var(--color-theme-text-secondary)'
-              }
-            }}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
+              viewType === 'minimal'
+                ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+            )}
           >
             <AlignLeft className="w-4 h-4" />
             Basit
@@ -194,7 +144,9 @@ export default function NewsSidebar({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 pb-24">
           {filteredNews.length === 0 ? (
-            <div className="text-center py-8" style={{color: 'var(--color-theme-text-tertiary)'}}>
+            <div
+              className="text-center py-8 text-[var(--color-theme-text-tertiary)]"
+            >
               <p>Haber bulunamadı.</p>
               <p className="text-sm mt-2">Filtreleri değiştirmeyi deneyin.</p>
             </div>
@@ -240,10 +192,12 @@ export default function NewsSidebar({
                 variant="outline"
               >
                 {loadingMore ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                    {t('common.loading')}
-                  </>
+                  <LoadingSpinner
+                    size="sm"
+                    variant="button"
+                    text={t('common.loading')}
+                    showText={false}
+                  />
                 ) : (
                   t('news.loadMore')
                 )}

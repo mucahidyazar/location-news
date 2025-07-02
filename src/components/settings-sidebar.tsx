@@ -42,16 +42,11 @@ export default function SettingsSidebar({
           <div className="space-y-2">
             <button
               onClick={onToggleIcons}
-              className={`w-full p-3 rounded-lg border-1 transition-all text-left ${
+              className={`w-full p-3 rounded-lg border-1 transition-all text-left bg-[var(--color-theme-surface-secondary)] ${
                 !useCustomIcons
                   ? 'border-blue-500 text-blue-900'
                   : 'border-gray-200 text-gray-700 hover:border-gray-300'
               }`}
-              style={{
-                backgroundColor: !useCustomIcons
-                  ? 'var(--color-theme-surface-secondary)'
-                  : 'var(--color-theme-surface-secondary)',
-              }}
             >
               <div className="font-medium">
                 {t('settings.mapIcons.default')}
@@ -62,16 +57,11 @@ export default function SettingsSidebar({
             </button>
             <button
               onClick={onToggleIcons}
-              className={`w-full p-3 rounded-lg border-1 transition-all text-left ${
+              className={`w-full p-3 rounded-lg border-1 transition-all text-left bg-[var(--color-theme-surface-secondary)] ${
                 useCustomIcons
                   ? 'border-blue-500 text-blue-900'
                   : 'border-gray-200 text-gray-700 hover:border-gray-300'
               }`}
-              style={{
-                backgroundColor: useCustomIcons
-                  ? 'var(--color-theme-surface-secondary)'
-                  : 'var(--color-theme-surface-secondary)',
-              }}
             >
               <div className="font-medium">{t('settings.mapIcons.custom')}</div>
               <div className="text-xs opacity-75">
@@ -88,8 +78,7 @@ export default function SettingsSidebar({
             {t('settings.language.title')}
           </h3>
           <div
-            className="p-3 rounded-lg border"
-            style={{backgroundColor: 'var(--color-theme-surface-secondary)'}}
+            className="p-3 rounded-lg border bg-[var(--color-theme-surface-secondary)]"
           >
             <LanguageSwitcher />
           </div>

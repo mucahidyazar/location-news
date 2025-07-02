@@ -3,30 +3,20 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
 import {Badge} from '@/components/ui/badge'
 import {CalendarDays, MapPin} from 'lucide-react'
 import {NewsCardProps} from '@/lib/types'
-import {SourceLogo} from '@/lib/news-sources'
 import {getCategoryKeyByName} from '@/lib/category-colors'
 import {getCategoryColorByKey} from '@/lib/theme-category-colors'
 import {useTheme} from '@/contexts/theme-context'
-import {useTranslations, useLocale} from 'next-intl'
+import {useTranslations} from 'next-intl'
+import { useDateFormatter } from '@/hooks/use-date-formatter'
 import TwitterEmbed from './twitter-embed'
+import {cn} from '@/lib/utils'
+import { NewsSourceDisplay } from '@/components/ui/news-source-display'
 
 export default function NewsCard({news, onLocationClick}: NewsCardProps) {
   const t = useTranslations()
-  const locale = useLocale()
   const {palette} = useTheme()
+  const { formatDate } = useDateFormatter()
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return t('common.loading')
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) return t('common.error')
-    return date.toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
 
   // Use key-based system for better multilingual support
   const rawCategoryName =
@@ -58,41 +48,20 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
           {news.category && (
             <Badge
               variant="secondary"
-              className="text-xs"
-              style={{
-                backgroundColor: categoryStyle?.badge?.background || palette.surface.secondary,
-                color: categoryStyle?.badge?.text || palette.text.primary,
-                borderColor: categoryStyle?.badge?.border || palette.border.secondary
-              }}
+              className={cn(
+                "text-xs",
+                `[background-color:${categoryStyle?.badge?.background || palette.surface.secondary}]`,
+                `[color:${categoryStyle?.badge?.text || palette.text.primary}]`,
+                `[border-color:${categoryStyle?.badge?.border || palette.border.secondary}]`
+              )}
             >
               {getTranslatedCategoryName(rawCategoryName)}
             </Badge>
           )}
-          {news.external_url ? (
-            <a
-              href={news.external_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs transition-colors group hover:underline"
-              style={{
-                color: palette.text.tertiary
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = palette.primary[600]
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = palette.text.tertiary
-              }}
-            >
-              <SourceLogo source={news.source} />
-              <span>{sourceName}</span>
-            </a>
-          ) : (
-            <div className="flex items-center gap-1 text-xs" style={{color: palette.text.tertiary}}>
-              <SourceLogo source={news.source} />
-              <span>{sourceName}</span>
-            </div>
-          )}
+          <NewsSourceDisplay
+            source={news.source}
+            externalUrl={news.external_url}
+          />
         </div>
         <CardTitle className="text-lg leading-tight">{news.title}</CardTitle>
       </CardHeader>
@@ -131,7 +100,7 @@ export default function NewsCard({news, onLocationClick}: NewsCardProps) {
 
           <div className="flex items-center gap-1">
             <CalendarDays className="w-4 h-4" />
-            {formatDate(news.published_at || '')}
+            {formatDate(news.published_at)}
           </div>
         </div>
       </CardContent>

@@ -3,8 +3,10 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { X, MapPin, Grid3x3 } from 'lucide-react'
+import { MapPin, Grid3x3 } from 'lucide-react'
 import { useTheme } from '@/contexts/theme-context'
+import {cn} from '@/lib/utils'
+import {SidebarHeader} from '@/components/ui/sidebar-header'
 
 interface MenuSidebarProps {
   onClose: () => void
@@ -16,30 +18,13 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
   const { palette } = useTheme()
 
   return (
-    <div className="h-full flex flex-col" style={{backgroundColor: palette.surface.primary}}>
+    <div className={cn("h-full flex flex-col", `[background-color:${palette.surface.primary}]`)}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b" style={{
-        background: 'linear-gradient(135deg, var(--color-theme-secondary-200) 0%, var(--color-theme-secondary-300) 50%, var(--color-theme-primary-200) 100%)',
-        borderColor: palette.border.primary
-      }}>
-        <h2 className="text-lg font-semibold flex items-center gap-2" style={{color: palette.text.primary}}>
-          <span>📱</span>
-          Menu
-        </h2>
-        <button
-          onClick={onClose}
-          className="p-1 rounded-full transition-colors"
-          style={{color: palette.text.secondary}}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = palette.surface.secondary
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent'
-          }}
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
+      <SidebarHeader
+        icon={<span>📱</span>}
+        title="Menu"
+        onClose={onClose}
+      />
 
       {/* Navigation Items */}
       <div className="flex-1 p-4">
@@ -48,24 +33,12 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
           <Link
             href="/"
             onClick={onClose}
-            className="flex items-center gap-3 p-4 rounded-lg transition-all"
-            style={{
-              backgroundColor: (pathname === '/' || !pathname.includes('/news')) ? palette.primary[50] : 'transparent',
-              color: (pathname === '/' || !pathname.includes('/news')) ? palette.primary[600] : palette.text.secondary,
-              borderLeft: (pathname === '/' || !pathname.includes('/news')) ? `4px solid ${palette.primary[600]}` : 'none'
-            }}
-            onMouseEnter={(e) => {
-              if (!(pathname === '/' || !pathname.includes('/news'))) {
-                e.currentTarget.style.backgroundColor = palette.surface.secondary
-                e.currentTarget.style.color = palette.primary[600]
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!(pathname === '/' || !pathname.includes('/news'))) {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = palette.text.secondary
-              }
-            }}
+            className={cn(
+              "flex items-center gap-3 p-4 rounded-lg transition-all",
+              (pathname === '/' || !pathname.includes('/news')) 
+                ? `[background-color:${palette.primary[50]}] [color:${palette.primary[600]}] [border-left:4px_solid_${palette.primary[600]}]`
+                : `[color:${palette.text.secondary}] hover:[background-color:${palette.surface.secondary}] hover:[color:${palette.primary[600]}]`
+            )}
           >
             <MapPin className="w-5 h-5" />
             <div>
@@ -79,24 +52,12 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
             <Link
               href="/news"
               onClick={onClose}
-              className="flex items-center gap-3 p-4 rounded-lg transition-all"
-              style={{
-                backgroundColor: pathname.includes('/news') ? palette.primary[50] : 'transparent',
-                color: pathname.includes('/news') ? palette.primary[600] : palette.text.secondary,
-                borderLeft: pathname.includes('/news') ? `4px solid ${palette.primary[600]}` : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (!pathname.includes('/news')) {
-                  e.currentTarget.style.backgroundColor = palette.surface.secondary
-                  e.currentTarget.style.color = palette.primary[600]
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!pathname.includes('/news')) {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                  e.currentTarget.style.color = palette.text.secondary
-                }
-              }}
+              className={cn(
+                "flex items-center gap-3 p-4 rounded-lg transition-all",
+                pathname.includes('/news') 
+                  ? `[background-color:${palette.primary[50]}] [color:${palette.primary[600]}] [border-left:4px_solid_${palette.primary[600]}]`
+                  : `[color:${palette.text.secondary}] hover:[background-color:${palette.surface.secondary}] hover:[color:${palette.primary[600]}]`
+              )}
             >
               <Grid3x3 className="w-5 h-5" />
               <div>
@@ -109,11 +70,12 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t" style={{
-        backgroundColor: palette.surface.secondary,
-        borderColor: palette.border.primary
-      }}>
-        <p className="text-xs text-center" style={{color: palette.text.tertiary}}>
+      <div className={cn(
+        "p-4 border-t",
+        `[background-color:${palette.surface.secondary}]`,
+        `[border-color:${palette.border.primary}]`
+      )}>
+        <p className={cn("text-xs text-center", `[color:${palette.text.tertiary}]`)}>
           Navigation Menu
         </p>
       </div>
