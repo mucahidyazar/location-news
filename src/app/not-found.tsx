@@ -5,13 +5,7 @@ import Image from 'next/image'
 
 export default function NotFound() {
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background:
-          'linear-gradient(135deg, #f8fafc 0%, #faf5ff 50%, #fdf2f8 100%)',
-      }}
-    >
+    <div className="min-h-screen [background:linear-gradient(135deg,#f8fafc_0%,#faf5ff_50%,#fdf2f8_100%)]">
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <div className="max-w-lg w-full">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
@@ -25,12 +19,7 @@ export default function NotFound() {
                     height={80}
                     className="opacity-80"
                   />
-                  <div
-                    className="absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{
-                      background: 'linear-gradient(45deg, #8b5cf6, #ec4899)',
-                    }}
-                  >
+                  <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center [background:linear-gradient(45deg,#8b5cf6,#ec4899)]">
                     <span className="text-white text-lg font-bold">?</span>
                   </div>
                 </div>
@@ -38,16 +27,7 @@ export default function NotFound() {
 
               <div className="mb-6">
                 <div className="text-8xl font-bold mb-4">
-                  <span
-                    style={{
-                      background: 'linear-gradient(45deg, #8b5cf6, #ec4899)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      color: 'transparent',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block',
-                    }}
-                  >
+                  <span className="[background:linear-gradient(45deg,#8b5cf6,#ec4899)] [background-clip:text] [webkit-background-clip:text] [color:transparent] [webkit-text-fill-color:transparent] inline-block">
                     404
                   </span>
                 </div>
@@ -65,19 +45,7 @@ export default function NotFound() {
             <div className="space-y-3 mb-8">
               <Link
                 href="/"
-                className="block w-full text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                style={{
-                  background: 'linear-gradient(45deg, #7c3aed, #d946ef)',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(45deg, #6d28d9, #c026d3)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(45deg, #7c3aed, #d946ef)'
-                }}
+                className="block w-full text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl [background:linear-gradient(45deg,#7c3aed,#d946ef)] hover:[background:linear-gradient(45deg,#6d28d9,#c026d3)]"
               >
                 <div className="flex items-center justify-center space-x-2">
                   <svg

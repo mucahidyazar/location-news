@@ -1,4 +1,6 @@
-import { supabase, supabaseAdmin } from './supabase'
+import { supabase, createAdminClient } from './supabase'
+
+const supabaseAdmin = createAdminClient()
 import type { 
   Location, 
   LocationInsert, 
@@ -23,6 +25,7 @@ export async function getLocations(): Promise<LocationWithStats[]> {
       latitude,
       longitude
     `)
+    .eq('status', 'approved')
     .not('location_name', 'is', null)
     .not('latitude', 'is', null)
     .not('longitude', 'is', null)
@@ -64,6 +67,7 @@ export async function getLocationByName(name: string): Promise<Location | null> 
     .from('news')
     .select('location_name, latitude, longitude')
     .eq('location_name', name)
+    .eq('status', 'approved')
     .not('latitude', 'is', null)
     .not('longitude', 'is', null)
     .limit(1)
@@ -81,8 +85,8 @@ export async function getLocationByName(name: string): Promise<Location | null> 
     name: data.location_name || '',
     latitude: data.latitude || 0,
     longitude: data.longitude || 0,
-    country: null,
-    region: null,
+    country: undefined,
+    region: undefined,
     news_count: 0,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -97,8 +101,8 @@ export async function createLocation(location: LocationInsert): Promise<Location
     name: location.name,
     latitude: location.latitude,
     longitude: location.longitude,
-    country: location.country || null,
-    region: location.region || null,
+    country: location.country || undefined,
+    region: location.region || undefined,
     news_count: location.news_count || 0,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -127,6 +131,7 @@ export async function getNews(params: {
       category:news_categories(*),
       source:news_sources(*)
     `)
+    .eq('status', 'approved')
     .order('created_at', { ascending: false })
 
   if (params.location) {
@@ -176,6 +181,7 @@ export async function getNewsById(id: string): Promise<NewsWithRelations | null>
       source:news_sources(*)
     `)
     .eq('id', id)
+    .eq('status', 'approved')
     .single()
 
   if (error) {
@@ -323,6 +329,7 @@ export async function searchNews(
       category:news_categories(*),
       source:news_sources(*)
     `)
+    .eq('status', 'approved')
     .textSearch('title', query, {
       type: 'websearch',
       config: 'english'

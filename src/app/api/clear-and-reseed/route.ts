@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 import { seedSupabaseDatabase } from '@/lib/supabase-seed';
 
 export async function POST() {
   try {
+    const supabaseAdmin = createAdminClient();
+    
     console.log('🧹 Clearing old data...');
     
     // Clear news first (due to foreign key constraints)

@@ -1,4 +1,6 @@
-import { supabaseAdmin } from './supabase'
+import { createAdminClient } from './supabase'
+
+const supabaseAdmin = createAdminClient()
 import { 
   createNews, 
   getCategoryByName, 

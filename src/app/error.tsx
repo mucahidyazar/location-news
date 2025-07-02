@@ -3,6 +3,7 @@
 import {useEffect} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+// import {cn} from '@/lib/utils'
 
 export default function Error({
   error,
@@ -16,13 +17,7 @@ export default function Error({
   }, [error])
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background:
-          'linear-gradient(135deg, #f8fafc 0%, #dbeafe 50%, #e0e7ff 100%)',
-      }}
-    >
+    <div className="min-h-screen [background:linear-gradient(135deg,#f8fafc_0%,#dbeafe_50%,#e0e7ff_100%)]">
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <div className="max-w-lg w-full">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
@@ -36,12 +31,7 @@ export default function Error({
                     height={80}
                     className="opacity-80"
                   />
-                  <div
-                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{
-                      background: 'linear-gradient(45deg, #ef4444, #dc2626)',
-                    }}
-                  >
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center [background:linear-gradient(45deg,#ef4444,#dc2626)]">
                     <span className="text-white text-sm font-bold">!</span>
                   </div>
                 </div>
@@ -59,19 +49,7 @@ export default function Error({
             <div className="space-y-3 mb-8">
               <button
                 onClick={reset}
-                className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                style={{
-                  background: 'linear-gradient(45deg, #2563eb, #4f46e5)',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(45deg, #1d4ed8, #4338ca)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(45deg, #2563eb, #4f46e5)'
-                }}
+                className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl [background:linear-gradient(45deg,#2563eb,#4f46e5)] hover:[background:linear-gradient(45deg,#1d4ed8,#4338ca)]"
               >
                 <div className="flex items-center justify-center space-x-2">
                   <svg
