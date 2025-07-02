@@ -11,6 +11,10 @@ import {useTranslations} from 'next-intl'
 import {MainLayoutProvider, useMainLayout} from '@/contexts/main-layout-context'
 import {NewsItem, Location} from '@/lib/types'
 import {cn} from '@/lib/utils'
+import {LoginSidebar} from '@/components/login-sidebar'
+import {UserSidebar} from '@/components/user-sidebar'
+import {AdminSidebar} from '@/components/admin-sidebar'
+import {SidebarHeader} from '@/components/ui/sidebar-header'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -29,7 +33,14 @@ function MainLayoutInner({children}: MainLayoutProps) {
     setIsUpdatesSidebarOpen,
     isMenuSidebarOpen,
     setIsMenuSidebarOpen,
+    isUserSidebarOpen,
+    setIsUserSidebarOpen,
+    isAdminSidebarOpen,
+    setIsAdminSidebarOpen,
   } = useMainLayout()
+
+  // Login sidebar state
+  const [isLoginSidebarOpen, setIsLoginSidebarOpen] = useState(false)
 
   // News data for sidebar
   const [news, setNews] = useState<NewsItem[]>([])
@@ -121,14 +132,12 @@ function MainLayoutInner({children}: MainLayoutProps) {
         setLoadingMore(false)
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [newsLoaded, NEWS_PER_PAGE],
   )
 
   useEffect(() => {
     loadSidebarData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [loadSidebarData])
 
   const handleClearFilter = () => {
     setSelectedLocation(undefined)
@@ -150,6 +159,9 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsSettingsSidebarOpen(false)
             setIsUpdatesSidebarOpen(false)
             setIsMenuSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
           }
         }}
         onToggleSettingsSidebar={() => {
@@ -158,6 +170,9 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsSidebarOpen(false)
             setIsUpdatesSidebarOpen(false)
             setIsMenuSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
           }
         }}
         onToggleUpdatesSidebar={() => {
@@ -166,6 +181,9 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsSidebarOpen(false)
             setIsSettingsSidebarOpen(false)
             setIsMenuSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
           }
         }}
         onToggleMenuSidebar={() => {
@@ -174,12 +192,51 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsSidebarOpen(false)
             setIsSettingsSidebarOpen(false)
             setIsUpdatesSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
+          }
+        }}
+        onToggleLoginSidebar={() => {
+          setIsLoginSidebarOpen(!isLoginSidebarOpen)
+          if (!isLoginSidebarOpen) {
+            setIsSidebarOpen(false)
+            setIsSettingsSidebarOpen(false)
+            setIsUpdatesSidebarOpen(false)
+            setIsMenuSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
+          }
+        }}
+        onToggleUserSidebar={() => {
+          setIsUserSidebarOpen(!isUserSidebarOpen)
+          if (!isUserSidebarOpen) {
+            setIsSidebarOpen(false)
+            setIsSettingsSidebarOpen(false)
+            setIsUpdatesSidebarOpen(false)
+            setIsMenuSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
+          }
+        }}
+        onToggleAdminSidebar={() => {
+          setIsAdminSidebarOpen(!isAdminSidebarOpen)
+          if (!isAdminSidebarOpen) {
+            setIsSidebarOpen(false)
+            setIsSettingsSidebarOpen(false)
+            setIsUpdatesSidebarOpen(false)
+            setIsMenuSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
           }
         }}
         isSidebarOpen={isSidebarOpen}
         isSettingsSidebarOpen={isSettingsSidebarOpen}
         isUpdatesSidebarOpen={isUpdatesSidebarOpen}
         isMenuSidebarOpen={isMenuSidebarOpen}
+        isLoginSidebarOpen={isLoginSidebarOpen}
+        isUserSidebarOpen={isUserSidebarOpen}
+        isAdminSidebarOpen={isAdminSidebarOpen}
       />
 
       <main className="flex-1 overflow-hidden relative">
@@ -188,7 +245,10 @@ function MainLayoutInner({children}: MainLayoutProps) {
             isSidebarOpen ||
             isSettingsSidebarOpen ||
             isUpdatesSidebarOpen ||
-            isMenuSidebarOpen
+            isMenuSidebarOpen ||
+            isLoginSidebarOpen ||
+            isUserSidebarOpen ||
+            isAdminSidebarOpen
               ? 'pr-0 md:pr-[400px]'
               : 'pr-0'
           }`}
@@ -197,6 +257,7 @@ function MainLayoutInner({children}: MainLayoutProps) {
         </div>
 
         {/* News Sidebar */}
+
         <div
           className={`absolute top-0 right-0 h-full w-full md:w-[400px] bg-white shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
             isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
@@ -266,58 +327,25 @@ function MainLayoutInner({children}: MainLayoutProps) {
 
         {/* Settings Sidebar */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
-            isSettingsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          style={{
-            backgroundColor: 'var(--color-theme-surface-primary)',
-            borderColor: 'var(--color-theme-border-primary)',
-          }}
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isSettingsSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
         >
-          <div
-            className="h-full flex flex-col"
-            style={{backgroundColor: 'var(--color-theme-surface-primary)'}}
-          >
+          <div className="h-full flex flex-col [background-color:var(--color-theme-surface-primary)]">
             {/* Settings Header */}
-            <div
-              className="flex items-center justify-between p-4 border-b"
-              style={{
-                background:
-                  'linear-gradient(135deg, var(--color-theme-secondary-200) 0%, var(--color-theme-secondary-300) 50%, var(--color-theme-primary-200) 100%)',
-                borderColor: 'var(--color-theme-border-primary)',
-              }}
-            >
-              <h2
-                className="text-lg font-semibold flex items-center gap-2"
-                style={{color: 'var(--color-theme-text-primary)'}}
-              >
-                <span>⚙️</span>
-                {t('settings.title')}
-              </h2>
-              <button
-                onClick={() => setIsSettingsSidebarOpen(false)}
-                className="p-1 rounded transition-colors"
-                style={{color: 'var(--color-theme-text-secondary)'}}
-                onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor =
-                    'var(--color-theme-surface-secondary)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                ✕
-              </button>
-            </div>
+            <SidebarHeader
+              icon={<span>⚙️</span>}
+              title={t('settings.title')}
+              onClose={() => setIsSettingsSidebarOpen(false)}
+            />
 
             {/* Settings Content */}
             <div className="flex-1 p-4 space-y-6">
               {/* Map Icons Setting */}
               <div className="space-y-3">
-                <h3
-                  className="text-sm font-medium flex items-center gap-2"
-                  style={{color: 'var(--color-theme-text-primary)'}}
-                >
+                <h3 className="text-sm font-medium flex items-center gap-2 [color:var(--color-theme-text-primary)]">
                   🗺️ {t('settings.mapIcons.title')}
                 </h3>
                 <div className="space-y-2">
@@ -356,19 +384,10 @@ function MainLayoutInner({children}: MainLayoutProps) {
 
               {/* Language Setting */}
               <div className="space-y-3">
-                <h3
-                  className="text-sm font-medium flex items-center gap-2"
-                  style={{color: 'var(--color-theme-text-primary)'}}
-                >
+                <h3 className="text-sm font-medium flex items-center gap-2 [color:var(--color-theme-text-primary)]">
                   🌐 {t('settings.language.title')}
                 </h3>
-                <div
-                  className="py-3 rounded-lg border"
-                  style={{
-                    backgroundColor: 'var(--color-theme-surface-secondary)',
-                    borderColor: 'var(--color-theme-border-primary)',
-                  }}
-                >
+                <div className="py-3 rounded-lg border [background-color:var(--color-theme-surface-secondary)] [border-color:var(--color-theme-border-primary)]">
                   <LanguageSwitcher />
                 </div>
               </div>
@@ -382,30 +401,68 @@ function MainLayoutInner({children}: MainLayoutProps) {
 
         {/* Updates Sidebar */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
-            isUpdatesSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          style={{
-            backgroundColor: 'var(--color-theme-surface-primary)',
-            borderColor: 'var(--color-theme-border-primary)',
-          }}
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isUpdatesSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
         >
           <UpdatesSidebar onClose={() => setIsUpdatesSidebarOpen(false)} />
         </div>
 
         {/* Menu Sidebar (Mobile only) */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001] ${
-            isMenuSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          style={{
-            backgroundColor: 'var(--color-theme-surface-primary)',
-            borderColor: 'var(--color-theme-border-primary)',
-          }}
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isMenuSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
         >
           <MenuSidebar
             onClose={() => setIsMenuSidebarOpen(false)}
             showNewsButton={true}
+          />
+        </div>
+
+        {/* Login Sidebar */}
+        <div
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isLoginSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
+        >
+          <LoginSidebar
+            isOpen={isLoginSidebarOpen}
+            onClose={() => setIsLoginSidebarOpen(false)}
+          />
+        </div>
+
+        {/* User Sidebar */}
+        <div
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isUserSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
+        >
+          <UserSidebar
+            isOpen={isUserSidebarOpen}
+            onClose={() => setIsUserSidebarOpen(false)}
+          />
+        </div>
+
+        {/* Admin Sidebar */}
+        <div
+          className={cn(
+            'absolute top-0 right-0 h-full w-full md:w-[400px] shadow-2xl md:border-l overflow-hidden transition-transform duration-500 ease-out z-[10001]',
+            '[background-color:var(--color-theme-surface-primary)] [border-color:var(--color-theme-border-primary)]',
+            isAdminSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
+        >
+          <AdminSidebar
+            isOpen={isAdminSidebarOpen}
+            onClose={() => setIsAdminSidebarOpen(false)}
           />
         </div>
       </main>

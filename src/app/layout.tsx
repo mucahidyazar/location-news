@@ -4,6 +4,8 @@ import './globals.css'
 import 'leaflet/dist/leaflet.css'
 import './marker-styles.css'
 import {ThemeProvider} from '@/contexts/theme-context'
+import {AuthProvider} from '@/contexts/auth-context'
+import {QueryProvider} from '@/contexts/query-client-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -109,9 +111,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${josefinSans.variable} antialiased`}
       >
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryProvider>
         <script
           data-name="BMC-Widget"
           data-cfasync="false"
