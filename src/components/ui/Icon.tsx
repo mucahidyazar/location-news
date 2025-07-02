@@ -58,7 +58,7 @@ export default function Icon({ name, size = 24, className = '', color }: IconPro
         viewBox="0 0 120 120"
         fill="none"
         className={className}
-        style={{ color }}
+        style={color ? { color } : undefined}
       >
         {iconPaths['newspaper-sharp']}
       </svg>
@@ -72,7 +72,7 @@ export default function Icon({ name, size = 24, className = '', color }: IconPro
       viewBox="0 0 120 120"
       fill="none"
       className={className}
-      style={{ color }}
+      style={color ? { color } : undefined}
     >
       {iconPath}
     </svg>

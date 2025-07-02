@@ -74,42 +74,42 @@ export function ThemeSwitcher({
             className="w-4 h-4 rounded-full border"
             style={{
               backgroundColor: previewPalette.primary[500],
-              borderColor: 'var(--color-theme-border-secondary)',
+borderColor: 'var(--color-theme-border-secondary)',
             }}
           />
           <div
             className="w-4 h-4 rounded-full border"
             style={{
               backgroundColor: previewPalette.secondary[500],
-              borderColor: 'var(--color-theme-border-secondary)',
+borderColor: 'var(--color-theme-border-secondary)',
             }}
           />
           <div
             className="w-4 h-4 rounded-full border"
             style={{
               backgroundColor: previewPalette.background.primary,
-              borderColor: 'var(--color-theme-border-secondary)',
+borderColor: 'var(--color-theme-border-secondary)',
             }}
           />
         </div>
         <div className="flex-1">
           <div
-            className="font-medium text-sm capitalize"
-            style={{
-              color: isSelected
-                ? 'var(--color-theme-primary-900)'
-                : 'var(--color-theme-text-primary)',
-            }}
+            className={cn(
+              "font-medium text-sm capitalize",
+              isSelected
+                ? "text-[var(--color-theme-primary-900)]"
+                : "text-[var(--color-theme-text-primary)]"
+            )}
           >
             {themeName}
           </div>
           <div
-            className="text-xs"
-            style={{
-              color: isSelected
-                ? 'var(--color-theme-primary-700)'
-                : 'var(--color-theme-text-tertiary)',
-            }}
+            className={cn(
+              "text-xs",
+              isSelected
+                ? "text-[var(--color-theme-primary-700)]"
+                : "text-[var(--color-theme-text-tertiary)]"
+            )}
           >
             {themeName === 'aurora' && 'Ethereal blues and greens'}
             {themeName === 'midnight' && 'Deep cosmic blues with silver'}
@@ -118,8 +118,7 @@ export function ThemeSwitcher({
         </div>
         {isSelected && (
           <Check
-            className="w-4 h-4"
-            style={{color: 'var(--color-theme-primary-600)'}}
+            className="w-4 h-4 text-[var(--color-theme-primary-600)]"
           />
         )}
       </div>
@@ -130,12 +129,10 @@ export function ThemeSwitcher({
     return (
       <div className="space-y-3">
         <div
-          className="flex items-center gap-1 text-sm font-medium"
-          style={{color: 'var(--color-theme-text-primary)'}}
+          className="flex items-center gap-1 text-sm font-medium text-[var(--color-theme-text-primary)]"
         >
           <Palette
-            className="w-4 h-4"
-            style={{color: 'var(--color-theme-primary-600)'}}
+            className="w-4 h-4 text-[var(--color-theme-primary-600)]"
           />
           Color Palette
         </div>

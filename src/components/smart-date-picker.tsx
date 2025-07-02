@@ -93,18 +93,16 @@ export default function SmartDatePicker({
           <Button
             variant="outline"
             className={cn(
+              "bg-[var(--color-theme-surface-secondary)]",
               "w-full justify-start text-left font-normal text-xs h-8 pr-8",
               !date && "text-muted-foreground"
             )}
-            style={{
-              backgroundColor: 'var(--color-theme-surface-secondary)',
-            }}
           >
             <CalendarIcon className="mr-2 h-3 w-3" />
             {formatDisplayText()}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-3 border shadow-lg z-[9999]" align="start" style={{ backgroundColor: 'var(--color-theme-surface-secondary)' }}>
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-3 border shadow-lg z-[9999] bg-[var(--color-theme-surface-secondary)]" align="start">
           <Calendar
             mode="range"
             defaultMonth={date?.from}

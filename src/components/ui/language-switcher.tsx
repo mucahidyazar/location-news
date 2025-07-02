@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { Globe, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import {cn} from '@/lib/utils'
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -28,18 +29,7 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg"
-        style={{
-          color: 'var(--color-theme-text-secondary)'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-secondary)'
-          e.currentTarget.style.color = 'var(--color-theme-text-primary)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'transparent'
-          e.currentTarget.style.color = 'var(--color-theme-text-secondary)'
-        }}
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg [color:var(--color-theme-text-secondary)] hover:[background-color:var(--color-theme-surface-secondary)] hover:[color:var(--color-theme-text-primary)]"
         aria-label={t('header.language')}
       >
         <Globe className="w-4 h-4" />
@@ -57,32 +47,22 @@ export default function LanguageSwitcher() {
           />
           
           {/* Dropdown */}
-          <div className="absolute right-0 top-full mt-1 z-20 w-full rounded-lg shadow-lg border py-1" style={{backgroundColor: 'var(--color-theme-surface-secondary)', borderColor: 'var(--color-theme-border-primary)'}}>
+          <div className="absolute right-0 top-full mt-1 z-20 w-full rounded-lg shadow-lg border py-1 [background-color:var(--color-theme-surface-secondary)] [border-color:var(--color-theme-border-primary)]">
             {languages.map((language) => (
               <button
                 key={language.code}
                 onClick={() => handleLanguageChange(language.code)}
-                className="w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors"
-                style={{
-                  color: locale === language.code ? 'var(--color-theme-primary-600)' : 'var(--color-theme-text-primary)',
-                  backgroundColor: locale === language.code ? 'var(--color-theme-primary-50)' : 'transparent',
-                  fontWeight: locale === language.code ? '500' : 'normal'
-                }}
-                onMouseEnter={(e) => {
-                  if (locale !== language.code) {
-                    e.currentTarget.style.backgroundColor = 'var(--color-theme-surface-secondary)'
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (locale !== language.code) {
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                  }
-                }}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                  locale === language.code 
+                    ? "[color:var(--color-theme-primary-600)] [background-color:var(--color-theme-primary-50)] font-medium"
+                    : "[color:var(--color-theme-text-primary)] hover:[background-color:var(--color-theme-surface-secondary)]"
+                )}
               >
                 <span className="text-base">{language.flag}</span>
                 <span>{language.name}</span>
                 {locale === language.code && (
-                  <span className="ml-auto" style={{color: 'var(--color-theme-primary-600)'}}>✓</span>
+                  <span className="ml-auto [color:var(--color-theme-primary-600)]">✓</span>
                 )}
               </button>
             ))}
