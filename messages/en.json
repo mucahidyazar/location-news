@@ -16,6 +16,14 @@
     "subtitle": "Knowledge is Power, Security is Right",
     "language": "Language"
   },
+  "menu": {
+    "options": "Menu Options",
+    "close": "Close Menu",
+    "feed": "News Feed",
+    "settings": "Settings",
+    "updates": "Updates",
+    "moderate": "Moderate"
+  },
   "settings": {
     "title": "Settings",
     "mapIcons": {
@@ -42,6 +50,7 @@
     "publishedHoursAgo": "Published {hours} hours ago",
     "viewCount": "{count} views",
     "source": "Source",
+    "loadMore": "Load More",
     "readFullArticle": "Read Full Article",
     "relatedNews": "Related News",
     "newsCount": "{count} news",

@@ -16,6 +16,14 @@
     "subtitle": "Bilgi Güçtür, Güvenlik Haktır",
     "language": "Dil"
   },
+  "menu": {
+    "options": "Menü Seçenekleri",
+    "close": "Menüyü Kapat",
+    "feed": "Haber Akışı",
+    "settings": "Ayarlar",
+    "updates": "Güncellemeler",
+    "moderate": "Yönetim"
+  },
   "settings": {
     "title": "Ayarlar",
     "mapIcons": {
