@@ -208,7 +208,8 @@
 }
 
 @keyframes wave {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   25% {
@@ -280,4 +281,12 @@
 
 .leaflet-popup-content p {
   margin: 0 !important;
+}
+
+.calendar-grid thead,
+.calendar-grid tbody,
+.calendar-grid thead tr,
+.calendar-grid thead tr th,
+.calendar-grid tbody tr {
+  width: 100% !important;
 }
