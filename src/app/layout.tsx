@@ -6,6 +6,7 @@ import './marker-styles.css'
 import {ThemeProvider} from '@/contexts/theme-context'
 import {AuthProvider} from '@/contexts/auth-context'
 import {QueryProvider} from '@/contexts/query-client-provider'
+import Script from 'next/script'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -110,15 +111,14 @@ export default function RootLayout({
 
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${josefinSans.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
         <QueryProvider>
           <ThemeProvider>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
+            <AuthProvider>{children}</AuthProvider>
           </ThemeProvider>
         </QueryProvider>
-        <script
+        <Script
           data-name="BMC-Widget"
           data-cfasync="false"
           src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
@@ -130,7 +130,7 @@ export default function RootLayout({
           data-x_margin="60"
           data-y_margin="28"
           async
-        ></script>
+        />
       </body>
     </html>
   )
