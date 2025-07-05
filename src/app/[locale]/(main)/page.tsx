@@ -392,7 +392,6 @@ export default function HomePage() {
             className="w-full md:w-[320px]"
             defaultToLastWeek={true}
           />
-
           {(selectedLocation ||
             !selectedCategories.includes(t('filters.all')) ||
             selectedSources.length > 0 ||
