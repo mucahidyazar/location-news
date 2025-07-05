@@ -16,7 +16,7 @@ interface UserSidebarProps {
 }
 
 export function UserSidebar({isOpen, onClose}: UserSidebarProps) {
-  const {user, userProfile, signOut, isAdmin, refreshProfile} = useAuth()
+  const {userProfile, signOut, isAdmin, refreshProfile} = useAuth()
   const [isEditing, setIsEditing] = useState(false)
   const [editedFullName, setEditedFullName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -42,12 +42,12 @@ export function UserSidebar({isOpen, onClose}: UserSidebarProps) {
   }
 
   const handleSave = async () => {
-    if (!user?.email) return
+    if (!userProfile?.email) return
 
     setIsSaving(true)
     try {
       // Update user profile in database
-      await updateUserProfile(user.email, {
+      await updateUserProfile(userProfile.email, {
         full_name: editedFullName,
       })
 
@@ -63,7 +63,7 @@ export function UserSidebar({isOpen, onClose}: UserSidebarProps) {
     }
   }
 
-  if (!isOpen || !user) {
+  if (!isOpen || !userProfile) {
     return null
   }
 
@@ -125,10 +125,10 @@ export function UserSidebar({isOpen, onClose}: UserSidebarProps) {
                 ) : (
                   <p
                     className={cn(
-                      "text-sm px-3 py-2 rounded border [background-color:var(--color-theme-surface-secondary)] [border-color:var(--color-theme-border-primary)]",
-                      !userProfile?.full_name 
-                        ? "italic [color:var(--color-theme-text-tertiary)]"
-                        : "[color:var(--color-theme-text-primary)]"
+                      'text-sm px-3 py-2 rounded border [background-color:var(--color-theme-surface-secondary)] [border-color:var(--color-theme-border-primary)]',
+                      !userProfile?.full_name
+                        ? 'italic [color:var(--color-theme-text-tertiary)]'
+                        : '[color:var(--color-theme-text-primary)]',
                     )}
                   >
                     {userProfile?.full_name || 'Click Edit to add your name'}
@@ -142,7 +142,7 @@ export function UserSidebar({isOpen, onClose}: UserSidebarProps) {
                   Email Address
                 </label>
                 <p className="text-sm px-3 py-2 rounded border [color:var(--color-theme-text-secondary)] [background-color:var(--color-theme-surface-secondary)] [border-color:var(--color-theme-border-primary)]">
-                  {userProfile?.email || user?.email}
+                  {userProfile?.email || userProfile?.email}
                 </p>
                 <p className="text-xs [color:var(--color-theme-text-tertiary)]">
                   Email cannot be changed

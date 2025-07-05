@@ -70,44 +70,29 @@ export default function NewsSidebar({
   const filteredNews = sortedNews
 
   return (
-    <div
-      className="h-screen w-full flex flex-col bg-[var(--color-theme-bg-primary)]"
-    >
+    <div className="h-screen w-full flex flex-col bg-[var(--color-theme-bg-primary)]">
       {/* Header - Fixed */}
       <div className="flex-none">
         <SidebarHeader
           icon={
-            <Newspaper
-              className="w-5 h-5 text-[var(--color-theme-primary-600)]"
-            />
+            <Newspaper className="w-5 h-5 text-[var(--color-theme-primary-600)]" />
           }
           title={t('news.title')}
           subtitle={`${filteredNews.length} haber bulundu`}
           onClose={onClose || (() => {})}
-          showCount={{
-            label: `${t('news.newsCount', {count: news.length})} • ${t(
-              'locations.locationCount',
-              {count: locations.length},
-            )}`,
-            count: filteredNews.length,
-          }}
         />
       </div>
 
       {/* View Type Tabs - Fixed */}
-      <div
-        className="flex-none p-4 border-b bg-[var(--color-theme-surface-primary)] border-[var(--color-theme-border-primary)]"
-      >
-        <div
-          className="flex rounded-lg bg-[var(--color-theme-surface-tertiary)]"
-        >
+      <div className="flex-none p-4 border-b bg-[var(--color-theme-surface-primary)] border-[var(--color-theme-border-primary)]">
+        <div className="flex rounded-lg bg-[var(--color-theme-surface-tertiary)]">
           <button
             onClick={() => onViewTypeChange('card')}
             className={cn(
               'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
               viewType === 'card'
                 ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
-                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]',
             )}
           >
             <Grid3X3 className="w-4 h-4" />
@@ -119,7 +104,7 @@ export default function NewsSidebar({
               'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
               viewType === 'horizontal'
                 ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
-                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]',
             )}
           >
             <LayoutList className="w-4 h-4" />
@@ -131,7 +116,7 @@ export default function NewsSidebar({
               'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all',
               viewType === 'minimal'
                 ? 'bg-[var(--color-theme-primary-500)] text-[var(--color-theme-text-inverse)] border border-[var(--color-theme-primary-600)] shadow-[0_1px_2px_0_var(--color-theme-bg-overlay)]'
-                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]'
+                : 'bg-transparent text-[var(--color-theme-text-secondary)] hover:bg-[var(--color-theme-surface-tertiary)] hover:text-[var(--color-theme-text-primary)]',
             )}
           >
             <AlignLeft className="w-4 h-4" />
@@ -144,9 +129,7 @@ export default function NewsSidebar({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 pb-24">
           {filteredNews.length === 0 ? (
-            <div
-              className="text-center py-8 text-[var(--color-theme-text-tertiary)]"
-            >
+            <div className="text-center py-8 text-[var(--color-theme-text-tertiary)]">
               <p>Haber bulunamadı.</p>
               <p className="text-sm mt-2">Filtreleri değiştirmeyi deneyin.</p>
             </div>
