@@ -147,7 +147,7 @@ export function LogoLoading({
           {/* Animated Brand Name */}
           <div
             className={cn(
-              'animate-fade-in',
+              'animate-fade-in mt-14',
               'text-[var(--color-theme-text-primary)]',
               'font-[family-name:var(--font-josefin-sans)]',
             )}

@@ -22,6 +22,7 @@ import {FloatingMenuButton} from '@/components/floating-menu-button'
 import {NewsReportForm} from '@/components/news-report-form'
 import {cn} from '@/lib/utils'
 import {useAuth} from '@/contexts/auth-context'
+import ArcGISGlobeLoading from '@/components/arcgis-globe-loading'
 
 export default function HomePage() {
   const t = useTranslations()
@@ -368,7 +369,14 @@ export default function HomePage() {
   }
 
   if (loading || authLoading) {
-    return <LogoLoading variant="page" text={t('common.loading')} size="xl" />
+    return (
+      <LogoLoading
+        variant="page"
+        text={t('common.loading')}
+        showText={false}
+        size="xl"
+      />
+    )
   }
 
   return (
