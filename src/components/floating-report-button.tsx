@@ -1,7 +1,7 @@
 'use client'
 
-import { MessageSquarePlus, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import {MessageSquarePlus, X} from 'lucide-react'
+import {cn} from '@/lib/utils'
 
 interface FloatingReportButtonProps {
   onClick: () => void
@@ -10,11 +10,11 @@ interface FloatingReportButtonProps {
   className?: string
 }
 
-export function FloatingReportButton({ 
-  onClick, 
-  isFormOpen, 
-  isSidebarOpen = false, 
-  className 
+export function FloatingReportButton({
+  onClick,
+  isFormOpen,
+  isSidebarOpen = false,
+  className,
 }: FloatingReportButtonProps) {
   return (
     <button
@@ -31,15 +31,19 @@ export function FloatingReportButton({
         'hover:[background-color:var(--color-theme-primary-600)]',
         // Smooth transition for icon change
         'transition-transform duration-200 ease-in-out',
-        className
+        className,
       )}
       style={{
         bottom: '24px',
         right: isSidebarOpen ? '420px' : '24px',
-        transition: 'all 300ms ease-out'
+        transition: 'all 300ms ease-out',
       }}
-      title={isFormOpen ? "Formu Kapat" : "Haber Bildir"}
-      aria-label={isFormOpen ? "Haber bildirimi formunu kapat" : "Yeni haber bildirimi oluştur"}
+      title={isFormOpen ? 'Formu Kapat' : 'Haber Bildir'}
+      aria-label={
+        isFormOpen
+          ? 'Haber bildirimi formunu kapat'
+          : 'Yeni haber bildirimi oluştur'
+      }
     >
       {isFormOpen ? (
         <X className="w-6 h-6" />
