@@ -2,55 +2,31 @@
 
 import {useState, useCallback, useEffect, useMemo, memo} from 'react'
 import {useSearchParams} from 'next/navigation'
-import {Button} from '@/components/ui/button'
-import {Input} from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {Newspaper, Search, X} from 'lucide-react'
+import {Newspaper} from 'lucide-react'
 import NewsCard from '@/components/news-card'
 import {useTranslations} from 'next-intl'
 import {LoadingSpinner} from '@/components/ui/loading-spinner'
 import {LogoLoading} from '@/components/ui/logo-loading'
+import {Button} from '@/components/ui/button'
 import {useInfiniteNews, useCategories} from '@/hooks/use-news'
+import {FiltersPanel} from '@/components/filters-panel'
 
 // Separate component for news data to isolate re-renders
 const NewsContent = memo(
   ({
-    searchTerm,
-    selectedCategory,
+    news,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    isNewsLoading,
   }: {
-    searchTerm: string
-    selectedCategory: string
+    news: unknown[]
+    hasNextPage: boolean
+    isFetchingNextPage: boolean
+    fetchNextPage: () => void
+    isNewsLoading: boolean
   }) => {
     const t = useTranslations()
-    const NEWS_PER_PAGE = 20
-
-    const newsOptions = useMemo(
-      () => ({
-        searchTerm: searchTerm || undefined,
-        selectedCategory: selectedCategory || undefined,
-        limit: NEWS_PER_PAGE,
-      }),
-      [searchTerm, selectedCategory],
-    )
-
-    const {
-      data,
-      fetchNextPage,
-      hasNextPage,
-      isFetchingNextPage,
-      isPending: isNewsLoading,
-    } = useInfiniteNews(newsOptions)
-
-    // Tüm sayfaları flat array haline getir
-    const news = useMemo(() => {
-      return data?.pages.flat() || []
-    }, [data])
 
     const loadMore = async () => {
       if (hasNextPage && !isFetchingNextPage) {
@@ -65,7 +41,7 @@ const NewsContent = memo(
     return (
       <>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {news.map(item => (
+          {news.map((item: any) => (
             <NewsCard key={item.id} news={item} onLocationClick={() => {}} />
           ))}
         </div>
@@ -123,8 +99,51 @@ export default function NewsPage() {
   )
 
   // Categories için ayrı hook
-  const {data: categories = [], isPending: isCategoriesLoading} =
-    useCategories()
+  const {isPending: isCategoriesLoading} = useCategories()
+
+  // News data for FiltersPanel
+  const NEWS_PER_PAGE = 20
+  const newsOptions = useMemo(
+    () => ({
+      searchTerm: debouncedSearchTerm || undefined,
+      selectedCategory: selectedCategory || undefined,
+      limit: NEWS_PER_PAGE,
+    }),
+    [debouncedSearchTerm, selectedCategory],
+  )
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isNewsLoading,
+  } = useInfiniteNews(newsOptions)
+
+  // Tüm sayfaları flat array haline getir
+  const news = useMemo(() => {
+    return data?.pages.flat() || []
+  }, [data])
+
+  // Calculate unique sources and counts like in main page
+  const sourceCount = news.reduce((acc, item) => {
+    const sourceName =
+      typeof item.source === 'string' ? item.source : item.source?.name || ''
+    acc[sourceName] = (acc[sourceName] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  const uniqueSources = Array.from(
+    new Set(
+      news
+        .map(item =>
+          typeof item.source === 'string'
+            ? item.source
+            : item.source?.name || '',
+        )
+        .filter(Boolean),
+    ),
+  ).sort((a, b) => (sourceCount[b] || 0) - (sourceCount[a] || 0))
 
   // inputValue değiştiğinde 500ms sonra debouncedSearchTerm'i güncelle
   useEffect(() => {
@@ -150,6 +169,25 @@ export default function NewsPage() {
     setSelectedCategory('')
   }, [])
 
+  // Category handling for FiltersPanel
+  const handleCategorySelect = useCallback((category: string) => {
+    if (category === t('filters.all')) {
+      setSelectedCategory('')
+    } else {
+      setSelectedCategory(category)
+    }
+  }, [t])
+
+  // Source handling for FiltersPanel  
+  const handleSourceSelect = useCallback((_source: string) => {
+    // News sayfasında source filtering yok ama FiltersPanel için boş handler
+  }, [])
+
+  // Date range handling for FiltersPanel
+  const handleDateRangeChange = useCallback((_start?: string, _end?: string) => {
+    // News sayfasında date filtering yok ama FiltersPanel için boş handler
+  }, [])
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
@@ -164,56 +202,30 @@ export default function NewsPage() {
   return (
     <div className="h-full overflow-auto bg-[var(--color-theme-surface-primary)]">
       {/* Filters */}
-      <div className="shadow-sm bg-[var(--color-theme-surface-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-wrap gap-4 items-center">
-            {/* Search */}
-            <div className="relative flex-1 min-w-[300px]">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search city, news title, or any keyword"
-                value={inputValue}
-                onChange={handleInputChange}
-                className="pl-10"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <Select
-              value={selectedCategory || 'all'}
-              onValueChange={value =>
-                setSelectedCategory(value === 'all' ? '' : value)
-              }
-            >
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder={t('news.allCategories')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('news.allCategories')}</SelectItem>
-                {categories.map(category => (
-                  <SelectItem key={category.id} value={category.name}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Clear Filters */}
-            {(inputValue || selectedCategory) && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                <X className="w-4 h-4 mr-1" />
-                {t('news.clearFilters')}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
+      <FiltersPanel
+        inputValue={inputValue}
+        onInputChange={handleInputChange}
+        onClearFilters={clearFilters}
+        selectedCategories={selectedCategory ? [selectedCategory] : [t('filters.all')]}
+        selectedSources={[]}
+        news={news}
+        uniqueSources={uniqueSources}
+        sourceCount={sourceCount}
+        onCategorySelect={handleCategorySelect}
+        onSourceSelect={handleSourceSelect}
+        onDateRangeChange={handleDateRangeChange}
+        dateRange={{}}
+        defaultToLastWeek={false}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <NewsContent
-          searchTerm={debouncedSearchTerm}
-          selectedCategory={selectedCategory}
+          news={news}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          isNewsLoading={isNewsLoading}
         />
       </main>
     </div>
