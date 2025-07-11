@@ -2,7 +2,7 @@
 
 This document outlines the coding conventions, architectural decisions, and development guidelines for the Mappy.News project. All contributors and AI assistants should follow these rules to maintain consistency and code quality.
 
-## <¨ Styling & CSS Conventions
+## <ï¿½ Styling & CSS Conventions
 
 ### 1. Tailwind CSS Priority
 - **ALWAYS use Tailwind CSS** classes instead of inline styles
@@ -61,7 +61,7 @@ This document outlines the coding conventions, architectural decisions, and deve
 - Use CSS custom properties for theme variables: `var(--color-theme-*)`
 - Wrap in Tailwind arbitrary values: `bg-[var(--color-theme-primary-500)]`
 
-## =Ý Form Handling
+## =ï¿½ Form Handling
 
 ### 1. React Hook Form + Zod
 - **ALWAYS use React Hook Form** for form state management
@@ -127,7 +127,7 @@ const useCreateNews = () => {
 - Use consistent response/error handling
 - Implement proper TypeScript types for API responses
 
-## >é Component Architecture
+## >ï¿½ Component Architecture
 
 ### 1. Component Structure
 - Use functional components with hooks
@@ -166,7 +166,7 @@ const Button = ({
 - Use Context API sparingly for truly global state
 - **NEVER use Redux** unless absolutely necessary
 
-## <¯ Naming Conventions
+## <ï¿½ Naming Conventions
 
 ### 1. Files & Folders
 - Use kebab-case for file names: `news-sidebar.tsx`
@@ -217,7 +217,7 @@ import type { NewsItem } from '@/lib/types'
 - **ALWAYS use absolute imports** with `@/` prefix
 - **NEVER use relative imports** like `../../../`
 
-## =à Performance Best Practices
+## =ï¿½ Performance Best Practices
 
 ### 1. React Optimization
 - Use `useMemo` and `useCallback` for expensive computations
@@ -254,7 +254,7 @@ interface UserData {
 const data: UserData = fetchData()
 ```
 
-## >ê Testing
+## >ï¿½ Testing
 
 ### 1. Testing Strategy
 - Write unit tests for utility functions
@@ -269,7 +269,7 @@ const data: UserData = fetchData()
 ## < Internationalization (i18n)
 
 ### 1. Text Content
-- **NEVER hardcode text** in components
+- **NEVER hardcode text** in components, documentation, or any user-facing content\n- **ALWAYS use i18n for ALL content** including documentation, error messages, notifications, and static files\n- **NEVER create static .md files with hardcoded text** - use i18n system instead
 - **ALWAYS use `useTranslations()`** hook from next-intl
 - Keep translation keys organized and descriptive
 
@@ -282,7 +282,30 @@ const t = useTranslations()
 <button>{t('form.submit')}</button>
 ```
 
-## <¨ Theme & Design System
+### 2. Documentation and Static Content
+- **NEVER write static documentation** with hardcoded English text
+- **ALWAYS create dynamic documentation** that uses the translation system
+- For .md files, create React components that render markdown using translations
+- Use translation keys for all headings, content, and metadata
+
+```tsx
+// L BAD - Static markdown file
+# Static Documentation
+This is hardcoded English text.
+
+//  GOOD - Dynamic documentation component
+const DocumentationPage = () => {
+  const t = useTranslations('docs')
+  return (
+    <div>
+      <h1>{t('title')}</h1>
+      <p>{t('content')}</p>
+    </div>
+  )
+}
+```
+
+## <ï¿½ Theme & Design System
 
 ### 1. Design Tokens
 - Use CSS custom properties for colors, spacing, typography
@@ -293,7 +316,7 @@ const t = useTranslations()
 - Use consistent variant patterns across components
 - Implement size and style variants systematically
 
-## =ñ Responsive Design
+## =ï¿½ Responsive Design
 
 ### 1. Mobile-First Approach
 - Design for mobile first, then scale up
@@ -318,7 +341,7 @@ const t = useTranslations()
 - Use environment variables for configuration
 - Validate environment variables at startup
 
-## =Ê Monitoring & Analytics
+## =ï¿½ Monitoring & Analytics
 
 ### 1. Error Handling
 - Implement proper error boundaries
@@ -330,7 +353,7 @@ const t = useTranslations()
 - Track Core Web Vitals
 - Implement performance budgets
 
-## =€ Deployment & CI/CD
+## =ï¿½ Deployment & CI/CD
 
 ### 1. Build Process
 - Ensure builds pass all linting and type checking
@@ -344,14 +367,14 @@ const t = useTranslations()
 
 ---
 
-##   Common Anti-Patterns to Avoid
+## ï¿½ Common Anti-Patterns to Avoid
 
 1. **Inline styles instead of Tailwind classes**
 2. **Mouse event handlers for hover effects**
 3. **useEffect for API calls instead of TanStack Query**
 4. **Plain forms without React Hook Form + Zod**
 5. **Relative imports instead of absolute imports**
-6. **Hardcoded text instead of translations**
+6. **Hardcoded text instead of translations (including static .md files)**
 7. **Any types instead of proper TypeScript interfaces**
 8. **Direct DOM manipulation instead of React patterns**
 9. **Class components instead of functional components**
@@ -359,7 +382,7 @@ const t = useTranslations()
 
 ---
 
-## =Ú Key Libraries & Tools
+## =ï¿½ Key Libraries & Tools
 
 - **Styling**: Tailwind CSS, cn() utility
 - **Forms**: React Hook Form + Zod
