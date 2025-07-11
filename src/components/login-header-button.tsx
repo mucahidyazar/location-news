@@ -14,7 +14,7 @@ interface LoginHeaderButtonProps {
 export function LoginHeaderButton({ onToggleLoginSidebar, isLoginSidebarOpen = false }: LoginHeaderButtonProps) {
   const [hasSecretAccess, setHasSecretAccess] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { user, signOut, loading } = useAuth()
+  const { userProfile, signOut, loading } = useAuth()
 
   useEffect(() => {
     setMounted(true)
@@ -70,7 +70,7 @@ export function LoginHeaderButton({ onToggleLoginSidebar, isLoginSidebarOpen = f
   // If has secret access, show login/logout button
   return (
     <>
-      {user ? (
+      {userProfile ? (
         <a
           href="#"
           onClick={(e) => {
@@ -78,7 +78,7 @@ export function LoginHeaderButton({ onToggleLoginSidebar, isLoginSidebarOpen = f
             signOut()
           }}
           className="flex flex-col items-center py-2 px-0 md:p-3 transition-all duration-300 ease-out text-xs rounded-lg min-w-[56px] md:min-w-[80px] [color:var(--color-theme-text-secondary)] hover:[background-color:var(--color-theme-primary-50)] hover:[color:var(--color-theme-primary-500)]"
-          title={`Logout ${user.email}`}
+          title={`Logout ${userProfile.email}`}
         >
           <LogOut className="w-5 h-5 mb-1" />
           <span>Logout</span>
