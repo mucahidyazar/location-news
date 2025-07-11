@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {usePathname, useRouter} from 'next/navigation'
-import {Grid3x3, List, MapPin} from 'lucide-react'
+import {Grid3x3, List, MapPin, Menu} from 'lucide-react'
 import {UserHeaderButton} from '@/components/user-header-button'
 import {HeaderNavButton} from '@/components/ui/header-nav-button'
 
@@ -11,10 +11,12 @@ interface CommonHeaderProps {
   showNewsButton?: boolean
   showSidebarButton?: boolean
   onToggleSidebar?: () => void
+  onToggleMenuSidebar?: () => void
   onToggleLoginSidebar?: () => void
   onToggleUserSidebar?: () => void
   className?: string
   isSidebarOpen?: boolean
+  isMenuSidebarOpen?: boolean
   isLoginSidebarOpen?: boolean
   isUserSidebarOpen?: boolean
 }
@@ -25,10 +27,12 @@ export default function CommonHeader({
   showNewsButton = false,
   showSidebarButton = false,
   onToggleSidebar,
+  onToggleMenuSidebar,
   onToggleLoginSidebar,
   onToggleUserSidebar,
   className = '',
   isSidebarOpen = false,
+  isMenuSidebarOpen = false,
   isLoginSidebarOpen = false,
   isUserSidebarOpen = false,
 }: CommonHeaderProps) {
@@ -72,6 +76,17 @@ export default function CommonHeader({
 
         {/* Right: Sidebars */}
         <ul className="nav-sidebars flex items-center gap-1 md:gap-2">
+          {/* Mobile Menu Button - Only visible on mobile */}
+          {onToggleMenuSidebar && (
+            <HeaderNavButton
+              icon={Menu}
+              label="Menu"
+              isActive={isMenuSidebarOpen}
+              onClick={onToggleMenuSidebar}
+              className="md:hidden"
+            />
+          )}
+
           {/* Feed Sidebar */}
           {showSidebarButton && onToggleSidebar && (
             <HeaderNavButton
@@ -82,21 +97,23 @@ export default function CommonHeader({
             />
           )}
 
-          {/* Home/Map Page */}
+          {/* Home/Map Page - Hidden on mobile when menu is available */}
           <HeaderNavButton
             icon={MapPin}
             label="Map"
             isActive={isMapActive}
             onClick={() => router.push('/')}
+            className={onToggleMenuSidebar ? "hidden md:flex" : ""}
           />
 
-          {/* News Page */}
+          {/* News Page - Hidden on mobile when menu is available */}
           {showNewsButton && (
             <HeaderNavButton
               icon={Grid3x3}
               label="News"
               isActive={isNewsActive}
               onClick={() => router.push('/news')}
+              className={onToggleMenuSidebar ? "hidden md:flex" : ""}
             />
           )}
 

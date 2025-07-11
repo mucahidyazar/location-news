@@ -17,7 +17,7 @@ export function HeaderNavButton({
   className
 }: HeaderNavButtonProps) {
   return (
-    <li className={cn("relative", className)}>
+    <li className={cn("relative flex", className)}>
       <a
         href="#"
         onClick={e => {

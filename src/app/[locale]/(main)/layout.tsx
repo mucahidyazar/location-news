@@ -175,6 +175,17 @@ function MainLayoutInner({children}: MainLayoutProps) {
             setIsAdminSidebarOpen(false)
           }
         }}
+        onToggleMenuSidebar={() => {
+          setIsMenuSidebarOpen(!isMenuSidebarOpen)
+          if (!isMenuSidebarOpen) {
+            setIsSidebarOpen(false)
+            setIsSettingsSidebarOpen(false)
+            setIsUpdatesSidebarOpen(false)
+            setIsLoginSidebarOpen(false)
+            setIsUserSidebarOpen(false)
+            setIsAdminSidebarOpen(false)
+          }
+        }}
         onToggleUserSidebar={() => {
           setIsUserSidebarOpen(!isUserSidebarOpen)
           if (!isUserSidebarOpen) {
@@ -187,6 +198,7 @@ function MainLayoutInner({children}: MainLayoutProps) {
           }
         }}
         isSidebarOpen={isSidebarOpen}
+        isMenuSidebarOpen={isMenuSidebarOpen}
         isLoginSidebarOpen={isLoginSidebarOpen}
         isUserSidebarOpen={isUserSidebarOpen}
       />

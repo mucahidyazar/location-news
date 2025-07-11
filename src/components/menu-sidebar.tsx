@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MapPin, Grid3x3 } from 'lucide-react'
+import { MapPin, Grid3x3, Shield, FileText } from 'lucide-react'
 import { useTheme } from '@/contexts/theme-context'
 import {cn} from '@/lib/utils'
 import {SidebarHeader} from '@/components/ui/sidebar-header'
@@ -67,6 +67,50 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
             </Link>
           )}
         </div>
+
+        {/* Legal Pages Section */}
+        <div className="mt-6 pt-4 border-t" style={{ borderColor: palette.border.primary }}>
+          <h3 className={cn("text-xs font-medium mb-2 px-2", `[color:${palette.text.tertiary}]`)}>
+            Legal
+          </h3>
+          <div className="space-y-2">
+            {/* Privacy Policy */}
+            <Link
+              href="/privacy-policy"
+              onClick={onClose}
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-lg transition-all",
+                pathname.includes('/privacy-policy') 
+                  ? `[background-color:${palette.primary[50]}] [color:${palette.primary[600]}] [border-left:4px_solid_${palette.primary[600]}]`
+                  : `[color:${palette.text.secondary}] hover:[background-color:${palette.surface.secondary}] hover:[color:${palette.primary[600]}]`
+              )}
+            >
+              <Shield className="w-4 h-4" />
+              <div>
+                <div className="font-medium text-sm">Privacy Policy</div>
+                <div className="text-xs opacity-75">How we protect your data</div>
+              </div>
+            </Link>
+
+            {/* Terms and Conditions */}
+            <Link
+              href="/terms-and-conditions"
+              onClick={onClose}
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-lg transition-all",
+                pathname.includes('/terms-and-conditions') 
+                  ? `[background-color:${palette.primary[50]}] [color:${palette.primary[600]}] [border-left:4px_solid_${palette.primary[600]}]`
+                  : `[color:${palette.text.secondary}] hover:[background-color:${palette.surface.secondary}] hover:[color:${palette.primary[600]}]`
+              )}
+            >
+              <FileText className="w-4 h-4" />
+              <div>
+                <div className="font-medium text-sm">Terms & Conditions</div>
+                <div className="text-xs opacity-75">Rules and guidelines</div>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Footer */}
@@ -75,8 +119,25 @@ export default function MenuSidebar({ onClose, showNewsButton = false }: MenuSid
         `[background-color:${palette.surface.secondary}]`,
         `[border-color:${palette.border.primary}]`
       )}>
+        <div className="flex justify-center gap-4 mb-2">
+          <Link
+            href="/privacy-policy"
+            onClick={onClose}
+            className={cn("text-xs hover:underline", `[color:${palette.text.tertiary}]`)}
+          >
+            Privacy
+          </Link>
+          <span className={cn("text-xs", `[color:${palette.text.tertiary}]`)}>•</span>
+          <Link
+            href="/terms-and-conditions"
+            onClick={onClose}
+            className={cn("text-xs hover:underline", `[color:${palette.text.tertiary}]`)}
+          >
+            Terms
+          </Link>
+        </div>
         <p className={cn("text-xs text-center", `[color:${palette.text.tertiary}]`)}>
-          Navigation Menu
+          © 2024 Mappy.News
         </p>
       </div>
     </div>
