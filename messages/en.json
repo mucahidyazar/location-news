@@ -43,6 +43,28 @@
     "locations": "Locations",
     "categories": "Categories"
   },
+  "docs": {
+    "preProductionChecklist": {
+      "title": "Pre-Production Checklist",
+      "subtitle": "Comprehensive checklist for preparing Mappy.News for production deployment",
+      "executiveSummary": "Executive Summary",
+      "executiveSummaryContent": "This document outlines the comprehensive checklist for preparing Mappy.News for production deployment. The project currently has a **70/100 production readiness score** with a solid foundation but requires critical fixes and enhancements.",
+      "criticalIssues": "Critical Issues (Must Fix Before Production)",
+      "highPriority": "High Priority Tasks",
+      "mediumPriority": "Medium Priority Tasks",
+      "lowPriority": "Low Priority Tasks",
+      "currentStatus": "Current Project Status",
+      "workingWell": "What's Working Well",
+      "criticalGaps": "Critical Gaps",
+      "deploymentReadiness": "Deployment Readiness Checklist",
+      "beforeFirstDeployment": "Before First Deployment",
+      "postDeploymentMonitoring": "Post-Deployment Monitoring",
+      "timelineRecommendations": "Timeline Recommendations",
+      "productionReadinessScore": "Production Readiness Score Breakdown",
+      "successCriteria": "Success Criteria for Production",
+      "contactSupport": "Contact and Support"
+    }
+  },
   "news": {
     "title": "Latest News",
     "noNews": "No news found",

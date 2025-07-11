@@ -43,6 +43,28 @@
     "locations": "Lokasyonlar",
     "categories": "Kategoriler"
   },
+  "docs": {
+    "preProductionChecklist": {
+      "title": "Prodüksiyon Öncesi Kontrol Listesi",
+      "subtitle": "Mappy.News'i prodüksiyon dağıtımına hazırlamak için kapsamlı kontrol listesi",
+      "executiveSummary": "Yönetici Özeti",
+      "executiveSummaryContent": "Bu belge, Mappy.News'i prodüksiyon dağıtımına hazırlamak için kapsamlı kontrol listesini özetler. Proje şu anda **70/100 prodüksiyon hazırlık puanına** sahip, sağlam bir temel var ancak kritik düzeltmeler ve geliştirmeler gerekiyor.",
+      "criticalIssues": "Kritik Sorunlar (Prodüksiyondan Önce Düzeltilmeli)",
+      "highPriority": "Yüksek Öncelikli Görevler",
+      "mediumPriority": "Orta Öncelikli Görevler",
+      "lowPriority": "Düşük Öncelikli Görevler",
+      "currentStatus": "Mevcut Proje Durumu",
+      "workingWell": "İyi Çalışan Özellikler",
+      "criticalGaps": "Kritik Eksiklikler",
+      "deploymentReadiness": "Dağıtım Hazırlık Kontrol Listesi",
+      "beforeFirstDeployment": "İlk Dağıtımdan Önce",
+      "postDeploymentMonitoring": "Dağıtım Sonrası İzleme",
+      "timelineRecommendations": "Zaman Çizelgesi Önerileri",
+      "productionReadinessScore": "Prodüksiyon Hazırlık Puanı Dağılımı",
+      "successCriteria": "Prodüksiyon için Başarı Kriterleri",
+      "contactSupport": "İletişim ve Destek"
+    }
+  },
   "news": {
     "title": "Son Haberler",
     "noNews": "Haber bulunamadı",
