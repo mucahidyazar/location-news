@@ -4,25 +4,13 @@ import {useState, useEffect, useCallback} from 'react'
 import InteractiveMap from '@/components/interactive-map'
 import {NewsItem, Location} from '@/lib/types'
 import {useMainLayout} from '@/contexts/main-layout-context'
-import {
-  categoryKeys,
-  getCategoryColor,
-  getCategoryKeyByName,
-  getCategoryColorByKey,
-} from '@/lib/category-colors'
-import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
-import {Input} from '@/components/ui/input'
-import {Newspaper, Search, X, Globe, Tv, Building} from 'lucide-react'
-import SmartDatePicker from '@/components/smart-date-picker'
 import {useTranslations} from 'next-intl'
 import {LogoLoading} from '@/components/ui/logo-loading'
 import {FloatingReportButton} from '@/components/floating-report-button'
 import {FloatingMenuButton} from '@/components/floating-menu-button'
 import {NewsReportForm} from '@/components/news-report-form'
-import {cn} from '@/lib/utils'
 import {useAuth} from '@/contexts/auth-context'
-import ArcGISGlobeLoading from '@/components/arcgis-globe-loading'
+import {FiltersPanel} from '@/components/filters-panel'
 
 export default function HomePage() {
   const t = useTranslations()
@@ -50,13 +38,6 @@ export default function HomePage() {
     isAdminSidebarOpen ||
     isUserSidebarOpen
 
-  // Generate dynamic categories based on translations
-  const getLocalizedCategories = () => {
-    return categoryKeys.map(key => {
-      if (key === 'all') return t('filters.all')
-      return t(`categories.${key}`)
-    })
-  }
 
   const [news, setNews] = useState<NewsItem[]>([])
   const [locations, setLocations] = useState<Location[]>([])
@@ -185,20 +166,6 @@ export default function HomePage() {
     ),
   ).sort((a, b) => (sourceCount[b] || 0) - (sourceCount[a] || 0))
 
-  const getSourceIcon = (source: string) => {
-    if (source.toLowerCase().includes('haber')) return Newspaper
-    if (
-      source.toLowerCase().includes('tv') ||
-      source.toLowerCase().includes('medya')
-    )
-      return Tv
-    if (
-      source.toLowerCase().includes('tech') ||
-      source.toLowerCase().includes('teknoloji')
-    )
-      return Building
-    return Globe
-  }
 
   const loadData = async (searchTerm?: string) => {
     try {
@@ -382,122 +349,22 @@ export default function HomePage() {
   return (
     <div className="h-full w-full relative">
       {/* Floating Filters Panel */}
-      <div className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999] transition-all duration-300 backdrop-blur-sm rounded-lg p-2 md:p-4 shadow-lg space-y-2 md:space-y-4 opacity-85 hover:opacity-95 bg-[var(--color-theme-surface-primary)]">
-        {/* Search and Main Filters */}
-        <div className="flex gap-2 md:gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[150px] md:min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search city, news title, or any keyword"
-              value={inputValue}
-              onChange={handleInputChange}
-              className="pl-10 h-8 text-sm"
-            />
-          </div>
-
-          <SmartDatePicker
-            onDateRangeChange={handleDateRangeChange}
-            className="w-full md:w-[320px]"
-            defaultToLastWeek={true}
-          />
-          {(selectedLocation ||
-            !selectedCategories.includes(t('filters.all')) ||
-            selectedSources.length > 0 ||
-            inputValue ||
-            dateRange?.start ||
-            dateRange?.end) && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilter}
-              className="text-red-600 hover:text-red-800 hover:bg-red-50 h-8 px-2 text-xs cursor-pointer mx-auto"
-            >
-              <X className="w-3 h-3 mr-1" />
-              {t('common.clear')}
-            </Button>
-          )}
-        </div>
-
-        {/* News Sources Filter */}
-        <div className="max-h-20 md:max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-          <div className="flex flex-wrap gap-1 md:gap-2">
-            {uniqueSources.map(source => {
-              const IconComponent = getSourceIcon(source)
-              const sourceNewsCount = sourceCount[source] || 0
-              return (
-                <button
-                  key={source}
-                  onClick={() => handleSourceSelect(source)}
-                  className={cn(
-                    'flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg transition-all border-2',
-                    selectedSources.includes(source)
-                      ? 'shadow-sm border-[var(--color-theme-primary-300)] bg-[var(--color-theme-primary-50)] text-[var(--color-theme-primary-600)]'
-                      : 'border-transparent bg-[var(--color-theme-surface-secondary)] text-[var(--color-theme-text-primary)] hover:bg-[var(--color-theme-surface-tertiary)]',
-                  )}
-                >
-                  <IconComponent className="w-4 h-4" />
-                  <div className="flex flex-col items-start">
-                    <span className="text-xs font-medium">{source}</span>
-                    <span className="text-xs opacity-75">
-                      {sourceNewsCount} haber
-                    </span>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Category Filter Badges */}
-        <div className="flex flex-wrap gap-1 md:gap-2">
-          {getLocalizedCategories().map(category => {
-            const isSelected = selectedCategories.includes(category)
-            // Use key-based system for better multilingual support
-            const categoryKey =
-              category === t('filters.all')
-                ? 'other_incidents'
-                : getCategoryKeyByName(category)
-            const categoryStyle =
-              category === t('filters.all')
-                ? getCategoryColor(category)
-                : getCategoryColorByKey(categoryKey)
-            const categoryNewsCount =
-              category === t('filters.all')
-                ? news.length
-                : news.filter(
-                    item =>
-                      (typeof item.category === 'string'
-                        ? item.category
-                        : item.category?.name) === category,
-                  ).length
-
-            return (
-              <Badge
-                key={category}
-                variant="secondary"
-                className={`cursor-pointer transition-all duration-200 text-xs flex items-center gap-1 ${
-                  isSelected
-                    ? `${categoryStyle.badge} opacity-100`
-                    : `bg-opacity-20 hover:bg-opacity-40 opacity-70 hover:opacity-100`
-                } border border-opacity-30`}
-                style={{
-                  backgroundColor: isSelected
-                    ? undefined
-                    : `${categoryStyle.hex}20`,
-                  borderColor: categoryStyle.hex,
-                  color: categoryStyle.hex,
-                }}
-                onClick={() => handleCategorySelect(category)}
-              >
-                <span>{category}</span>
-                <span className="text-xs opacity-60">
-                  ({categoryNewsCount})
-                </span>
-              </Badge>
-            )
-          })}
-        </div>
-      </div>
+      <FiltersPanel
+        className="absolute top-4 left-2 right-2 md:left-4 md:right-4 z-[9999]"
+        inputValue={inputValue}
+        onInputChange={handleInputChange}
+        onClearFilters={handleClearFilter}
+        selectedLocation={selectedLocation}
+        selectedCategories={selectedCategories}
+        selectedSources={selectedSources}
+        dateRange={dateRange}
+        onDateRangeChange={handleDateRangeChange}
+        onCategorySelect={handleCategorySelect}
+        onSourceSelect={handleSourceSelect}
+        news={news}
+        uniqueSources={uniqueSources}
+        sourceCount={sourceCount}
+      />
 
       <div className="absolute inset-0">
         <InteractiveMap
